@@ -26,11 +26,11 @@ export default function Navbar() {
         {/* 로고 */}
         <Link href="/" className="flex items-center gap-2 flex-shrink-0">
           <Image
-            src="/images/logo.png"
+            src="/images/logo-transparent.png"
             alt="수리담 로고"
             width={100}
             height={32}
-            className="h-8 w-auto object-contain"
+            className="h-20 w-auto object-contain"
             priority
           />
           {/* 로고 없을 때 폴백 */}
