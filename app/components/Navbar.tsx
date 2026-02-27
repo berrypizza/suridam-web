@@ -56,7 +56,7 @@ export default function Navbar() {
 
             {/* 유튜브 */}
             <a
-              href="https://youtube.com/@수리담" // ← 실제 채널 URL로 교체
+              href="https://www.youtube.com/@surirang-911" // ← 실제 채널 URL로 교체
               target="_blank"
               rel="noopener noreferrer"
               aria-label="유튜브"
