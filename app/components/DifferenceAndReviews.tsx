@@ -38,29 +38,6 @@ export default function DifferenceAndReviews() {
     [],
   );
 
-  const diffs = [
-    {
-      problem: "일단 방문부터 → 현장에서 말이 바뀜",
-      solution: "사진으로 1차 판단 후, 가능한 경우에만 방문합니다",
-      icon: "📷",
-    },
-    {
-      problem: "비용 '가봐야 알아요' 로 끝",
-      solution: "범위를 먼저 공유하고, 납득 후 진행합니다",
-      icon: "💬",
-    },
-    {
-      problem: "수리 후 마무리 기준이 없음",
-      solution: "수평·유격·열림감·이상 소음 기준으로 확인합니다",
-      icon: "✅",
-    },
-    {
-      problem: '"할 수 있다"고 해놓고 결과가 애매함',
-      solution: "어려우면 사진 보고 먼저 말씀드립니다",
-      icon: "🤝",
-    },
-  ];
-
   const scrollByCard = (dir: "left" | "right") => {
     const el = ref.current;
     if (!el) return;
@@ -132,59 +109,168 @@ export default function DifferenceAndReviews() {
             style={{ color: "#7a7a7a" }}>
             Before / After
           </p>
+
+          {/* 헤더 카피 — "다 한다 = 경험치" 포지셔닝 */}
           <h2
-            className="text-xl md:text-2xl font-semibold"
+            className="text-xl md:text-2xl lg:text-3xl font-semibold"
             style={{ color: "#1e1e1e" }}>
-            수리 전 사진 한 장, 수리 후 탄성 한 번
+            소파든, 장롱이든, 문짝이든
+            <br />
+            <span style={{ color: "#2fae8a" }}>
+              수리담은 가구를 가리지 않습니다.
+            </span>
           </h2>
           <p className="mt-2 text-sm" style={{ color: "#7a7a7a" }}>
-            직접 확인하세요.
+            다양한 수리 경험이 쌓인 만큼, 어떤 상황에서도 판단이 빠릅니다.
           </p>
 
-          <div className="mt-6 grid gap-4 sm:grid-cols-2">
-            {/* Before */}
+          {/* 상부장 세트 */}
+          <div className="mt-8">
             <div
-              className="rounded-2xl p-4"
-              style={{ backgroundColor: "white", border: "1px solid #e5e5e5" }}>
+              className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold mb-4"
+              style={{ backgroundColor: "#1e1e1e", color: "white" }}>
+              상부장 처짐 수리
+            </div>
+            <div className="grid gap-4 sm:grid-cols-2">
               <div
-                className="text-xs font-semibold mb-2 uppercase tracking-widest"
-                style={{ color: "#7a7a7a" }}>
-                Before
+                className="rounded-2xl p-4"
+                style={{
+                  backgroundColor: "white",
+                  border: "1px solid #e5e5e5",
+                }}>
+                <div
+                  className="text-xs font-semibold mb-2 uppercase tracking-widest"
+                  style={{ color: "#7a7a7a" }}>
+                  Before
+                </div>
+                <div
+                  className="relative w-full aspect-[4/3] rounded-xl overflow-hidden"
+                  style={{ backgroundColor: "#e5e5e5" }}>
+                  <Image
+                    src="/images/upper-before.jpg"
+                    alt="상부장 수리 전"
+                    fill
+                    sizes="(max-width: 768px) 100vw, 480px"
+                    className="object-cover"
+                  />
+                </div>
               </div>
               <div
-                className="relative w-full aspect-[4/3] rounded-xl overflow-hidden"
-                style={{ backgroundColor: "#e5e5e5" }}>
-                <Image
-                  src="/images/upper-before.jpg"
-                  alt="수리 전"
-                  fill
-                  sizes="(max-width: 768px) 100vw, 480px"
-                  className="object-cover"
-                />
+                className="rounded-2xl p-4"
+                style={{
+                  backgroundColor: "white",
+                  border: "1px solid #2fae8a",
+                }}>
+                <div
+                  className="text-xs font-semibold mb-2 uppercase tracking-widest"
+                  style={{ color: "#2fae8a" }}>
+                  After ✦
+                </div>
+                <div
+                  className="relative w-full aspect-[4/3] rounded-xl overflow-hidden"
+                  style={{ backgroundColor: "#e5e5e5" }}>
+                  <Image
+                    src="/images/upper-after.jpg"
+                    alt="상부장 수리 후"
+                    fill
+                    sizes="(max-width: 768px) 100vw, 480px"
+                    className="object-cover"
+                  />
+                </div>
               </div>
             </div>
+          </div>
 
-            {/* After */}
+          {/* 구분선 */}
+          <div className="my-8 h-px" style={{ backgroundColor: "#e5e5e5" }} />
+
+          {/* 소파 세트 */}
+          <div>
             <div
-              className="rounded-2xl p-4"
-              style={{ backgroundColor: "white", border: "1px solid #2fae8a" }}>
+              className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold mb-4"
+              style={{ backgroundColor: "#1e1e1e", color: "white" }}>
+              소파 꺼짐 수리
+            </div>
+            <div className="grid gap-4 sm:grid-cols-2">
               <div
-                className="text-xs font-semibold mb-2 uppercase tracking-widest"
-                style={{ color: "#2fae8a" }}>
-                After ✦
+                className="rounded-2xl p-4"
+                style={{
+                  backgroundColor: "white",
+                  border: "1px solid #e5e5e5",
+                }}>
+                <div
+                  className="text-xs font-semibold mb-2 uppercase tracking-widest"
+                  style={{ color: "#7a7a7a" }}>
+                  Before
+                </div>
+                <div
+                  className="relative w-full aspect-[4/3] rounded-xl overflow-hidden"
+                  style={{ backgroundColor: "#e5e5e5" }}>
+                  <Image
+                    src="/images/sofa-before.jpg"
+                    alt="소파 수리 전"
+                    fill
+                    sizes="(max-width: 768px) 100vw, 480px"
+                    className="object-cover"
+                  />
+                </div>
               </div>
               <div
-                className="relative w-full aspect-[4/3] rounded-xl overflow-hidden"
-                style={{ backgroundColor: "#e5e5e5" }}>
-                <Image
-                  src="/images/upper-after.jpg"
-                  alt="수리 후"
-                  fill
-                  sizes="(max-width: 768px) 100vw, 480px"
-                  className="object-cover"
-                />
+                className="rounded-2xl p-4"
+                style={{
+                  backgroundColor: "white",
+                  border: "1px solid #2fae8a",
+                }}>
+                <div
+                  className="text-xs font-semibold mb-2 uppercase tracking-widest"
+                  style={{ color: "#2fae8a" }}>
+                  After ✦
+                </div>
+                <div
+                  className="relative w-full aspect-[4/3] rounded-xl overflow-hidden"
+                  style={{ backgroundColor: "#e5e5e5" }}>
+                  <Image
+                    src="/images/sofa-after.jpg"
+                    alt="소파 수리 후"
+                    fill
+                    sizes="(max-width: 768px) 100vw, 480px"
+                    className="object-cover"
+                  />
+                </div>
               </div>
             </div>
+          </div>
+
+          {/* 하단 수리 종류 태그 모음 */}
+          <div className="mt-8 flex flex-wrap gap-2">
+            {[
+              "상부장 처짐",
+              "소파 꺼짐",
+              "슬라이딩 도어",
+              "문짝 교체",
+              "서랍 수리",
+              "경첩 교체",
+            ].map((tag) => (
+              <span
+                key={tag}
+                className="rounded-full px-3 py-1 text-xs font-medium"
+                style={{
+                  backgroundColor: "white",
+                  border: "1px solid #e5e5e5",
+                  color: "#7a7a7a",
+                }}>
+                {tag}
+              </span>
+            ))}
+            <span
+              className="rounded-full px-3 py-1 text-xs font-medium"
+              style={{
+                backgroundColor: "#f0faf6",
+                border: "1px solid #2fae8a",
+                color: "#2e9f83",
+              }}>
+              + 그 외 가구 수리 전반
+            </span>
           </div>
         </div>
       </div>
