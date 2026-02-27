@@ -2,8 +2,8 @@ export default function Footer() {
   return (
     <footer className="px-6 py-10 border-t">
       <div className="mx-auto max-w-5xl text-sm text-gray-600 space-y-2">
-        <div className="font-semibold text-gray-900">수리담</div>
-        <div>활동지역: 인천 / 부천 / 서울 강서구 중심</div>
+        <div className="font-semibold text-gray-900">수리담 가구수리</div>
+        <div>활동지역: 수도권 / 인천 / 부천 / 서울</div>
         <div>
           문의:{" "}
           <a className="underline" href="tel:01091273024">
