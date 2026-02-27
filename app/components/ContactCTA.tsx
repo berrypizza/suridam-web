@@ -1,3 +1,5 @@
+import React from "react";
+
 export default function ContactCTA() {
   const steps = [
     { num: "01", text: "가구 사진 1~3장 찍기" },
@@ -83,7 +85,7 @@ export default function ContactCTA() {
           className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4 text-sm"
           style={{ color: "#7a7a7a" }}>
           {badges.map((b, i) => (
-            <>
+            <React.Fragment key={b}>
               <span key={b} className="flex items-center gap-1.5">
                 <span
                   className="h-1.5 w-1.5 rounded-full inline-block flex-shrink-0"
@@ -99,7 +101,7 @@ export default function ContactCTA() {
                   ·
                 </span>
               )}
-            </>
+            </React.Fragment>
           ))}
         </div>
       </div>

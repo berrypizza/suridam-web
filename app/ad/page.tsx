@@ -3,6 +3,7 @@ import DifferenceAndReviews from "@/app/components/DifferenceAndReviews";
 import ContactCTA from "@/app/components/ContactCTA";
 import Footer from "@/app/components/Footer";
 import Navbar from "@/app/components/Navbar";
+import Staffphotos from "@/app/components/Staffphotos";
 
 export default function AdPage() {
   return (
@@ -10,6 +11,7 @@ export default function AdPage() {
       <Navbar />
       <HookIntro />
       <DifferenceAndReviews />
+      <Staffphotos />
       <ContactCTA />
       <Footer />
     </main>
