@@ -26,16 +26,15 @@ export default function ContactCTA() {
           <h2
             className="text-2xl md:text-3xl font-bold leading-snug"
             style={{ color: "#1e1e1e" }}>
-            스크롤 3번 다 보셨나요?
+            아직 고민 중이어도 괜찮습니다.
           </h2>
           <p
             className="mt-2 text-xl md:text-2xl font-normal"
             style={{ color: "#7a7a7a" }}>
-            그럼 이제 사진 한 장만 보내주세요.
+            사진 한 장이면 가능 여부만 먼저 알 수 있어요.
           </p>
           <p className="mt-3 text-sm" style={{ color: "#7a7a7a" }}>
-            가능한지부터 먼저 정리해드립니다. 비용 걱정 전에 여부 확인이
-            먼저입니다.
+            그것만으로도 충분합니다.
           </p>
         </div>
 

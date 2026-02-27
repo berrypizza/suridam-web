@@ -41,9 +41,9 @@ export default function StaffPhotos() {
             <p
               className="mt-3 text-sm leading-relaxed"
               style={{ color: "#7a7a7a" }}>
-              가능한 경우에만 방문합니다. 수리담이 문을 두드렸다면,
+              불필요한 교체를 권하지 않습니다.
               <br className="hidden md:block" />
-              이미 해결될 수 있다고 판단한 겁니다.
+              고칠 수 있으면 고치고, 안 되면 안 된다고 먼저 말합니다.
             </p>
           </div>
 

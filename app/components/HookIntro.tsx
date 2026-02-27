@@ -26,17 +26,39 @@ export default function HookIntro() {
         <h1
           className="mt-4 text-3xl md:text-4xl lg:text-5xl font-bold leading-tight tracking-tight"
           style={{ color: "#1e1e1e" }}>
-          수리 전 사진 한 장,
-          <br />
-          수리 후 탄성 한 번{" "}
+          {/* 첫째 줄 */}
+          수리 전 {/* '사진 한 장' 형광펜 */}
           <span className="relative inline-block">
-            <span className="relative z-10">— 직접 확인하세요.</span>
+            <span className="relative z-10">사진 한 장,</span>
             <span
-              className="absolute bottom-1 left-0 w-full h-2 -z-0 rounded"
-              style={{ backgroundColor: "#2fae8a", opacity: 0.35 }}
+              className="absolute left-0 w-full rounded"
+              style={{
+                bottom: "0.05em",
+                height: "0.35em",
+                backgroundColor: "#2fae8a",
+                opacity: 0.35,
+                zIndex: 0,
+              }}
               aria-hidden="true"
             />
           </span>
+          <br />
+          {/* 둘째 줄 */}
+          수리 후 {/* '탄성 한 번' 형광펜 */}
+          <span className="relative inline-block">
+            <span className="relative z-10">탄성 한 번</span>
+            <span
+              className="absolute left-0 w-full rounded"
+              style={{
+                bottom: "0.05em",
+                height: "0.35em",
+                backgroundColor: "#2fae8a",
+                opacity: 0.35,
+                zIndex: 0,
+              }}
+              aria-hidden="true"
+            />
+          </span>{" "}
         </h1>
 
         {/* 넛지 서브 카피 */}
@@ -44,7 +66,8 @@ export default function HookIntro() {
           className="mt-5 max-w-xl rounded-2xl px-5 py-4"
           style={{ backgroundColor: "#f5f5f5", border: "1px solid #e5e5e5" }}>
           <p className="text-base leading-relaxed" style={{ color: "#1e1e1e" }}>
-            처음 오셨나요? 그렇다면 <strong>그냥 믿지 마세요.</strong>
+            처음 오셨나요? 그렇다면{" "}
+            <strong style={{ color: "#2fae8a" }}>그냥 믿지 마세요.</strong>
             <br />
             수리담이 자신 있는 이유, <strong>스크롤 3번</strong>이면 확인됩니다.
           </p>
@@ -53,7 +76,7 @@ export default function HookIntro() {
         {/* CTA 버튼 */}
         <div className="mt-8 flex flex-col sm:flex-row gap-3">
           <a
-            href="https://suridam.vercel.app/request"
+            href="/request"
             className="rounded-xl px-6 py-3.5 text-white text-center font-semibold transition-opacity hover:opacity-90"
             style={{ backgroundColor: "#2fae8a" }}>
             사진 상담 시작하기 →
