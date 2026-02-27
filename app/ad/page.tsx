@@ -4,6 +4,7 @@ import ContactCTA from "@/app/components/ContactCTA";
 import Footer from "@/app/components/Footer";
 import Navbar from "@/app/components/Navbar";
 import Staffphotos from "@/app/components/Staffphotos";
+import WhySuridam from "../components/WhySuridam";
 
 export default function AdPage() {
   return (
@@ -11,6 +12,7 @@ export default function AdPage() {
       <Navbar />
       <HookIntro />
       <DifferenceAndReviews />
+      <WhySuridam />
       <Staffphotos />
       <ContactCTA />
       <Footer />
