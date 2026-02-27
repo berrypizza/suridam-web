@@ -9,13 +9,11 @@ import WhySuridam from "@/app/components/WhySuridam";
 export default function AdPage() {
   return (
     <main className="min-h-screen bg-white text-gray-900">
-      <Navbar />
       <HookIntro />
       <DifferenceAndReviews />
       <WhySuridam />
       <Staffphotos />
       <ContactCTA />
-      <Footer />
     </main>
   );
 }

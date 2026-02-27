@@ -41,7 +41,7 @@ function inputClass(hasError: boolean) {
 }
 
 export default function RequestPage() {
-  // 🔥 모바일 감지 (오류 안 나게 useEffect 사용)
+  // 🔥 모바일 감지 (SSR 안전)
   const [isMobile, setIsMobile] = useState<boolean | null>(null);
 
   useEffect(() => {
@@ -87,10 +87,10 @@ export default function RequestPage() {
     { num: "03", text: "사진 첨부 후 전송" },
   ];
 
-  // 🔥 모바일 판단 전 렌더링 방지 (깜빡임 없음)
+  // 🔥 모바일 판단 전 깜빡임 방지
   if (isMobile === null) return null;
 
-  // 🔥 PC/태블릿 차단
+  // 🔥 PC/태블릿 차단 화면
   if (!isMobile) {
     return (
       <main className="min-h-screen bg-white px-4 py-10">
@@ -123,7 +123,7 @@ export default function RequestPage() {
     );
   }
 
-  // 📱 모바일일 때만 기존 화면
+  // 📱 모바일 전용 페이지 (기존 구조 그대로)
   return (
     <main className="min-h-screen bg-white px-4 py-6 sm:py-10">
       <div className="mx-auto max-w-5xl">
@@ -137,12 +137,58 @@ export default function RequestPage() {
               상담 문자 보내기
             </span>
             를 누르면 문자 앱이 열립니다.
-            <span className="text-zinc-400"> (모바일 권장)</span>
           </p>
         </div>
 
-        {/* 기존 네 폼 구조 그대로 */}
-        {/* 여기 아래는 네가 준 기존 코드 그대로 유지해도 됨 */}
+        <form
+          onSubmit={onSubmit}
+          className="mt-5 grid gap-4 rounded-2xl border border-zinc-200 bg-white p-5 shadow-[0_2px_16px_rgba(0,0,0,0.05)]">
+          <label className="grid">
+            <span className="text-sm font-bold text-zinc-900">이름</span>
+            <input
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className={inputClass(!!errors.name)}
+            />
+          </label>
+
+          <label className="grid">
+            <span className="text-sm font-bold text-zinc-900">연락처</span>
+            <input
+              type="tel"
+              value={customerPhone}
+              onChange={(e) => setCustomerPhone(e.target.value)}
+              className={inputClass(!!errors.customerPhone)}
+            />
+          </label>
+
+          <label className="grid">
+            <span className="text-sm font-bold text-zinc-900">지역</span>
+            <input
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+              className={inputClass(!!errors.address)}
+            />
+          </label>
+
+          <label className="grid">
+            <span className="text-sm font-bold text-zinc-900">
+              증상 / 요청사항
+            </span>
+            <textarea
+              value={symptom}
+              onChange={(e) => setSymptom(e.target.value)}
+              rows={4}
+              className={inputClass(!!errors.symptom)}
+            />
+          </label>
+
+          <button
+            type="submit"
+            className="rounded-xl bg-[#2fae8a] px-4 py-4 text-[16px] font-black text-white">
+            📨 상담 문자 보내기
+          </button>
+        </form>
       </div>
     </main>
   );
