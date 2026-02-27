@@ -62,7 +62,7 @@ export default function ContactCTA() {
         {/* CTA 버튼 */}
         <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
           <a
-            href="https://suridam.vercel.app/request"
+            href="/request"
             className="rounded-xl px-7 py-4 text-white font-semibold text-center transition-opacity hover:opacity-90"
             style={{ backgroundColor: "#2fae8a" }}>
             사진 상담 시작하기 →

@@ -141,7 +141,7 @@ export default function WhySuridam() {
             <strong>출장비를 받지 않습니다.</strong>
           </p>
           <a
-            href="https://suridam.vercel.app/request"
+            href="/request"
             className="flex-shrink-0 rounded-xl px-5 py-2.5 text-sm md:text-base font-semibold text-white transition-opacity hover:opacity-90 whitespace-nowrap"
             style={{ backgroundColor: "#2fae8a" }}>
             사진 상담 시작하기 →
