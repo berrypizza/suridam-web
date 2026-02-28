@@ -163,7 +163,7 @@ export default function DifferenceAndReviews() {
                 }}>
                 <div
                   className="text-xs font-semibold mb-2 uppercase tracking-widest"
-                  style={{ color: "#2fae8a" }}>
+                  style={{ color: "#2fae8a", fontWeight: "800" }}>
                   After ✦
                 </div>
                 <div
@@ -223,7 +223,7 @@ export default function DifferenceAndReviews() {
                 }}>
                 <div
                   className="text-xs font-semibold mb-2 uppercase tracking-widest"
-                  style={{ color: "#2fae8a" }}>
+                  style={{ color: "#2fae8a", fontWeight: "800" }}>
                   After ✦
                 </div>
                 <div
@@ -283,7 +283,7 @@ export default function DifferenceAndReviews() {
                 }}>
                 <div
                   className="text-xs font-semibold mb-2 uppercase tracking-widest"
-                  style={{ color: "#2fae8a" }}>
+                  style={{ color: "#2fae8a", fontWeight: "800" }}>
                   After ✦
                 </div>
                 <div
@@ -343,7 +343,7 @@ export default function DifferenceAndReviews() {
                 }}>
                 <div
                   className="text-xs font-semibold mb-2 uppercase tracking-widest"
-                  style={{ color: "#2fae8a" }}>
+                  style={{ color: "#2fae8a", fontWeight: "800" }}>
                   After ✦
                 </div>
                 <div
@@ -403,7 +403,7 @@ export default function DifferenceAndReviews() {
                 }}>
                 <div
                   className="text-xs font-semibold mb-2 uppercase tracking-widest"
-                  style={{ color: "#2fae8a" }}>
+                  style={{ color: "#2fae8a", fontWeight: "800" }}>
                   After ✦
                 </div>
                 <div
@@ -462,7 +462,7 @@ export default function DifferenceAndReviews() {
                 }}>
                 <div
                   className="text-xs font-semibold mb-2 uppercase tracking-widest"
-                  style={{ color: "#2fae8a" }}>
+                  style={{ color: "#2fae8a", fontWeight: "800" }}>
                   After ✦
                 </div>
                 <div
