@@ -73,7 +73,9 @@ export default function HookIntro() {
         <div className="mt-5 max-w-xl">
           <p className="text-base leading-relaxed text-white">
             처음 오셨나요? 그렇다면{" "}
-            <strong style={{ color: "#2fae8a" }}>그냥 믿지 마세요.</strong>
+            <strong style={{ backgroundColor: "#2fae8a" }}>
+              그냥 믿지 마세요.
+            </strong>
             <br />
             수리담이 자신 있는 이유, <strong>스크롤 3번</strong>이면 확인됩니다.
           </p>
