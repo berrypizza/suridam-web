@@ -7,6 +7,11 @@ export default function HookIntro() {
         loop
         muted
         playsInline
+        preload="auto"
+        poster="/images/staff.gif"
+        controls={false}
+        disablePictureInPicture
+        controlsList="nodownload noplaybackrate noremoteplayback"
         className="absolute inset-0 z-0 h-full w-full object-cover">
         <source src="/images/staff2.mp4" type="video/mp4" />
       </video>
