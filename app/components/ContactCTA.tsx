@@ -24,17 +24,17 @@ export default function ContactCTA() {
             Contact
           </p>
           <h2
-            className="text-2xl md:text-3xl font-bold leading-snug"
+            className="text-3xl md:text-3xl font-bold leading-snug"
             style={{ color: "#1e1e1e" }}>
-            아직 고민 중이어도 괜찮습니다.
+            바로 문의하지 마세요.
           </h2>
           <p
             className="mt-2 text-xl md:text-2xl font-normal"
             style={{ color: "#7a7a7a" }}>
-            사진 한 장이면 가능 여부만 먼저 알 수 있어요.
+            최대한 저희를 알아보시고, 납득하신 후에 연락 주세요.
           </p>
-          <p className="mt-3 text-sm" style={{ color: "#7a7a7a" }}>
-            그것만으로도 충분합니다.
+          <p className="mt-3 text-xl font-bold" style={{ color: "#7a7a7a" }}>
+            급할 필요 없습니다.
           </p>
         </div>
 
