@@ -29,99 +29,125 @@ const diffs = [
 
 export default function WhySuridam() {
   return (
-    <section className="px-6 py-16" style={{ backgroundColor: "white" }}>
-      <div className="mx-auto max-w-5xl">
-        {/* 섹션 헤더 */}
+    <section style={{ backgroundColor: "#1e1e1e" }}>
+      <div className="px-6 py-16 mx-auto max-w-5xl">
+        {/* ── 섹션 헤더 ── */}
         <div className="mb-10">
-          <p
-            className="text-xs md:text-sm tracking-widest uppercase mb-3"
-            style={{ color: "#7a7a7a" }}>
+          <span
+            className="inline-block text-xs tracking-widest uppercase mb-4 px-3 py-1 rounded-full font-semibold"
+            style={{
+              backgroundColor: "#2fae8a22",
+              color: "#2fae8a",
+              border: "1px solid #2fae8a55",
+            }}>
             Why Suridam
-          </p>
+          </span>
 
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
             <h2
               className="text-2xl md:text-3xl lg:text-4xl font-bold"
-              style={{ color: "#1e1e1e" }}>
+              style={{ color: "white" }}>
               그래서 뭐가 다른가요?
             </h2>
 
             {/* vs 레이블 */}
-            <div className="hidden md:flex items-center gap-2 text-xs md:text-sm font-semibold pb-1">
+            <div className="hidden md:flex items-center gap-2 text-sm font-semibold pb-1">
               <span
                 className="px-3 py-1 rounded-full"
-                style={{ backgroundColor: "#fee2e2", color: "#ef4444" }}>
+                style={{
+                  backgroundColor: "#fee2e233",
+                  color: "#ef4444",
+                  border: "1px solid #ef444433",
+                }}>
                 일반 업체
               </span>
-              <span style={{ color: "#7a7a7a" }}>vs</span>
+              <span style={{ color: "#555" }}>vs</span>
               <span
                 className="px-3 py-1 rounded-full"
-                style={{ backgroundColor: "#f0faf6", color: "#2e9f83" }}>
+                style={{
+                  backgroundColor: "#2fae8a22",
+                  color: "#2fae8a",
+                  border: "1px solid #2fae8a55",
+                }}>
                 수리담
               </span>
             </div>
           </div>
         </div>
 
-        {/* 비교 리스트 */}
+        {/* ── 비교 리스트 ── */}
         <div className="flex flex-col gap-3">
           {diffs.map((d, i) => (
             <div
               key={i}
               className="grid grid-cols-1 md:grid-cols-2 rounded-2xl overflow-hidden"
-              style={{ border: "1px solid #e5e5e5" }}>
-              {/* ── 일반 업체 (좌) ── */}
+              style={{ border: "1px solid #2a2a2a" }}>
+              {/* 일반 업체 (좌) */}
               <div
-                className="flex items-start gap-3 md:gap-4 px-5 md:px-6 py-5 md:py-6"
+                className="flex items-start gap-3 px-5 py-5"
                 style={{
-                  backgroundColor: "#fafafa",
-                  borderBottom: "1px solid #e5e5e5",
+                  backgroundColor: "#2a2a2a",
+                  borderBottom: "1px solid #333",
                 }}>
-                {/* ✕ 아이콘 */}
                 <div
-                  className="flex-shrink-0 mt-0.5 h-5 w-5 md:h-6 md:w-6 rounded-full flex items-center justify-center font-bold text-xs md:text-sm"
-                  style={{ backgroundColor: "#fee2e2", color: "#ef4444" }}>
+                  className="flex-shrink-0 mt-0.5 h-6 w-6 rounded-full flex items-center justify-center font-bold text-xs"
+                  style={{
+                    backgroundColor: "#ef444422",
+                    color: "#ef4444",
+                    border: "1px solid #ef444433",
+                  }}>
                   ✕
                 </div>
-
                 <div>
-                  <span
-                    className="inline-block text-[10px] md:text-xs font-semibold tracking-widest uppercase mb-2 rounded-full px-2 py-0.5"
-                    style={{ backgroundColor: "#fee2e2", color: "#ef4444" }}>
-                    일반 업체
-                  </span>
+                  <div className="flex items-center gap-2 mb-2">
+                    <span
+                      className="text-[10px] font-semibold tracking-widest uppercase rounded-full px-2 py-0.5"
+                      style={{
+                        backgroundColor: "#ef444422",
+                        color: "#ef4444",
+                      }}>
+                      일반 업체
+                    </span>
+                    <span className="text-xs" style={{ color: "#444" }}>
+                      {d.theme}
+                    </span>
+                  </div>
                   <p
-                    className="text-sm md:text-base lg:text-lg leading-relaxed whitespace-pre-line"
+                    className="text-sm md:text-base leading-relaxed whitespace-pre-line"
                     style={{
-                      color: "#7a7a7a",
+                      color: "#555",
                       textDecoration: "line-through",
-                      textDecorationColor: "#fca5a5",
+                      textDecorationColor: "#ef444466",
                     }}>
                     {d.problem}
                   </p>
                 </div>
               </div>
 
-              {/* ── 수리담 (우) ── */}
+              {/* 수리담 (우) */}
               <div
-                className="flex items-start gap-3 md:gap-4 px-5 md:px-6 py-5 md:py-6"
-                style={{ backgroundColor: "white" }}>
-                {/* ✓ 아이콘 */}
+                className="flex items-start gap-3 px-5 py-5"
+                style={{ backgroundColor: "#242424" }}>
                 <div
-                  className="flex-shrink-0 mt-0.5 h-5 w-5 md:h-6 md:w-6 rounded-full flex items-center justify-center text-white font-bold text-xs md:text-sm"
+                  className="flex-shrink-0 mt-0.5 h-6 w-6 rounded-full flex items-center justify-center text-white font-bold text-xs"
                   style={{ backgroundColor: "#2fae8a" }}>
                   ✓
                 </div>
-
                 <div>
-                  <span
-                    className="inline-block text-[10px] md:text-xs font-semibold tracking-widest uppercase mb-2 rounded-full px-2 py-0.5"
-                    style={{ backgroundColor: "#f0faf6", color: "#2e9f83" }}>
-                    수리담
-                  </span>
+                  <div className="flex items-center gap-2 mb-2">
+                    <span
+                      className="text-[10px] font-semibold tracking-widest uppercase rounded-full px-2 py-0.5"
+                      style={{
+                        backgroundColor: "#2fae8a22",
+                        color: "#2fae8a",
+                      }}>
+                      수리담
+                    </span>
+                    <span className="text-lg">{d.icon}</span>
+                  </div>
                   <p
-                    className="text-sm md:text-base lg:text-lg font-semibold leading-relaxed whitespace-pre-line"
-                    style={{ color: "#1e1e1e" }}>
+                    className="text-sm md:text-base font-semibold leading-relaxed whitespace-pre-line"
+                    style={{ color: "#e5e5e5" }}>
                     {d.solution}
                   </p>
                 </div>
@@ -130,19 +156,29 @@ export default function WhySuridam() {
           ))}
         </div>
 
-        {/* 하단 약속 배너 */}
+        {/* ── 하단 약속 배너 ── */}
         <div
           className="mt-8 rounded-2xl px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-4"
-          style={{ backgroundColor: "#f0faf6", border: "1px solid #2fae8a" }}>
-          <p
-            className="text-sm md:text-base lg:text-lg font-medium text-center sm:text-left"
-            style={{ color: "#1e1e1e" }}>
-            위 4가지 기준, 수리담이 지키지 못하면{" "}
-            <strong>출장비를 받지 않습니다.</strong>
-          </p>
+          style={{
+            backgroundColor: "#2fae8a18",
+            border: "1px solid #2fae8a55",
+          }}>
+          <div>
+            <p className="text-xs mb-1" style={{ color: "#2fae8a" }}>
+              수리담의 약속
+            </p>
+            <p
+              className="text-sm md:text-base font-medium"
+              style={{ color: "white" }}>
+              위 4가지 기준, 수리담이 지키지 못하면{" "}
+              <strong style={{ color: "#2fae8a" }}>
+                출장비를 받지 않습니다.
+              </strong>
+            </p>
+          </div>
           <a
             href="/request"
-            className="flex-shrink-0 rounded-xl px-5 py-2.5 text-sm md:text-base font-semibold text-white transition-opacity hover:opacity-90 whitespace-nowrap"
+            className="flex-shrink-0 rounded-xl px-5 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90 whitespace-nowrap"
             style={{ backgroundColor: "#2fae8a" }}>
             사진 상담 시작하기 →
           </a>

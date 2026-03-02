@@ -13,15 +13,17 @@ export default function StaffPhotos() {
     <section className="px-6 py-16" style={{ backgroundColor: "white" }}>
       <div className="mx-auto max-w-5xl">
         {/* 헤더 */}
-        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-8">
+        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-8">
           <div>
-            <p
-              className="text-xs tracking-widest uppercase mb-3"
-              style={{ color: "#7a7a7a" }}>
+            <span
+              className="inline-block text-xs tracking-widest uppercase mb-4 px-3 py-1 rounded-full font-semibold"
+              style={{
+                backgroundColor: "#f5f5f5",
+                color: "#7a7a7a",
+                border: "1px solid #e5e5e5",
+              }}>
               Our Work
-            </p>
-
-            {/* 메인 카피 */}
+            </span>
             <h2
               className="text-2xl md:text-3xl font-bold leading-snug"
               style={{ color: "#1e1e1e" }}>
@@ -29,15 +31,17 @@ export default function StaffPhotos() {
               <br />
               <span className="relative inline-block mt-1">
                 <span className="relative z-10">해결된다는 겁니다.</span>
-                {/* 브랜드 컬러 밑줄 강조 */}
                 <span
-                  className="absolute bottom-1 left-0 w-full h-2 -z-0 rounded"
-                  style={{ backgroundColor: "#2fae8a", opacity: 0.3 }}
+                  className="absolute bottom-1 left-0 w-full h-2 rounded"
+                  style={{
+                    backgroundColor: "#2fae8a",
+                    opacity: 0.3,
+                    zIndex: 0,
+                  }}
                   aria-hidden="true"
                 />
               </span>
             </h2>
-
             <p
               className="mt-3 text-sm leading-relaxed"
               style={{ color: "#7a7a7a" }}>
@@ -47,9 +51,8 @@ export default function StaffPhotos() {
             </p>
           </div>
 
-          {/* 우측 수치 뱃지 */}
           <div
-            className="flex items-center gap-3 rounded-2xl px-5 py-4 flex-shrink-0 self-start md:self-auto"
+            className="flex items-center gap-3 rounded-2xl px-5 py-4 flex-shrink-0 self-start"
             style={{ backgroundColor: "#f0faf6", border: "1px solid #2fae8a" }}>
             <div
               className="h-8 w-8 rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0"
@@ -67,7 +70,7 @@ export default function StaffPhotos() {
           </div>
         </div>
 
-        {/* 사진 그리드 — 모바일 2열 / PC 4열 */}
+        {/* 사진 그리드 */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           {photos.map((p, i) => (
             <div
@@ -84,23 +87,24 @@ export default function StaffPhotos() {
                   sizes="(max-width: 768px) 50vw, 25vw"
                   className="object-cover transition-transform duration-500 group-hover:scale-105"
                 />
-                {/* 호버 오버레이 */}
                 <div
                   className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                  style={{ backgroundColor: "#2fae8a", opacity: 0 }}
-                  onMouseOver={(e) => (e.currentTarget.style.opacity = "0.15")}
-                  onMouseOut={(e) => (e.currentTarget.style.opacity = "0")}
+                  style={{ backgroundColor: "rgba(47,174,138,0.15)" }}
                 />
               </div>
             </div>
           ))}
         </div>
 
-        {/* 하단 태그라인 */}
+        {/* 태그라인 */}
         <div className="mt-6 flex items-center gap-3">
           <div className="h-px flex-1" style={{ backgroundColor: "#e5e5e5" }} />
-          <p className="text-xs" style={{ color: "#7a7a7a" }}>
+          <p
+            className="text-xs flex items-center gap-1.5"
+            style={{ color: "#7a7a7a" }}>
+            <span style={{ color: "#2fae8a" }}>✦</span>
             수리담은 결과로 말합니다
+            <span style={{ color: "#2fae8a" }}>✦</span>
           </p>
           <div className="h-px flex-1" style={{ backgroundColor: "#e5e5e5" }} />
         </div>
