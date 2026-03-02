@@ -3,7 +3,7 @@ import React from "react";
 const steps = [
   { num: "01", text: "가구 사진 1~3장 찍기" },
   { num: "02", text: "지역 + 증상 한 줄 적기" },
-  { num: "03", text: "수리 가능 여부 + 비용 범위 안내" },
+  { num: "03", text: "수리 가능 여부 + 비용 범위 먼저 안내" },
 ];
 
 const badges = [
@@ -31,17 +31,15 @@ export default function ContactCTA() {
           <h2
             className="text-2xl md:text-3xl font-bold leading-snug"
             style={{ color: "white" }}>
-            바로 문의하지 마세요.
+            아직 고민 중이어도 괜찮습니다.
           </h2>
-          <p
-            className="mt-3 text-lg md:text-xl font-normal"
-            style={{ color: "#7a7a7a" }}>
-            최대한 저희를 알아보시고, 납득하신 후에 연락 주세요.
+          <p className="mt-3 text-lg font-normal" style={{ color: "#7a7a7a" }}>
+            사진 한 장이면 가능 여부만 먼저 알 수 있어요.
           </p>
           <p
             className="mt-2 text-base font-semibold"
             style={{ color: "#2fae8a" }}>
-            급할 필요 없습니다.
+            그것만으로도 충분합니다.
           </p>
         </div>
 
@@ -51,7 +49,10 @@ export default function ContactCTA() {
             <div
               key={s.num}
               className="rounded-2xl px-5 py-5 flex items-start gap-4"
-              style={{ backgroundColor: "#2a2a2a", border: "1px solid #333" }}>
+              style={{
+                backgroundColor: i === 2 ? "#2fae8a18" : "#2a2a2a",
+                border: `1px solid ${i === 2 ? "#2fae8a55" : "#333"}`,
+              }}>
               <span
                 className="text-2xl font-bold leading-none select-none flex-shrink-0"
                 style={{ color: i === 2 ? "#2fae8a" : "#444" }}>
@@ -71,8 +72,8 @@ export default function ContactCTA() {
           <a
             href="/request"
             className="rounded-xl px-8 py-4 text-white font-bold text-center text-base transition-opacity hover:opacity-90"
-            style={{ backgroundColor: "#2fae8a" }}>
-            사진 상담 시작하기 →
+            style={{ backgroundColor: "#2fae8a", fontSize: 16 }}>
+            💬 사진 상담 시작하기 →
           </a>
           <a
             href="tel:01091273024"

@@ -5,15 +5,19 @@ import Footer from "@/app/components/Footer";
 import Navbar from "@/app/components/Navbar";
 import Staffphotos from "@/app/components/Staffphotos";
 import WhySuridam from "@/app/components/WhySuridam";
+import FloatingCTA from "@/app/components/FloatingCTA";
 
 export default function AdPage() {
   return (
-    <main className="min-h-screen bg-white text-gray-900">
-      <HookIntro />
-      <DifferenceAndReviews />
-      <WhySuridam />
-      <Staffphotos />
-      <ContactCTA />
-    </main>
+    <>
+      <main className="min-h-screen" style={{ backgroundColor: "#1e1e1e" }}>
+        <HookIntro />
+        <DifferenceAndReviews />
+        <WhySuridam />
+        <Staffphotos />
+        <ContactCTA />
+      </main>
+      <FloatingCTA />
+    </>
   );
 }
