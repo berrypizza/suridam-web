@@ -16,14 +16,23 @@ const beforeAfterSets = [
     before: "/images/sofa-before2.jpg",
     after: "/images/sofa-after2.jpg",
   },
+  {
+    tag: "소파 꺼짐 수리",
+    before: "/images/sofa-before3.jpg",
+    after: "/images/sofa-after3.jpg",
+  },
+  {
+    tag: "소파 꺼짐 수리",
+    before: "/images/sofa-before4.jpg",
+    after: "/images/sofa-after4.jpg",
+  },
 ];
 
 const repairTags = [
   "소파 꺼짐",
-  "스프링 교체",
-  "솜 교체",
-  "가죽 처짐",
-  "패브릭 소파",
+  "스프링 빠짐",
+  "목대 부러짐",
+  "부직포 교체",
   "리클라이너 소파",
 ];
 

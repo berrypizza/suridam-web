@@ -3,15 +3,15 @@
 const diffs = [
   {
     icon: "📷",
-    theme: "방문 기준",
-    problem: "일단 방문부터\n현장에서 말이 바뀜",
-    solution: "사진으로 1차 판단 후\n가능한 경우에만 방문합니다",
+    theme: "소파 꺼짐 복원 조율",
+    problem: "일단 돌덩이 처럼\n딴딴하게만 만드는 업체",
+    solution: "소파 수리 중간에\n쿠션 꺼짐 정도 조율합니다.",
   },
   {
     icon: "🛋️",
-    theme: "수리 vs 교체",
-    problem: '"교체하는 게 낫다"고만\n말하는 업체',
-    solution: "수리로 가능하면 수리를\n먼저 권합니다",
+    theme: "추가 비용",
+    problem: "방문해서 견적이\n달라지는 업체",
+    solution: "추가 비용 일절\n없습니다",
   },
   {
     icon: "💬",

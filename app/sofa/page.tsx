@@ -16,7 +16,6 @@ export const metadata = {
 export default function SofaPage() {
   return (
     <>
-      <Navbar />
       <main className="min-h-screen" style={{ backgroundColor: "#1e1e1e" }}>
         <HookIntroSofa />
         <DifferenceAndReviewsSofa />
@@ -24,7 +23,6 @@ export default function SofaPage() {
         <StaffPhotosSofa />
         <ContactCTASofa />
       </main>
-      <Footer />
       <FloatingCTA />
     </>
   );
