@@ -2,10 +2,10 @@
 import Image from "next/image";
 
 const photos = [
-  { src: "/images/staff-1.jpg", alt: "소파 수리 현장 1" },
-  { src: "/images/staff-2.jpg", alt: "소파 수리 현장 2" },
-  { src: "/images/staff-3.jpg", alt: "소파 수리 현장 3" },
-  { src: "/images/staff-4.jpg", alt: "소파 수리 현장 4" },
+  { src: "/images/staff-6.jpg", alt: "소파 수리 현장 1" },
+  { src: "/images/staff-7.jpg", alt: "소파 수리 현장 2" },
+  { src: "/images/staff-8.jpg", alt: "소파 수리 현장 3" },
+  { src: "/images/staff-9.jpg", alt: "소파 수리 현장 4" },
 ];
 
 export default function StaffPhotosSofa() {
