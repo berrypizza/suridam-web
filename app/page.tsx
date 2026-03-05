@@ -6,6 +6,7 @@ import WhySuridam from "@/app/components/WhySuridam";
 import FloatingCTA from "@/app/components/FloatingCTA";
 import Navbar from "@/app/components/Navbar";
 import Footer from "@/app/components/Footer";
+import EstimateCalculator from "./components/EstimateCalculator";
 export default function AdPage() {
   return (
     <>
@@ -14,6 +15,7 @@ export default function AdPage() {
         <DifferenceAndReviews />
         <WhySuridam />
         <Staffphotos />
+        <EstimateCalculator />
         <ContactCTA />
       </main>
       <FloatingCTA />
