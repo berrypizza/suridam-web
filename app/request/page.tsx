@@ -214,7 +214,7 @@ export default function RequestPage() {
               {/* 캐릭터 이미지 */}
               <div className="flex justify-center sm:justify-end flex-shrink-0">
                 <Image
-                  src="/images/suriragn2.png"
+                  src="/images/main-transparent.png"
                   alt="수리랑"
                   width={160}
                   height={160}
