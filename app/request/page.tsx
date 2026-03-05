@@ -215,7 +215,7 @@ export default function RequestPage() {
               <div className="flex justify-center sm:justify-end flex-shrink-0">
                 <Image
                   src="/images/main-transparent.png"
-                  alt="수리랑"
+                  alt="수리담 캐릭터"
                   width={160}
                   height={160}
                   priority
@@ -433,8 +433,8 @@ export default function RequestPage() {
             className="w-full max-w-sm rounded-2xl p-6 text-center"
             style={{ backgroundColor: "#2a2a2a", border: "1px solid #333" }}>
             <Image
-              src="/images/surirang.png"
-              alt="수리랑"
+              src="/images/main-transparent.png"
+              alt="수리담 캐릭터"
               width={160}
               height={160}
               className="mx-auto h-32 w-32 object-contain"
