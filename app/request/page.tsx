@@ -78,15 +78,13 @@ export default function RequestPage() {
 
   if (isMobile === null) return null;
 
-  // PC 차단 화면
+  // ━━━━ PC / 태블릿 화면 ━━━━
   if (!isMobile) {
     return (
       <main
         className="min-h-screen flex items-center justify-center px-6 py-10"
         style={{ backgroundColor: "#1e1e1e" }}>
-        <div
-          className="mx-auto max-w-md rounded-2xl p-8 text-center"
-          style={{ backgroundColor: "#2a2a2a", border: "1px solid #333" }}>
+        <div className="mx-auto max-w-lg text-center">
           <span
             className="inline-block text-xs tracking-widest uppercase mb-4 px-3 py-1 rounded-full font-semibold"
             style={{
@@ -94,27 +92,80 @@ export default function RequestPage() {
               color: "#2fae8a",
               border: "1px solid #2fae8a55",
             }}>
-            안내
+            상담 안내
           </span>
-          <h1 className="text-xl font-bold mt-2" style={{ color: "white" }}>
-            현재는 모바일 문자 상담만 지원합니다
+
+          <h1 className="text-2xl font-bold mt-2" style={{ color: "white" }}>
+            사진 상담은 모바일에서
+            <br />더 편하게 진행할 수 있어요
           </h1>
           <p
             className="mt-3 text-sm leading-relaxed"
             style={{ color: "#7a7a7a" }}>
-            이 페이지는 문자 앱을 열어 상담 내용을 전송하는 구조입니다.
+            문자로 사진을 첨부해야 해서 스마트폰 접속을 권장드려요.
             <br />
-            PC 및 태블릿에서는 지원하지 않습니다.
-            <br />
-            휴대폰으로 다시 접속해 주세요.
+            지금 바로 전화 문의도 가능합니다.
           </p>
+
+          {/* QR 코드 — /public/images/request-qr.png 로 교체 */}
+          <div className="my-8 flex flex-col items-center gap-3">
+            <div
+              className="w-36 h-36 rounded-2xl flex items-center justify-center overflow-hidden"
+              style={{ backgroundColor: "#2a2a2a", border: "2px dashed #333" }}>
+              <Image
+                src="/images/request-qr.png"
+                alt="수리담 상담 QR코드"
+                width={144}
+                height={144}
+                className="w-full h-full object-contain"
+                onError={(e) => {
+                  // 이미지 없을 때 플레이스홀더
+                  (e.currentTarget as HTMLImageElement).style.display = "none";
+                  const parent = (e.currentTarget as HTMLImageElement)
+                    .parentElement;
+                  if (parent) {
+                    parent.innerHTML = `
+                      <div style="text-align:center">
+                        <div style="font-size:28px">📱</div>
+                        <p style="font-size:11px;color:#555;margin-top:4px">QR 코드</p>
+                        <p style="font-size:10px;color:#444">suridam.co.kr/request</p>
+                      </div>`;
+                  }
+                }}
+              />
+            </div>
+            <p className="text-xs" style={{ color: "#555" }}>
+              QR 코드로 스마트폰에서 바로 열기
+            </p>
+          </div>
+
+          {/* 전화 CTA */}
           <a
             href={`tel:${OWNER_PHONE}`}
-            className="mt-6 inline-flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-bold text-white transition-opacity hover:opacity-90"
+            className="inline-flex items-center gap-2 rounded-xl px-8 py-4 text-base font-bold text-white transition-opacity hover:opacity-90"
             style={{ backgroundColor: "#2fae8a" }}>
-            📞 010-9127-3024
+            📞 010-9127-3024 전화 문의
           </a>
-          <p className="mt-5 text-xs" style={{ color: "#555" }}>
+
+          <div className="mt-5 flex flex-col gap-2">
+            {[
+              "수리 불가 시 출장비 없습니다",
+              "사진으로 1차 판단 후 방문",
+              "비용 범위 먼저 안내",
+            ].map((t) => (
+              <div key={t} className="flex items-center justify-center gap-2">
+                <span
+                  className="h-1.5 w-1.5 rounded-full flex-shrink-0"
+                  style={{ backgroundColor: "#2fae8a" }}
+                />
+                <span className="text-xs" style={{ color: "#555" }}>
+                  {t}
+                </span>
+              </div>
+            ))}
+          </div>
+
+          <p className="mt-8 text-xs" style={{ color: "#444" }}>
             무조건 수리 가능하다고 말씀드리지는 않습니다.
           </p>
         </div>
@@ -122,6 +173,7 @@ export default function RequestPage() {
     );
   }
 
+  // ━━━━ 모바일 화면 ━━━━
   return (
     <main
       className="min-h-screen px-4 py-8 sm:py-12"
@@ -190,8 +242,6 @@ export default function RequestPage() {
                   </span>
                   로 안내합니다.
                 </p>
-
-                {/* 신뢰 포인트 3개 */}
                 <div className="mt-4 flex flex-col gap-2">
                   {[
                     "사진으로 1차 판단 후 방문",
@@ -210,8 +260,6 @@ export default function RequestPage() {
                   ))}
                 </div>
               </div>
-
-              {/* 캐릭터 이미지 */}
               <div className="flex justify-center sm:justify-end flex-shrink-0">
                 <Image
                   src="/images/main-transparent.png"
@@ -224,7 +272,6 @@ export default function RequestPage() {
               </div>
             </div>
 
-            {/* 버튼 */}
             <div className="mt-5 flex gap-3">
               <a
                 href={`tel:${OWNER_PHONE}`}
@@ -283,7 +330,6 @@ export default function RequestPage() {
 
             {/* 폼 */}
             <form onSubmit={onSubmit} className="flex flex-col gap-4">
-              {/* 이름 */}
               <label className="flex flex-col gap-1.5">
                 <span
                   className="text-sm font-semibold"
@@ -308,7 +354,6 @@ export default function RequestPage() {
                 )}
               </label>
 
-              {/* 연락처 */}
               <label className="flex flex-col gap-1.5">
                 <span
                   className="text-sm font-semibold"
@@ -336,7 +381,6 @@ export default function RequestPage() {
                 )}
               </label>
 
-              {/* 지역 */}
               <label className="flex flex-col gap-1.5">
                 <span
                   className="text-sm font-semibold"
@@ -364,7 +408,6 @@ export default function RequestPage() {
                 )}
               </label>
 
-              {/* 증상 */}
               <label className="flex flex-col gap-1.5">
                 <span
                   className="text-sm font-semibold"
@@ -391,7 +434,6 @@ export default function RequestPage() {
                 )}
               </label>
 
-              {/* 사진 안내 */}
               <div
                 className="rounded-xl px-4 py-3"
                 style={{
@@ -408,7 +450,6 @@ export default function RequestPage() {
                 </p>
               </div>
 
-              {/* 제출 버튼 */}
               <button
                 type="submit"
                 className="mt-1 rounded-xl py-4 text-base font-bold text-white transition-opacity hover:opacity-90 active:opacity-80"
@@ -439,7 +480,6 @@ export default function RequestPage() {
               height={160}
               className="mx-auto h-32 w-32 object-contain"
             />
-
             <span
               className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-bold mt-3"
               style={{
@@ -449,7 +489,6 @@ export default function RequestPage() {
               }}>
               ✓ 접수 완료
             </span>
-
             <h2 className="mt-3 text-lg font-bold" style={{ color: "white" }}>
               접수가 완료되었습니다
             </h2>
@@ -459,7 +498,6 @@ export default function RequestPage() {
             <p className="mt-1 text-xs" style={{ color: "#ef4444" }}>
               모바일이 아니라면 문자가 보내지지 않을 수 있어요.
             </p>
-
             <div className="mt-5 flex flex-col gap-2">
               <a
                 href={YT_URL}
