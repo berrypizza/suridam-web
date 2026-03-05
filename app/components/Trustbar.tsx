@@ -3,7 +3,6 @@
 export default function TrustBar() {
   const signals = [
     { icon: "★★★★★", text: "4.9 실제 고객 후기" },
-    { icon: "📍", text: "수도권 출장" },
     { icon: "🚫", text: "수리 불가 시 출장비 0원" },
   ];
 
