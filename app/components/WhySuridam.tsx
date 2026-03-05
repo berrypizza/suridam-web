@@ -1,29 +1,39 @@
 "use client";
 
+import Image from "next/image";
+
 const diffs = [
   {
     icon: "📷",
     theme: "방문 기준",
     problem: "일단 방문부터\n현장에서 말이 바뀜",
     solution: "사진으로 1차 판단 후\n가능한 경우에만 방문합니다",
+    image: "/images/why1.png",
+    imageAlt: "수리 전 사진으로 먼저 판단하는 모습",
   },
   {
     icon: "💬",
     theme: "비용 안내",
     problem: "비용은\n'가봐야 알아요'로 끝",
     solution: "범위를 먼저 공유하고\n납득 후 진행합니다",
+    image: "/images/why2.png",
+    imageAlt: "비용 범위를 미리 안내하는 모습",
   },
   {
     icon: "✅",
     theme: "마무리 기준",
     problem: "수리 후\n마무리 기준이 없음",
     solution: "수평·유격·열림감·소음\n기준으로 확인합니다",
+    image: "/images/why3.png",
+    imageAlt: "수평 기준으로 마무리 확인하는 모습",
   },
   {
     icon: "🤝",
     theme: "솔직함",
     problem: '"할 수 있다"고 해놓고\n결과가 애매함',
     solution: "어려우면 사진 보고\n먼저 말씀드립니다",
+    image: "/images/why4.png",
+    imageAlt: "솔직하게 상담하는 모습",
   },
 ];
 
@@ -31,8 +41,8 @@ export default function WhySuridam() {
   return (
     <section style={{ backgroundColor: "#1e1e1e" }}>
       <div className="px-6 py-16 mx-auto max-w-5xl">
-        {/* ── 섹션 헤더 ── */}
-        <div className="mb-10">
+        {/* 섹션 헤더 */}
+        <div className="mb-12">
           <span
             className="inline-block text-xs tracking-widest uppercase mb-4 px-3 py-1 rounded-full font-semibold"
             style={{
@@ -42,15 +52,12 @@ export default function WhySuridam() {
             }}>
             Why Suridam
           </span>
-
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
             <h2
               className="text-2xl md:text-3xl lg:text-4xl font-bold"
               style={{ color: "white" }}>
               그래서 뭐가 다른가요?
             </h2>
-
-            {/* vs 레이블 */}
             <div className="hidden md:flex items-center gap-2 text-sm font-semibold pb-1">
               <span
                 className="px-3 py-1 rounded-full"
@@ -75,88 +82,113 @@ export default function WhySuridam() {
           </div>
         </div>
 
-        {/* ── 비교 리스트 ── */}
-        <div className="flex flex-col gap-3">
+        {/* 비교 카드 */}
+        <div className="flex flex-col gap-6">
           {diffs.map((d, i) => (
             <div
               key={i}
-              className="grid grid-cols-1 md:grid-cols-2 rounded-2xl overflow-hidden"
+              className="rounded-2xl overflow-hidden"
               style={{ border: "1px solid #2a2a2a" }}>
-              {/* 일반 업체 (좌) */}
-              <div
-                className="flex items-start gap-3 px-5 py-5"
-                style={{
-                  backgroundColor: "#2a2a2a",
-                  borderBottom: "1px solid #333",
-                }}>
+              <div className="grid grid-cols-1 md:grid-cols-[1fr_1fr_300px]">
+                {/* 일반 업체 (좌) */}
                 <div
-                  className="flex-shrink-0 mt-0.5 h-6 w-6 rounded-full flex items-center justify-center font-bold text-xs"
+                  className="flex items-start gap-3 px-5 py-5"
                   style={{
-                    backgroundColor: "#ef444422",
-                    color: "#ef4444",
-                    border: "1px solid #ef444433",
+                    backgroundColor: "#2a2a2a",
+                    borderBottom: "1px solid #2e2e2e",
                   }}>
-                  ✕
-                </div>
-                <div>
-                  <div className="flex items-center gap-2 mb-2">
-                    <span
-                      className="text-[10px] font-semibold tracking-widest uppercase rounded-full px-2 py-0.5"
-                      style={{
-                        backgroundColor: "#ef444422",
-                        color: "#ef4444",
-                      }}>
-                      일반 업체
-                    </span>
-                    <span className="text-xs" style={{ color: "#444" }}>
-                      {d.theme}
-                    </span>
-                  </div>
-                  <p
-                    className="text-sm md:text-base leading-relaxed whitespace-pre-line"
+                  <div
+                    className="flex-shrink-0 mt-0.5 h-6 w-6 rounded-full flex items-center justify-center font-bold text-xs"
                     style={{
-                      color: "#555",
-                      textDecoration: "line-through",
-                      textDecorationColor: "#ef444466",
+                      backgroundColor: "#ef444422",
+                      color: "#ef4444",
+                      border: "1px solid #ef444433",
                     }}>
-                    {d.problem}
-                  </p>
-                </div>
-              </div>
-
-              {/* 수리담 (우) */}
-              <div
-                className="flex items-start gap-3 px-5 py-5"
-                style={{ backgroundColor: "#242424" }}>
-                <div
-                  className="flex-shrink-0 mt-0.5 h-6 w-6 rounded-full flex items-center justify-center text-white font-bold text-xs"
-                  style={{ backgroundColor: "#2fae8a" }}>
-                  ✓
-                </div>
-                <div>
-                  <div className="flex items-center gap-2 mb-2">
-                    <span
-                      className="text-[10px] font-semibold tracking-widest uppercase rounded-full px-2 py-0.5"
-                      style={{
-                        backgroundColor: "#2fae8a22",
-                        color: "#2fae8a",
-                      }}>
-                      수리담
-                    </span>
-                    <span className="text-lg">{d.icon}</span>
+                    ✕
                   </div>
-                  <p
-                    className="text-sm md:text-base font-semibold leading-relaxed whitespace-pre-line"
-                    style={{ color: "#e5e5e5" }}>
-                    {d.solution}
-                  </p>
+                  <div>
+                    <div className="flex items-center gap-2 mb-2">
+                      <span
+                        className="text-[10px] font-semibold tracking-widest uppercase rounded-full px-2 py-0.5"
+                        style={{
+                          backgroundColor: "#ef444422",
+                          color: "#ef4444",
+                        }}>
+                        일반 업체
+                      </span>
+                      <span className="text-xs" style={{ color: "#444" }}>
+                        {d.theme}
+                      </span>
+                    </div>
+                    <p
+                      className="text-sm md:text-base leading-relaxed whitespace-pre-line"
+                      style={{
+                        color: "#979797",
+                        textDecoration: "line-through",
+                        textDecorationColor: "#ff0000b7",
+                      }}>
+                      {d.problem}
+                    </p>
+                  </div>
+                </div>
+
+                {/* 수리담 (중) */}
+                <div
+                  className="flex items-start gap-3 px-5 py-5"
+                  style={{
+                    backgroundColor: "#242424",
+                    borderBottom: "1px solid #2e2e2e",
+                  }}>
+                  <div
+                    className="flex-shrink-0 mt-0.5 h-6 w-6 rounded-full flex items-center justify-center text-white font-bold text-xs"
+                    style={{ backgroundColor: "#2fae8a" }}>
+                    ✓
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2 mb-2">
+                      <span
+                        className="text-[10px] font-semibold tracking-widest uppercase rounded-full px-2 py-0.5"
+                        style={{
+                          backgroundColor: "#2fae8a22",
+                          color: "#2fae8a",
+                        }}>
+                        수리담
+                      </span>
+                      <span className="text-lg">{d.icon}</span>
+                    </div>
+                    <p
+                      className="text-sm md:text-base font-semibold leading-relaxed whitespace-pre-line"
+                      style={{ color: "#e5e5e5" }}>
+                      {d.solution}
+                    </p>
+                  </div>
+                </div>
+
+                {/* 이미지 (우) */}
+                <div
+                  className="relative w-full h-40 md:h-auto overflow-hidden"
+                  style={{ backgroundColor: "#1a1a1a", minHeight: "160px" }}>
+                  <Image
+                    src={d.image}
+                    alt={d.imageAlt}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 300px"
+                    className="object-cover opacity-97"
+                  />
+                  <div
+                    className="absolute inset-0"
+                    style={{
+                      background:
+                        "linear-gradient(135deg, rgba(47,174,138,0.15) 0%, transparent 60%)",
+                    }}
+                  />
                 </div>
               </div>
             </div>
           ))}
         </div>
 
-        {/* ── 하단 약속 배너 ── */}
+        {/* 하단 약속 배너 */}
         <div
           className="mt-8 rounded-2xl px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-4"
           style={{

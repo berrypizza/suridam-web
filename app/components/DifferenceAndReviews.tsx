@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef } from "react";
+import { useRef } from "react";
 import Image from "next/image";
 
 type Review = { who: string; title: string; body: string; stars?: number };
@@ -47,38 +47,58 @@ const repairTags = [
   "경첩 교체",
 ];
 
+// 상단 맛보기 — 스크롤 초반, 불안 해소용
+const previewReviews: Review[] = [
+  {
+    who: "강서구 화곡동 / 김** 고객님",
+    title: "싱크대 상부장 떨어짐",
+    body: "상부장이 떨어져서, 혹시나 하는 마음에 사진으로 문의했는데, 사진 보고 방향부터 정리해줘서 불안이 줄었어요. 믿고 맡겼습니다.",
+    stars: 5,
+  },
+  {
+    who: "부천 상동 / 이** 고객님",
+    title: "소파 꺼짐",
+    body: "새로 사려다 고민했는데, 다시 탄탄해져서 만족합니다.",
+    stars: 5,
+  },
+  {
+    who: "인천 서구 / 고** 고객님",
+    title: "슬라이딩 도어",
+    body: "붙박이장 슬라이딩 문 바퀴가 부서졌는데 수리담에서 수리가 가능하다고 해서 맡겼어요. 새로 사는 것보다 훨씬 저렴하게 고쳐서 만족합니다.",
+    stars: 5,
+  },
+];
+
+// 하단 슬라이드 — 차별점 본 후, 확신용
+const allReviews: Review[] = [
+  {
+    who: "마포구 합정 / 최** 고객님",
+    title: "문짝 문제",
+    body: "안 되는 건 안 된다고 먼저 말해주는 게 오히려 신뢰였습니다.",
+    stars: 5,
+  },
+  {
+    who: "서울 노원구 / 정** 고객님",
+    title: "상부장 탈락",
+    body: "출장비 걱정했는데 사진으로 먼저 확인해줘서 괜히 부른 게 아니었어요.",
+    stars: 5,
+  },
+  {
+    who: "인천 남동구 / 한** 고객님",
+    title: "경첩 교체",
+    body: "비용 범위 먼저 얘기해줘서 좋았어요. 딱 그 안에서 끝났습니다.",
+    stars: 5,
+  },
+  {
+    who: "부천 중동 / 오** 고객님",
+    title: "서랍 수리",
+    body: "다른 곳에서 교체하라고 했는데 수리담은 고칠 수 있다고 해서 수리했어요.",
+    stars: 5,
+  },
+];
+
 export default function DifferenceAndReviews() {
   const ref = useRef<HTMLDivElement | null>(null);
-
-  const reviews: Review[] = useMemo(
-    () => [
-      {
-        who: "강서구 화곡동 / 김** 고객님",
-        title: "상부장 처짐",
-        body: "사진 보고 방향부터 정리해줘서 불안이 줄었어요.",
-        stars: 5,
-      },
-      {
-        who: "부천 상동 / 이** 고객님",
-        title: "소파 꺼짐",
-        body: "새로 사려다 고민했는데, 다시 탄탄해져서 만족합니다.",
-        stars: 5,
-      },
-      {
-        who: "인천 서구 / 고** 고객님",
-        title: "슬라이딩 도어",
-        body: "문이 안 걸리고 부드럽게 닫혀서 스트레스가 사라졌어요.",
-        stars: 5,
-      },
-      {
-        who: "마포구 합정 / 최** 고객님",
-        title: "문짝 문제",
-        body: "안 되는 건 안 된다고 먼저 말해주는 게 오히려 신뢰였습니다.",
-        stars: 5,
-      },
-    ],
-    [],
-  );
 
   const scrollByCard = (dir: "left" | "right") => {
     const el = ref.current;
@@ -93,10 +113,9 @@ export default function DifferenceAndReviews() {
 
   return (
     <section>
-      {/* ━━━━ 리뷰 맛보기 — 다크 배경 ━━━━ */}
+      {/* ━━━━ 리뷰 맛보기 ━━━━ */}
       <div className="px-6 pt-16 pb-12" style={{ backgroundColor: "#1e1e1e" }}>
         <div className="mx-auto max-w-5xl">
-          {/* 헤더 */}
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-8">
             <div>
               <span
@@ -134,9 +153,8 @@ export default function DifferenceAndReviews() {
             </div>
           </div>
 
-          {/* 리뷰 카드 */}
           <div className="grid gap-4 sm:grid-cols-3">
-            {reviews.slice(0, 3).map((r, i) => (
+            {previewReviews.map((r, i) => (
               <div
                 key={i}
                 className="rounded-2xl p-5 flex flex-col gap-3"
@@ -188,7 +206,6 @@ export default function DifferenceAndReviews() {
       {/* ━━━━ Before / After ━━━━ */}
       <div className="px-6 py-16" style={{ backgroundColor: "#f5f5f5" }}>
         <div className="mx-auto max-w-5xl">
-          {/* 헤더 */}
           <div className="mb-12">
             <span
               className="inline-block text-xs tracking-widest uppercase mb-3 px-3 py-1 rounded-full font-semibold"
@@ -213,7 +230,6 @@ export default function DifferenceAndReviews() {
             </p>
           </div>
 
-          {/* Before/After 세트 */}
           <div className="flex flex-col gap-6">
             {beforeAfterSets.map((set, i) => (
               <div key={i}>
@@ -228,11 +244,9 @@ export default function DifferenceAndReviews() {
                     style={{ backgroundColor: "#e5e5e5" }}
                   />
                 </div>
-
                 <div className="grid grid-cols-2 gap-2 md:gap-4">
-                  {/* Before */}
                   <div
-                    className="rounded-2xl overflow-hidden relative"
+                    className="rounded-2xl overflow-hidden"
                     style={{ border: "1px solid #e5e5e5" }}>
                     <div
                       className="relative w-full aspect-[4/3]"
@@ -255,10 +269,8 @@ export default function DifferenceAndReviews() {
                       </div>
                     </div>
                   </div>
-
-                  {/* After */}
                   <div
-                    className="rounded-2xl overflow-hidden relative"
+                    className="rounded-2xl overflow-hidden"
                     style={{ border: "2px solid #2fae8a" }}>
                     <div
                       className="relative w-full aspect-[4/3]"
@@ -282,7 +294,6 @@ export default function DifferenceAndReviews() {
             ))}
           </div>
 
-          {/* 태그 모음 */}
           <div className="mt-10 flex flex-wrap gap-2">
             {repairTags.map((tag) => (
               <span
@@ -349,7 +360,7 @@ export default function DifferenceAndReviews() {
           <div
             ref={ref}
             className="flex gap-4 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-2">
-            {reviews.map((r, idx) => (
+            {allReviews.map((r, idx) => (
               <article
                 key={`${r.title}-${idx}`}
                 data-card="review"
