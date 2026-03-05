@@ -36,38 +36,58 @@ const repairTags = [
   "리클라이너 소파",
 ];
 
+// 상단 맛보기용 — 구매 전 불안 해소 포인트
+const previewReviews: Review[] = [
+  {
+    who: "부천 상동 / 이** 고객님",
+    title: "소파 꺼짐",
+    body: "새로 사려다 고민했는데, 다시 탄탄해져서 정말 만족합니다.",
+    stars: 5,
+  },
+  {
+    who: "인천 서구 / 박** 고객님",
+    title: "소파 스프링",
+    body: "앉으면 완전히 꺼지던 소파가 새 것처럼 됐어요. 교체 안 해도 됐네요.",
+    stars: 5,
+  },
+  {
+    who: "강서구 화곡동 / 김** 고객님",
+    title: "소파 처짐",
+    body: "소파에 누워서 영화 보는 게 낙이었는데, 다시 편하게 누울 수 있게 돼서 너무 좋아요.",
+    stars: 5,
+  },
+];
+
+// 하단 슬라이드용 — 신뢰·차별점 확신 포인트
+const allReviews: Review[] = [
+  {
+    who: "마포구 합정 / 최** 고객님",
+    title: "소파 수리",
+    body: "추가 비용 없다고 처음부터 말해줘서 좋았어요. 정말 추가 비용 없었습니다.",
+    stars: 5,
+  },
+  {
+    who: "서울 노원구 / 정** 고객님",
+    title: "소파 목대",
+    body: "출장비 걱정했는데 사진으로 먼저 확인해줘서 괜히 부른 게 아니었어요.",
+    stars: 5,
+  },
+  {
+    who: "인천 남동구 / 한** 고객님",
+    title: "스프링 교체",
+    body: "비용 범위 먼저 얘기해줘서 좋았어요. 추가 비용은 없었습니다.",
+    stars: 5,
+  },
+  {
+    who: "부천 중동 / 오** 고객님",
+    title: "리클라이너",
+    body: "다른 곳에서 교체하라고 했는데 수리담은 고칠 수 있다고 해서 수리했어요.",
+    stars: 5,
+  },
+];
+
 export default function DifferenceAndReviewsSofa() {
   const ref = useRef<HTMLDivElement | null>(null);
-
-  const reviews: Review[] = useMemo(
-    () => [
-      {
-        who: "부천 상동 / 이** 고객님",
-        title: "소파 꺼짐",
-        body: "새로 사려다 고민했는데, 다시 탄탄해져서 정말 만족합니다.",
-        stars: 5,
-      },
-      {
-        who: "인천 서구 / 박** 고객님",
-        title: "소파 스프링",
-        body: "앉으면 완전히 꺼지던 소파가 새 것처럼 됐어요. 교체 안 해도 됐네요.",
-        stars: 5,
-      },
-      {
-        who: "강서구 화곡동 / 김** 고객님",
-        title: "소파 처짐",
-        body: "사진 보고 방향부터 정리해줘서 불안이 줄었어요. 믿고 맡겼습니다.",
-        stars: 5,
-      },
-      {
-        who: "마포구 합정 / 최** 고객님",
-        title: "소파 수리",
-        body: "안 되는 건 안 된다고 먼저 말해주는 게 오히려 신뢰였습니다.",
-        stars: 5,
-      },
-    ],
-    [],
-  );
 
   const scrollByCard = (dir: "left" | "right") => {
     const el = ref.current;
@@ -123,7 +143,7 @@ export default function DifferenceAndReviewsSofa() {
           </div>
 
           <div className="grid gap-4 sm:grid-cols-3">
-            {reviews.slice(0, 3).map((r, i) => (
+            {previewReviews.map((r, i) => (
               <div
                 key={i}
                 className="rounded-2xl p-5 flex flex-col gap-3"
@@ -330,7 +350,7 @@ export default function DifferenceAndReviewsSofa() {
           <div
             ref={ref}
             className="flex gap-4 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-2">
-            {reviews.map((r, idx) => (
+            {allReviews.map((r, idx) => (
               <article
                 key={`${r.title}-${idx}`}
                 data-card="review"

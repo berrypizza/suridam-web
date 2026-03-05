@@ -16,7 +16,7 @@ export default function HookIntroSofa() {
         <source src="/images/staff2.mp4" type="video/mp4" />
       </video> */}
       <img
-        src="/images/staff-main.png"
+        src="/images/staff-main2.png"
         alt="Staff"
         className="absolute inset-0 z-0 h-full w-full object-cover"
       />
