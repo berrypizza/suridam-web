@@ -21,7 +21,7 @@ export default function Navbar() {
   return (
     <header
       className="sticky top-0 z-50"
-      style={{ backgroundColor: "white", borderBottom: "1px solid #e5e5e5" }}>
+      style={{ backgroundColor: "#1e1e1e", borderBottom: "1px solid #2a2a2a" }}>
       <div className="mx-auto max-w-5xl px-6 h-14 flex items-center justify-between gap-4">
         {/* 로고 */}
         <Link href="/" className="flex items-center gap-2 flex-shrink-0">
@@ -33,17 +33,14 @@ export default function Navbar() {
             className="h-20 w-auto object-contain"
             priority
           />
-          {/* 로고 없을 때 폴백 */}
-          {/* <span className="text-lg font-bold tracking-tight" style={{ color: "#1e1e1e" }}>수리담</span> */}
         </Link>
 
         {/* 우측 */}
         <div className="flex items-center gap-2">
-          {/* SNS 아이콘 — pill 스타일 묶음 */}
+          {/* SNS 아이콘 */}
           <div
             className="hidden sm:flex items-center gap-1 rounded-full px-1.5 py-1.5"
-            style={{ backgroundColor: "#f5f5f5", border: "1px solid #e5e5e5" }}>
-            {/* 네이버 블로그 */}
+            style={{ backgroundColor: "#2a2a2a", border: "1px solid #333" }}>
             <a
               href="https://blog.naver.com/sofaresq"
               target="_blank"
@@ -53,10 +50,8 @@ export default function Navbar() {
               style={{ backgroundColor: "#03C75A", color: "white" }}>
               <NaverIcon />
             </a>
-
-            {/* 유튜브 */}
             <a
-              href="https://www.youtube.com/@surirang-911" // ← 실제 채널 URL로 교체
+              href="https://www.youtube.com/@surirang-911"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="유튜브"
@@ -69,7 +64,7 @@ export default function Navbar() {
           {/* 구분선 */}
           <div
             className="hidden sm:block h-4 w-px"
-            style={{ backgroundColor: "#e5e5e5" }}
+            style={{ backgroundColor: "#333" }}
           />
 
           {/* 전화 CTA */}
