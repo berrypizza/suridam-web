@@ -404,10 +404,10 @@ export default function EstimateCalculator() {
               <div className="space-y-4">
                 <button
                   onClick={() => setStep(1)}
-                  className="text-xs text-gray-400 mb-2">
+                  className="text-xs text-gray-700 mb-2">
                   ← 이전으로
                 </button>
-                <p className="text-sm font-bold text-gray-400 uppercase tracking-widest">
+                <p className="text-sm font-bold text-gray-700 uppercase tracking-widest">
                   Step 2. 상세 증상 선택
                 </p>
                 <h3 className="text-xl font-bold mb-4">{selectedGroup} 수리</h3>
@@ -423,10 +423,10 @@ export default function EstimateCalculator() {
                           setStep(3);
                         }}
                         className="w-full flex items-center justify-between p-4 rounded-xl border border-gray-100 hover:border-emerald-200 hover:bg-emerald-50 transition-all text-left">
-                        <span className="text-sm font-medium text-gray-700">
+                        <span className="text-sm font-medium text-gray-1000">
                           {c.label}
                         </span>
-                        <span className="text-gray-300">→</span>
+                        <span className="text-gray-700">→</span>
                       </button>
                     ))}
                 </div>
@@ -438,13 +438,13 @@ export default function EstimateCalculator() {
               <div className="space-y-6">
                 <button
                   onClick={() => setStep(2)}
-                  className="text-xs text-gray-400 mb-2">
+                  className="text-xs text-gray-700 mb-2">
                   ← 이전으로
                 </button>
                 <div className="flex items-center gap-3 pb-4 border-b">
                   <span className="text-3xl">{cat.icon}</span>
                   <div>
-                    <p className="text-xs text-gray-400">{cat.group}</p>
+                    <p className="text-xs text-gray-700">{cat.group}</p>
                     <h3 className="text-lg font-bold">{cat.label}</h3>
                   </div>
                 </div>
