@@ -2,7 +2,7 @@ export default function HookIntro() {
   return (
     <section className="relative h-screen overflow-hidden">
       {/* 배경 비디오 */}
-      <video
+      {/* <video
         autoPlay
         loop
         muted
@@ -14,7 +14,12 @@ export default function HookIntro() {
         controlsList="nodownload noplaybackrate noremoteplayback"
         className="absolute inset-0 z-0 h-full w-full object-cover">
         <source src="/images/staff2.mp4" type="video/mp4" />
-      </video>
+      </video> */}
+      <img
+        src="/images/staff-main.png"
+        alt="Staff"
+        className="absolute inset-0 z-0 h-full w-full object-cover"
+      />
 
       {/* 하단 그라디언트 오버레이 — 텍스트 가독성 */}
       <div
