@@ -216,8 +216,8 @@ export default function RequestPage() {
                 <Image
                   src="/images/main-transparent.png"
                   alt="수리담 캐릭터"
-                  width={240}
-                  height={240}
+                  width={320}
+                  height={320}
                   priority
                   className="h-36 w-36 object-contain"
                 />
