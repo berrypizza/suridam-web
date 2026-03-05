@@ -144,7 +144,7 @@ export default function DifferenceAndReviews() {
               <span style={{ color: "#2fae8a", fontSize: 18 }}>★★★★★</span>
               <div>
                 <div className="text-xs font-bold" style={{ color: "white" }}>
-                  5.0 / 5.0
+                  4.9 / 5.0
                 </div>
                 <div className="text-xs" style={{ color: "#7a7a7a" }}>
                   실제 고객 후기
