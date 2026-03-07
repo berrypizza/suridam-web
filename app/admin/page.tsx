@@ -1,6 +1,7 @@
-export const dynamic = "force-dynamic";
-("use client");
+// prettier-ignore
+'use client';
 
+export const dynamic = "force-dynamic";
 /**
  * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
  * 설치 방법 (한 번만 하면 됨)
