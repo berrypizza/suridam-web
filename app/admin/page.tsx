@@ -2,31 +2,17 @@
 'use client';
 
 export const dynamic = "force-dynamic";
-/**
- * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
- * 설치 방법 (한 번만 하면 됨)
- *
- * 1. npm install @supabase/supabase-js
- *
- * 2. .env.local 에 추가:
- *    NEXT_PUBLIC_SUPABASE_URL=https://xxxxx.supabase.co
- *    NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJxxxxxx
- *    (Supabase → Settings → API 에서 복사)
- *
- * 3. supabase-setup.sql 을 Supabase SQL Editor에서 실행
- *
- * 4. suridam.co.kr/admin 으로 접속
- *    → 기사 2명 모두 같은 데이터 실시간 공유
- * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
- */
 
 import { useEffect, useState, useCallback } from "react";
 import { createClient } from "@supabase/supabase-js";
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-);
+// ── Supabase 클라이언트를 함수로 감싸서 빌드 때 실행 방지 ──
+function getSupabase() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+  );
+}
 
 // ─── 타입 ───────────────────────────────────────────────
 type Status = "대기" | "배정" | "완료" | "취소";
@@ -91,7 +77,6 @@ const emptyForm = () => ({
   memo: "",
 });
 
-// ─── 메인 ───────────────────────────────────────────────
 export default function AdminDashboard() {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(true);
@@ -104,9 +89,8 @@ export default function AdminDashboard() {
   const [form, setForm] = useState(emptyForm());
   const [saving, setSaving] = useState(false);
 
-  // ── 데이터 로드 ─────────────────────────────────────
   const load = useCallback(async () => {
-    const { data } = await supabase
+    const { data } = await getSupabase()
       .from("jobs")
       .select("*")
       .order("visit_date", { ascending: true });
@@ -118,8 +102,8 @@ export default function AdminDashboard() {
     load();
   }, [load]);
 
-  // ── 실시간 구독 ─────────────────────────────────────
   useEffect(() => {
+    const supabase = getSupabase();
     const channel = supabase
       .channel("jobs_realtime")
       .on(
@@ -133,15 +117,14 @@ export default function AdminDashboard() {
     };
   }, [load]);
 
-  // ── CRUD ────────────────────────────────────────────
   const save = async () => {
     if (!form.name.trim() || !form.region.trim() || !form.symptom.trim())
       return;
     setSaving(true);
     if (editId) {
-      await supabase.from("jobs").update(form).eq("id", editId);
+      await getSupabase().from("jobs").update(form).eq("id", editId);
     } else {
-      await supabase.from("jobs").insert(form);
+      await getSupabase().from("jobs").insert(form);
     }
     setSaving(false);
     setShowForm(false);
@@ -150,12 +133,12 @@ export default function AdminDashboard() {
   };
 
   const update = async (id: string, patch: Partial<Job>) => {
-    await supabase.from("jobs").update(patch).eq("id", id);
+    await getSupabase().from("jobs").update(patch).eq("id", id);
   };
 
   const remove = async (id: string) => {
     if (!confirm("삭제할까요?")) return;
-    await supabase.from("jobs").delete().eq("id", id);
+    await getSupabase().from("jobs").delete().eq("id", id);
   };
 
   const startEdit = (job: Job) => {
@@ -174,7 +157,6 @@ export default function AdminDashboard() {
     setShowForm(true);
   };
 
-  // ── 필터 ────────────────────────────────────────────
   const filtered = jobs.filter((j) => {
     if (tab === "오늘" && j.visit_date !== dateFilter) return false;
     if (statusFilter !== "전체" && j.status !== statusFilter) return false;
@@ -182,7 +164,6 @@ export default function AdminDashboard() {
     return true;
   });
 
-  // ── 통계 ────────────────────────────────────────────
   const thisMonth = jobs.filter((j) =>
     j.created_at?.startsWith(today().slice(0, 7)),
   );
@@ -263,11 +244,11 @@ export default function AdminDashboard() {
 
         {loading && (
           <div className="text-center py-20" style={{ color: "#555" }}>
-            <p>불러오는 중...</p>
+            불러오는 중...
           </div>
         )}
 
-        {/* ── 통계 탭 ── */}
+        {/* 통계 탭 */}
         {!loading && tab === "통계" && (
           <div className="flex flex-col gap-4">
             <div className="grid grid-cols-2 gap-3">
@@ -302,7 +283,6 @@ export default function AdminDashboard() {
               </div>
             </div>
 
-            {/* 기사별 */}
             {TECHS.map((tech) => {
               const techJobs = doneThisMonth.filter((j) => j.tech === tech);
               const techRevenue = techJobs.reduce(
@@ -352,7 +332,6 @@ export default function AdminDashboard() {
               );
             })}
 
-            {/* 리뷰 요청 */}
             <div
               className="rounded-2xl p-5"
               style={{
@@ -394,7 +373,7 @@ export default function AdminDashboard() {
                     <a
                       href={`sms:${job.phone}?&body=${reviewSms(job)}`}
                       onClick={() => update(job.id, { review_requested: true })}
-                      className="text-xs px-3 py-1.5 rounded-full font-semibold transition-opacity hover:opacity-80"
+                      className="text-xs px-3 py-1.5 rounded-full font-semibold"
                       style={{
                         backgroundColor: "#03C75A22",
                         color: "#03C75A",
@@ -409,7 +388,7 @@ export default function AdminDashboard() {
           </div>
         )}
 
-        {/* ── 오늘 / 전체 탭 ── */}
+        {/* 오늘 / 전체 탭 */}
         {!loading && (tab === "오늘" || tab === "전체") && (
           <>
             <div className="flex flex-wrap gap-2 mb-4">
@@ -426,7 +405,7 @@ export default function AdminDashboard() {
                   <button
                     key={s}
                     onClick={() => setStatusFilter(s as Status | "전체")}
-                    className="rounded-full px-3 py-1.5 text-xs font-semibold transition-all"
+                    className="rounded-full px-3 py-1.5 text-xs font-semibold"
                     style={{
                       backgroundColor:
                         statusFilter === s ? "#2fae8a" : "#1e1e1e",
@@ -442,7 +421,7 @@ export default function AdminDashboard() {
                   <button
                     key={t}
                     onClick={() => setTechFilter(t as Tech | "전체")}
-                    className="rounded-full px-3 py-1.5 text-xs font-semibold transition-all"
+                    className="rounded-full px-3 py-1.5 text-xs font-semibold"
                     style={{
                       backgroundColor:
                         techFilter === t ? "#2a2a2a" : "transparent",
@@ -605,7 +584,7 @@ export default function AdminDashboard() {
         )}
       </div>
 
-      {/* ── 접수 폼 모달 ── */}
+      {/* 접수 폼 모달 */}
       {showForm && (
         <div
           className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4"
@@ -764,7 +743,7 @@ export default function AdminDashboard() {
             <button
               onClick={save}
               disabled={saving}
-              className="mt-1 rounded-xl py-3.5 text-sm font-bold text-white transition-opacity"
+              className="mt-1 rounded-xl py-3.5 text-sm font-bold text-white"
               style={{ backgroundColor: "#2fae8a", opacity: saving ? 0.7 : 1 }}>
               {saving ? "저장 중..." : editId ? "수정 완료" : "접수 저장"}
             </button>
