@@ -1,7 +1,6 @@
-//prettier-ignore
-"use client";
-
 export const dynamic = "force-dynamic";
+
+("use client");
 
 import { useEffect, useState, useCallback } from "react";
 import { createClient } from "@supabase/supabase-js";
@@ -55,10 +54,17 @@ const STATUS_DOT: Record<Status, string> = {
 function today() {
   return new Date().toISOString().slice(0, 10);
 }
+function thisYearMonth() {
+  return new Date().toISOString().slice(0, 7);
+}
 function formatDate(d: string) {
   if (!d) return "-";
   const [, m, day] = d.split("-");
   return `${parseInt(m)}/${parseInt(day)}`;
+}
+function formatYearMonth(ym: string) {
+  const [y, m] = ym.split("-");
+  return `${y}년 ${parseInt(m)}월`;
 }
 function formatTime(t: string) {
   if (!t) return "";
@@ -104,6 +110,17 @@ function pad(n: number) {
   return String(n).padStart(2, "0");
 }
 
+// 월 목록 생성 (jobs 데이터에서)
+function getMonthOptions(jobs: Job[]) {
+  const set = new Set<string>();
+  jobs.forEach((j) => {
+    if (j.visit_date) set.add(j.visit_date.slice(0, 7));
+  });
+  const cur = thisYearMonth();
+  set.add(cur);
+  return Array.from(set).sort().reverse();
+}
+
 export default function AdminDashboard() {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(true);
@@ -111,6 +128,7 @@ export default function AdminDashboard() {
   const [statusFilter, setStatusFilter] = useState<Status | "전체">("전체");
   const [techFilter, setTechFilter] = useState<Tech | "전체">("전체");
   const [dateFilter, setDateFilter] = useState(today());
+  const [monthFilter, setMonthFilter] = useState(thisYearMonth());
   const [showForm, setShowForm] = useState(false);
   const [editId, setEditId] = useState<string | null>(null);
   const [form, setForm] = useState(emptyForm());
@@ -189,18 +207,21 @@ export default function AdminDashboard() {
     setShowForm(true);
   };
 
+  const monthOptions = getMonthOptions(jobs);
+
+  // 전체 탭 필터 (월 + 상태 + 기사)
   const filtered = jobs.filter((j) => {
     if (tab === "오늘" && j.visit_date !== dateFilter) return false;
+    if (tab === "전체" && !j.visit_date?.startsWith(monthFilter)) return false;
     if (statusFilter !== "전체" && j.status !== statusFilter) return false;
     if (techFilter !== "전체" && j.tech !== techFilter) return false;
     return true;
   });
 
-  const thisMonth = jobs.filter((j) =>
-    j.created_at?.startsWith(today().slice(0, 7)),
-  );
-  const doneThisMonth = thisMonth.filter((j) => j.status === "완료");
-  const revenue = doneThisMonth.reduce((s, j) => s + (j.price || 0), 0);
+  // 통계 탭 (선택 월 기준)
+  const monthJobs = jobs.filter((j) => j.visit_date?.startsWith(monthFilter));
+  const doneMonth = monthJobs.filter((j) => j.status === "완료");
+  const revenue = doneMonth.reduce((s, j) => s + (j.price || 0), 0);
   const reviewPending = jobs.filter(
     (j) => j.status === "완료" && !j.review_requested && j.phone,
   );
@@ -224,6 +245,56 @@ export default function AdminDashboard() {
   });
   const selectedJobs = selectedDay ? (jobsByDate[selectedDay] ?? []) : [];
   const todayStr = today();
+
+  // 월 선택 UI
+  const MonthSelector = () => (
+    <div className="flex items-center gap-2 mb-4">
+      <button
+        onClick={() => {
+          const d = new Date(monthFilter + "-01");
+          d.setMonth(d.getMonth() - 1);
+          setMonthFilter(d.toISOString().slice(0, 7));
+        }}
+        className="px-3 py-1.5 rounded-lg text-sm"
+        style={{
+          backgroundColor: "#1e1e1e",
+          color: "#e5e5e5",
+          border: "1px solid #2a2a2a",
+        }}>
+        ‹
+      </button>
+      <select
+        value={monthFilter}
+        onChange={(e) => setMonthFilter(e.target.value)}
+        className="flex-1 text-center text-sm font-bold rounded-xl py-1.5"
+        style={{
+          backgroundColor: "#1e1e1e",
+          color: "white",
+          border: "1px solid #2a2a2a",
+          outline: "none",
+        }}>
+        {monthOptions.map((m) => (
+          <option key={m} value={m}>
+            {formatYearMonth(m)}
+          </option>
+        ))}
+      </select>
+      <button
+        onClick={() => {
+          const d = new Date(monthFilter + "-01");
+          d.setMonth(d.getMonth() + 1);
+          setMonthFilter(d.toISOString().slice(0, 7));
+        }}
+        className="px-3 py-1.5 rounded-lg text-sm"
+        style={{
+          backgroundColor: "#1e1e1e",
+          color: "#e5e5e5",
+          border: "1px solid #2a2a2a",
+        }}>
+        ›
+      </button>
+    </div>
+  );
 
   return (
     <main
@@ -551,6 +622,7 @@ export default function AdminDashboard() {
         {/* ── 통계 탭 ── */}
         {!loading && tab === "통계" && (
           <div className="flex flex-col gap-4">
+            <MonthSelector />
             <div className="grid grid-cols-2 gap-3">
               <div
                 className="rounded-2xl p-5"
@@ -559,7 +631,7 @@ export default function AdminDashboard() {
                   border: "1px solid #2a2a2a",
                 }}>
                 <p className="text-xs mb-1" style={{ color: "#555" }}>
-                  이번 달 매출
+                  {formatYearMonth(monthFilter)} 매출
                 </p>
                 <p className="text-2xl font-bold" style={{ color: "white" }}>
                   {formatPrice(revenue)}
@@ -572,10 +644,10 @@ export default function AdminDashboard() {
                   border: "1px solid #2a2a2a",
                 }}>
                 <p className="text-xs mb-1" style={{ color: "#555" }}>
-                  이번 달 완료
+                  {formatYearMonth(monthFilter)} 완료
                 </p>
                 <p className="text-2xl font-bold" style={{ color: "white" }}>
-                  {doneThisMonth.length}
+                  {doneMonth.length}
                   <span className="text-base ml-1" style={{ color: "#7a7a7a" }}>
                     건
                   </span>
@@ -583,7 +655,7 @@ export default function AdminDashboard() {
               </div>
             </div>
             {TECHS.map((tech) => {
-              const techJobs = doneThisMonth.filter((j) => j.tech === tech);
+              const techJobs = doneMonth.filter((j) => j.tech === tech);
               const techRevenue = techJobs.reduce(
                 (s, j) => s + (j.price || 0),
                 0,
@@ -689,15 +761,18 @@ export default function AdminDashboard() {
         {/* ── 오늘 / 전체 탭 ── */}
         {!loading && (tab === "오늘" || tab === "전체") && (
           <>
-            <div className="flex flex-wrap gap-2 mb-4">
-              {tab === "오늘" && (
+            {tab === "전체" && <MonthSelector />}
+            {tab === "오늘" && (
+              <div className="mb-4">
                 <input
                   type="date"
                   value={dateFilter}
                   onChange={(e) => setDateFilter(e.target.value)}
                   style={{ ...inputStyle, width: "auto", padding: "6px 10px" }}
                 />
-              )}
+              </div>
+            )}
+            <div className="flex flex-wrap gap-2 mb-4">
               <div className="flex flex-wrap gap-1">
                 {(["전체", ...STATUSES] as const).map((s) => (
                   <button
