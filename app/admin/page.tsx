@@ -1,7 +1,6 @@
-//prettier-ignore
-'use client';
-
 export const dynamic = "force-dynamic";
+
+("use client");
 
 import { useEffect, useState, useCallback } from "react";
 import { createClient } from "@supabase/supabase-js";
@@ -914,20 +913,201 @@ export default function AdminDashboard() {
           </div>
         )}
 
-        {/* ── 오늘 / 전체 탭 ── */}
-        {!loading && (tab === "오늘" || tab === "전체") && (
-          <>
-            {tab === "전체" && <MonthSelector />}
-            {tab === "오늘" && (
-              <div className="mb-4">
-                <input
-                  type="date"
-                  value={dateFilter}
-                  onChange={(e) => setDateFilter(e.target.value)}
-                  style={{ ...inputStyle, width: "auto", padding: "6px 10px" }}
-                />
+        {/* ── 오늘 탭 ── */}
+        {!loading && tab === "오늘" && (
+          <div>
+            <div className="flex items-center gap-2 mb-3">
+              <button
+                onClick={() => {
+                  const d = new Date(dateFilter);
+                  d.setDate(d.getDate() - 1);
+                  setDateFilter(d.toISOString().slice(0, 10));
+                }}
+                className="px-3 py-2 rounded-lg"
+                style={{
+                  backgroundColor: "#1e1e1e",
+                  color: "#e5e5e5",
+                  border: "1px solid #2a2a2a",
+                }}>
+                ‹
+              </button>
+              <input
+                type="date"
+                value={dateFilter}
+                onChange={(e) => setDateFilter(e.target.value)}
+                className="flex-1 text-center text-sm font-bold rounded-xl py-2"
+                style={{
+                  backgroundColor: "#1e1e1e",
+                  color: "white",
+                  border: "1px solid #2a2a2a",
+                  outline: "none",
+                }}
+              />
+              <button
+                onClick={() => {
+                  const d = new Date(dateFilter);
+                  d.setDate(d.getDate() + 1);
+                  setDateFilter(d.toISOString().slice(0, 10));
+                }}
+                className="px-3 py-2 rounded-lg"
+                style={{
+                  backgroundColor: "#1e1e1e",
+                  color: "#e5e5e5",
+                  border: "1px solid #2a2a2a",
+                }}>
+                ›
+              </button>
+              <select
+                value={techFilter}
+                onChange={(e) => setTechFilter(e.target.value as Tech | "전체")}
+                className="rounded-xl px-3 py-2 text-xs font-bold cursor-pointer"
+                style={{
+                  backgroundColor:
+                    techFilter === "기사1"
+                      ? "#2fae8a22"
+                      : techFilter === "기사2"
+                        ? "#60a5fa22"
+                        : "#1e1e1e",
+                  color:
+                    techFilter === "기사1"
+                      ? "#2fae8a"
+                      : techFilter === "기사2"
+                        ? "#60a5fa"
+                        : "#aaa",
+                  border: `1px solid ${techFilter === "기사1" ? "#2fae8a44" : techFilter === "기사2" ? "#60a5fa44" : "#2a2a2a"}`,
+                  outline: "none",
+                }}>
+                <option value="전체">전체</option>
+                <option value="기사1">기사1</option>
+                <option value="기사2">기사2</option>
+              </select>
+            </div>
+            <div className="flex flex-wrap gap-1 mb-4">
+              {(["전체", ...STATUSES] as const).map((s) => (
+                <button
+                  key={s}
+                  onClick={() => setStatusFilter(s as Status | "전체")}
+                  className="rounded-full px-3 py-1.5 text-xs font-semibold"
+                  style={{
+                    backgroundColor: statusFilter === s ? "#2fae8a" : "#1e1e1e",
+                    color: statusFilter === s ? "white" : "#555",
+                    border: "1px solid #2a2a2a",
+                  }}>
+                  {s}
+                </button>
+              ))}
+            </div>
+            <div
+              className="rounded-2xl overflow-hidden"
+              style={{ border: "1px solid #2a2a2a" }}>
+              <div
+                className="flex items-center justify-between px-4 py-3"
+                style={{
+                  backgroundColor: "#1e1e1e",
+                  borderBottom: "1px solid #2a2a2a",
+                }}>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span
+                    className="text-sm font-bold"
+                    style={{ color: "white" }}>
+                    {formatDate(dateFilter)} 일정
+                  </span>
+                  <span
+                    className="text-xs px-2 py-0.5 rounded-full"
+                    style={{ backgroundColor: "#2a2a2a", color: "#aaa" }}>
+                    {filtered.length}건
+                  </span>
+                  <span className="text-xs" style={{ color: "#2fae8a" }}>
+                    완료 {filtered.filter((j) => j.status === "완료").length}건
+                    ·{" "}
+                    {formatPrice(
+                      filtered
+                        .filter((j) => j.status === "완료")
+                        .reduce((s, j) => s + (j.price || 0), 0),
+                    )}
+                  </span>
+                </div>
+                <button
+                  onClick={() => {
+                    setForm({ ...emptyForm(), visit_date: dateFilter });
+                    setEditId(null);
+                    setShowForm(true);
+                  }}
+                  className="text-xs px-3 py-1.5 rounded-lg font-bold"
+                  style={{ backgroundColor: "#2fae8a", color: "white" }}>
+                  + 추가
+                </button>
               </div>
-            )}
+              {filtered.length === 0 ? (
+                <div
+                  className="text-center py-12"
+                  style={{ backgroundColor: "#141414", color: "#333" }}>
+                  <p className="text-3xl mb-2">📋</p>
+                  <p className="text-sm">일정 없음</p>
+                </div>
+              ) : (
+                <div
+                  className="flex flex-col gap-0"
+                  style={{ backgroundColor: "#141414" }}>
+                  {[...filtered]
+                    .sort((a, b) => {
+                      if (!a.visit_time && !b.visit_time) return 0;
+                      if (!a.visit_time) return 1;
+                      if (!b.visit_time) return -1;
+                      return a.visit_time.localeCompare(b.visit_time);
+                    })
+                    .map((job, idx, arr) => (
+                      <div key={job.id}>
+                        {job.visit_time &&
+                          (idx === 0 ||
+                            arr[idx - 1].visit_time?.slice(0, 2) !==
+                              job.visit_time.slice(0, 2)) && (
+                            <div
+                              className="flex items-center gap-2 px-4 py-1.5"
+                              style={{ borderBottom: "1px solid #1f1f1f" }}>
+                              <span
+                                className="text-xs font-bold"
+                                style={{ color: "#444" }}>
+                                {formatTime(job.visit_time)}
+                              </span>
+                              <div
+                                className="flex-1 h-px"
+                                style={{ backgroundColor: "#1f1f1f" }}
+                              />
+                            </div>
+                          )}
+                        {!job.visit_time &&
+                          (idx === 0 || arr[idx - 1].visit_time) && (
+                            <div
+                              className="px-4 py-1.5"
+                              style={{ borderBottom: "1px solid #1f1f1f" }}>
+                              <span
+                                className="text-xs font-bold"
+                                style={{ color: "#444" }}>
+                                시간 미정
+                              </span>
+                            </div>
+                          )}
+                        <div className="px-3 py-2">
+                          <JobCard
+                            job={job}
+                            onUpdate={update}
+                            onEdit={startEdit}
+                            onDelete={remove}
+                          />
+                        </div>
+                      </div>
+                    ))}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* ── 전체 탭 ── */}
+        {!loading && tab === "전체" && (
+          <>
+            <MonthSelector />
             <div className="flex flex-wrap gap-2 mb-4">
               <div className="flex flex-wrap gap-1">
                 {(["전체", ...STATUSES] as const).map((s) => (
