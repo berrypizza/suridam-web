@@ -64,7 +64,6 @@ function today() {
 function thisYearMonth() {
   return new Date().toISOString().slice(0, 7);
 }
-
 function formatDate(d: string) {
   if (!d) return "-";
   const [, m, day] = d.split("-");
@@ -118,16 +117,136 @@ function pad(n: number) {
   return String(n).padStart(2, "0");
 }
 
-// 시간 → 픽셀 위치 (AM 7시 = 0px, 1시간 = 60px)
-const START_HOUR = 7;
-const HOUR_HEIGHT = 60;
-function timeToY(t: string) {
-  if (!t) return null;
-  const [h, m] = t.split(":").map(Number);
-  return (h - START_HOUR) * HOUR_HEIGHT + m;
-}
+// ── 잡 카드 컴포넌트 ─────────────────────────────────────
+function JobCard({
+  job,
+  onUpdate,
+  onEdit,
+  onDelete,
+}: {
+  job: Job;
+  onUpdate: (id: string, patch: Partial<Job>) => void;
+  onEdit: (job: Job) => void;
+  onDelete: (id: string) => void;
+}) {
+  const techColor = TECH_COLOR[job.tech || ""];
+  return (
+    <div
+      className="rounded-2xl overflow-hidden"
+      style={{
+        backgroundColor: "#1e1e1e",
+        border: "1px solid #2a2a2a",
+        borderLeft: `3px solid ${techColor}`,
+      }}>
+      {/* 상단 행 */}
+      <div className="flex items-center gap-2 px-3 pt-3 pb-2 flex-wrap">
+        <select
+          value={job.status}
+          onChange={(e) =>
+            onUpdate(job.id, { status: e.target.value as Status })
+          }
+          className="text-xs font-semibold rounded-full px-2 py-1 border cursor-pointer"
+          style={{ ...STATUS_STYLE[job.status], outline: "none" }}>
+          {STATUSES.map((s) => (
+            <option key={s} value={s}>
+              {s}
+            </option>
+          ))}
+        </select>
+        {job.visit_time && (
+          <span className="text-xs font-bold" style={{ color: "#aaa" }}>
+            {formatTime(job.visit_time)}
+          </span>
+        )}
+        <select
+          value={job.tech}
+          onChange={(e) => onUpdate(job.id, { tech: e.target.value as Tech })}
+          className="text-xs rounded-full px-2 py-1 border cursor-pointer font-semibold"
+          style={{
+            backgroundColor: "#2a2a2a",
+            border: `1px solid ${techColor}44`,
+            color: techColor,
+            outline: "none",
+          }}>
+          <option value="">미배정</option>
+          {TECHS.filter(Boolean).map((t) => (
+            <option key={t} value={t}>
+              {t}
+            </option>
+          ))}
+        </select>
+      </div>
 
-const HOURS = Array.from({ length: 15 }, (_, i) => i + START_HOUR); // 7~21시
+      {/* 메인 정보 */}
+      <div className="flex items-start gap-3 px-3 pb-2">
+        <div className="flex-1 min-w-0">
+          <div className="flex flex-wrap items-center gap-2 mb-0.5">
+            <span className="text-sm font-bold" style={{ color: "white" }}>
+              {job.name || "?"}
+            </span>
+            <span className="text-xs" style={{ color: "#555" }}>
+              {job.region}
+            </span>
+            <span className="text-xs" style={{ color: "#7a7a7a" }}>
+              {job.symptom}
+            </span>
+          </div>
+          <div className="flex flex-wrap items-center gap-3 mt-1">
+            {job.price > 0 && (
+              <span className="text-sm font-bold" style={{ color: "#2fae8a" }}>
+                {formatPrice(job.price)}
+              </span>
+            )}
+            {job.memo && (
+              <span
+                className="text-xs flex items-center gap-1"
+                style={{ color: "#7a7a7a" }}>
+                <span style={{ fontSize: 10 }}>💬</span>
+                {job.memo}
+              </span>
+            )}
+          </div>
+        </div>
+
+        {/* 액션 버튼들 */}
+        <div className="flex flex-col gap-1 flex-shrink-0">
+          {job.phone && (
+            <a
+              href={`tel:${job.phone}`}
+              className="w-8 h-8 flex items-center justify-center rounded-xl text-sm"
+              style={{
+                backgroundColor: "#ef444422",
+                color: "#ef4444",
+                border: "1px solid #ef444433",
+              }}>
+              📞
+            </a>
+          )}
+          <button
+            onClick={() => onEdit(job)}
+            className="w-8 h-8 flex items-center justify-center rounded-xl text-xs font-bold"
+            style={{
+              backgroundColor: "#2a2a2a",
+              color: "#aaa",
+              border: "1px solid #333",
+            }}>
+            수정
+          </button>
+          <button
+            onClick={() => onDelete(job.id)}
+            className="w-8 h-8 flex items-center justify-center rounded-xl text-xs font-bold"
+            style={{
+              backgroundColor: "#ef444422",
+              color: "#ef4444",
+              border: "1px solid #ef444433",
+            }}>
+            삭제
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function AdminDashboard() {
   const [jobs, setJobs] = useState<Job[]>([]);
@@ -216,7 +335,6 @@ export default function AdminDashboard() {
     setShowForm(true);
   };
 
-  // 전체/오늘 필터
   const filtered = jobs.filter((j) => {
     if (tab === "오늘" && j.visit_date !== dateFilter) return false;
     if (tab === "전체" && !j.visit_date?.startsWith(monthFilter)) return false;
@@ -225,7 +343,6 @@ export default function AdminDashboard() {
     return true;
   });
 
-  // 통계
   const monthJobs = jobs.filter((j) => j.visit_date?.startsWith(monthFilter));
   const doneMonth = monthJobs.filter((j) => j.status === "완료");
   const revenue = doneMonth.reduce((s, j) => s + (j.price || 0), 0);
@@ -244,7 +361,7 @@ export default function AdminDashboard() {
     width: "100%",
   };
 
-  // 달력 데이터
+  // 달력
   const calDays = getCalendarDays(calYear, calMonth);
   const jobsByDate: Record<string, Job[]> = {};
   jobs.forEach((j) => {
@@ -252,19 +369,10 @@ export default function AdminDashboard() {
     jobsByDate[j.visit_date].push(j);
   });
 
-  // 달력 기사 필터 적용
-  const filteredJobsByDate: Record<string, Job[]> = {};
-  Object.entries(jobsByDate).forEach(([date, dayJobs]) => {
-    filteredJobsByDate[date] =
-      calTechFilter === "전체"
-        ? dayJobs
-        : dayJobs.filter((j) => j.tech === calTechFilter);
-  });
-
   const selectedJobs = selectedDay
-    ? calTechFilter === "전체"
-      ? (jobsByDate[selectedDay] ?? [])
-      : (jobsByDate[selectedDay] ?? []).filter((j) => j.tech === calTechFilter)
+    ? (jobsByDate[selectedDay] ?? []).filter(
+        (j) => calTechFilter === "전체" || j.tech === calTechFilter,
+      )
     : [];
   const todayStr = today();
 
@@ -297,217 +405,6 @@ export default function AdminDashboard() {
       </button>
     </div>
   );
-
-  // ── 타임테이블 뷰 ──────────────────────────────────────
-  const TimetableView = () => {
-    const techsToShow =
-      calTechFilter === "전체"
-        ? TECHS.filter(Boolean)
-        : [calTechFilter as string];
-
-    return (
-      <div
-        className="mt-4 rounded-2xl overflow-hidden"
-        style={{ backgroundColor: "#1a1a1a", border: "1px solid #2a2a2a" }}>
-        {/* 헤더 */}
-        <div
-          className="flex items-center justify-between px-4 py-3"
-          style={{
-            backgroundColor: "#1e1e1e",
-            borderBottom: "1px solid #2a2a2a",
-          }}>
-          <h3 className="text-sm font-bold" style={{ color: "white" }}>
-            {selectedDay && formatDate(selectedDay)} 타임테이블
-            <span
-              className="ml-2 text-xs font-normal"
-              style={{ color: "#555" }}>
-              ({selectedJobs.length}건)
-            </span>
-          </h3>
-          <button
-            onClick={() => {
-              setForm({ ...emptyForm(), visit_date: selectedDay! });
-              setEditId(null);
-              setShowForm(true);
-            }}
-            className="text-xs px-2.5 py-1 rounded-lg"
-            style={{ backgroundColor: "#2fae8a", color: "white" }}>
-            + 추가
-          </button>
-        </div>
-
-        {selectedJobs.length === 0 ? (
-          <div className="text-center py-12" style={{ color: "#333" }}>
-            <p className="text-3xl mb-2">📋</p>
-            <p className="text-sm">일정 없음</p>
-          </div>
-        ) : (
-          <div
-            className="flex"
-            style={{ minHeight: `${HOURS.length * HOUR_HEIGHT}px` }}>
-            {/* 시간 축 */}
-            <div
-              className="flex-shrink-0"
-              style={{ width: 52, borderRight: "1px solid #252525" }}>
-              {HOURS.map((h) => (
-                <div
-                  key={h}
-                  style={{
-                    height: HOUR_HEIGHT,
-                    borderBottom: "1px solid #1f1f1f",
-                    paddingTop: 4,
-                    paddingLeft: 6,
-                  }}>
-                  <span style={{ fontSize: 10, color: "#444" }}>
-                    {h < 12 ? `AM ${h}` : h === 12 ? "PM 12" : `PM ${h - 12}`}
-                  </span>
-                </div>
-              ))}
-            </div>
-
-            {/* 기사별 컬럼 */}
-            {techsToShow.map((tech) => {
-              const techJobs = selectedJobs.filter(
-                (j) => j.tech === tech || (tech === "" && !j.tech),
-              );
-              const untimedJobs = techJobs.filter((j) => !j.visit_time);
-              const timedJobs = techJobs.filter((j) => j.visit_time);
-
-              return (
-                <div
-                  key={tech}
-                  className="flex-1 relative"
-                  style={{ borderRight: "1px solid #252525", minWidth: 0 }}>
-                  {/* 기사 헤더 */}
-                  <div
-                    className="sticky top-0 text-center py-1 text-xs font-bold"
-                    style={{
-                      backgroundColor: TECH_COLOR[tech] + "22",
-                      color: TECH_COLOR[tech],
-                      borderBottom: "1px solid #2a2a2a",
-                      zIndex: 1,
-                    }}>
-                    {tech || "미배정"}
-                  </div>
-
-                  {/* 시간 그리드 배경 */}
-                  <div
-                    className="relative"
-                    style={{ height: `${HOURS.length * HOUR_HEIGHT}px` }}>
-                    {HOURS.map((h) => (
-                      <div
-                        key={h}
-                        style={{
-                          position: "absolute",
-                          top:
-                            h === START_HOUR
-                              ? 0
-                              : (h - START_HOUR) * HOUR_HEIGHT,
-                          left: 0,
-                          right: 0,
-                          height: HOUR_HEIGHT,
-                          borderBottom: "1px solid #1f1f1f",
-                        }}
-                      />
-                    ))}
-
-                    {/* 시간 있는 일정 블록 */}
-                    {timedJobs.map((job) => {
-                      const y = timeToY(job.visit_time);
-                      if (y === null) return null;
-                      const color = TECH_COLOR[job.tech || ""];
-                      return (
-                        <div
-                          key={job.id}
-                          onClick={() => startEdit(job)}
-                          style={{
-                            position: "absolute",
-                            top: y + 22, // 기사 헤더 높이 보정
-                            left: 3,
-                            right: 3,
-                            height: 52,
-                            backgroundColor: color + "22",
-                            border: `1px solid ${color}55`,
-                            borderLeft: `3px solid ${color}`,
-                            borderRadius: 8,
-                            padding: "3px 6px",
-                            cursor: "pointer",
-                            overflow: "hidden",
-                          }}>
-                          <div style={{ fontSize: 10, color, fontWeight: 700 }}>
-                            {formatTime(job.visit_time)}
-                          </div>
-                          <div
-                            style={{
-                              fontSize: 11,
-                              color: "#e5e5e5",
-                              fontWeight: 600,
-                              whiteSpace: "nowrap",
-                              overflow: "hidden",
-                              textOverflow: "ellipsis",
-                            }}>
-                            {job.name}
-                          </div>
-                          <div
-                            style={{
-                              fontSize: 10,
-                              color: "#7a7a7a",
-                              whiteSpace: "nowrap",
-                              overflow: "hidden",
-                              textOverflow: "ellipsis",
-                            }}>
-                            {job.symptom}
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-
-                  {/* 시간 없는 일정 */}
-                  {untimedJobs.length > 0 && (
-                    <div
-                      className="px-2 py-2"
-                      style={{ borderTop: "1px solid #252525" }}>
-                      <p
-                        style={{
-                          fontSize: 10,
-                          color: "#444",
-                          marginBottom: 4,
-                        }}>
-                        시간 미정
-                      </p>
-                      {untimedJobs.map((job) => (
-                        <div
-                          key={job.id}
-                          onClick={() => startEdit(job)}
-                          className="rounded-lg px-2 py-1.5 mb-1 cursor-pointer"
-                          style={{
-                            backgroundColor: "#252525",
-                            borderLeft: `3px solid ${TECH_COLOR[job.tech || ""]}`,
-                          }}>
-                          <div
-                            style={{
-                              fontSize: 11,
-                              color: "#e5e5e5",
-                              fontWeight: 600,
-                            }}>
-                            {job.name}
-                          </div>
-                          <div style={{ fontSize: 10, color: "#7a7a7a" }}>
-                            {job.symptom}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        )}
-      </div>
-    );
-  };
 
   return (
     <main
@@ -576,8 +473,8 @@ export default function AdminDashboard() {
         {/* ── 달력 탭 ── */}
         {!loading && tab === "달력" && (
           <div>
-            {/* 달력 헤더 */}
-            <div className="flex items-center justify-between mb-3">
+            {/* 월 네비 + 기사 드롭다운 */}
+            <div className="flex items-center gap-2 mb-3">
               <button
                 onClick={() => {
                   const d = new Date(calYear, calMonth - 1);
@@ -585,11 +482,17 @@ export default function AdminDashboard() {
                   setCalMonth(d.getMonth());
                   setSelectedDay(null);
                 }}
-                className="px-3 py-1.5 rounded-lg text-sm"
-                style={{ backgroundColor: "#1e1e1e", color: "#e5e5e5" }}>
+                className="px-3 py-2 rounded-lg"
+                style={{
+                  backgroundColor: "#1e1e1e",
+                  color: "#e5e5e5",
+                  border: "1px solid #2a2a2a",
+                }}>
                 ‹
               </button>
-              <span className="text-base font-bold" style={{ color: "white" }}>
+              <span
+                className="flex-1 text-center text-base font-bold"
+                style={{ color: "white" }}>
                 {calYear}년 {calMonth + 1}월
               </span>
               <button
@@ -599,34 +502,66 @@ export default function AdminDashboard() {
                   setCalMonth(d.getMonth());
                   setSelectedDay(null);
                 }}
-                className="px-3 py-1.5 rounded-lg text-sm"
-                style={{ backgroundColor: "#1e1e1e", color: "#e5e5e5" }}>
+                className="px-3 py-2 rounded-lg"
+                style={{
+                  backgroundColor: "#1e1e1e",
+                  color: "#e5e5e5",
+                  border: "1px solid #2a2a2a",
+                }}>
                 ›
               </button>
+
+              {/* 기사 드롭다운 */}
+              <select
+                value={calTechFilter}
+                onChange={(e) =>
+                  setCalTechFilter(e.target.value as Tech | "전체")
+                }
+                className="rounded-xl px-3 py-2 text-xs font-bold cursor-pointer"
+                style={{
+                  backgroundColor:
+                    calTechFilter === "기사1"
+                      ? "#2fae8a22"
+                      : calTechFilter === "기사2"
+                        ? "#60a5fa22"
+                        : "#1e1e1e",
+                  color:
+                    calTechFilter === "기사1"
+                      ? "#2fae8a"
+                      : calTechFilter === "기사2"
+                        ? "#60a5fa"
+                        : "#aaa",
+                  border: `1px solid ${calTechFilter === "기사1" ? "#2fae8a44" : calTechFilter === "기사2" ? "#60a5fa44" : "#2a2a2a"}`,
+                  outline: "none",
+                }}>
+                <option value="전체">전체</option>
+                <option value="기사1">기사1</option>
+                <option value="기사2">기사2</option>
+              </select>
             </div>
 
-            {/* 기사 필터 */}
-            <div className="flex gap-1.5 mb-3">
-              {(["전체", "기사1", "기사2"] as const).map((t) => (
-                <button
-                  key={t}
-                  onClick={() => setCalTechFilter(t)}
-                  className="flex-1 rounded-xl py-2 text-xs font-bold transition-all"
-                  style={{
-                    backgroundColor:
-                      calTechFilter === t
-                        ? t === "기사1"
-                          ? "#2fae8a"
-                          : t === "기사2"
-                            ? "#60a5fa"
-                            : "#555"
-                        : "#1e1e1e",
-                    color: calTechFilter === t ? "white" : "#555",
-                    border: `1px solid ${calTechFilter === t ? "transparent" : "#2a2a2a"}`,
-                  }}>
-                  {t === "전체" ? "전체 보기" : t}
-                </button>
+            {/* 기사 컬러 레전드 */}
+            <div className="flex items-center gap-3 mb-3 px-1">
+              {TECHS.filter(Boolean).map((t) => (
+                <div key={t} className="flex items-center gap-1.5">
+                  <span
+                    className="h-2 w-2 rounded-full"
+                    style={{ backgroundColor: TECH_COLOR[t] }}
+                  />
+                  <span className="text-xs" style={{ color: TECH_COLOR[t] }}>
+                    {t}
+                  </span>
+                </div>
               ))}
+              <div className="flex items-center gap-1.5">
+                <span
+                  className="h-2 w-2 rounded-full"
+                  style={{ backgroundColor: "#7a7a7a" }}
+                />
+                <span className="text-xs" style={{ color: "#555" }}>
+                  미배정
+                </span>
+              </div>
             </div>
 
             {/* 요일 헤더 */}
@@ -648,7 +583,11 @@ export default function AdminDashboard() {
               {calDays.map((day, i) => {
                 if (!day) return <div key={`e-${i}`} />;
                 const dateStr = `${calYear}-${pad(calMonth + 1)}-${pad(day)}`;
-                const dayJobs = filteredJobsByDate[dateStr] ?? [];
+                const allDayJobs = jobsByDate[dateStr] ?? [];
+                const dayJobs =
+                  calTechFilter === "전체"
+                    ? allDayJobs
+                    : allDayJobs.filter((j) => j.tech === calTechFilter);
                 const isToday = dateStr === todayStr;
                 const isSelected = dateStr === selectedDay;
                 const dow = i % 7;
@@ -682,14 +621,11 @@ export default function AdminDashboard() {
                       {dayJobs.slice(0, 3).map((j) => (
                         <div
                           key={j.id}
-                          className="flex items-center gap-1 w-full overflow-hidden">
+                          className="flex items-center gap-1 overflow-hidden">
                           <span
                             className="h-1.5 w-1.5 rounded-full flex-shrink-0"
                             style={{
-                              backgroundColor:
-                                calTechFilter === "전체"
-                                  ? TECH_COLOR[j.tech || ""]
-                                  : STATUS_DOT[j.status],
+                              backgroundColor: TECH_COLOR[j.tech || ""],
                             }}
                           />
                           <span
@@ -711,8 +647,131 @@ export default function AdminDashboard() {
               })}
             </div>
 
-            {/* 타임테이블 */}
-            {selectedDay && <TimetableView />}
+            {/* 선택 날짜 타임테이블 */}
+            {selectedDay && (
+              <div
+                className="mt-4 rounded-2xl overflow-hidden"
+                style={{ border: "1px solid #2a2a2a" }}>
+                {/* 헤더 */}
+                <div
+                  className="flex items-center justify-between px-4 py-3"
+                  style={{
+                    backgroundColor: "#1e1e1e",
+                    borderBottom: "1px solid #2a2a2a",
+                  }}>
+                  <div className="flex items-center gap-2">
+                    <span
+                      className="text-sm font-bold"
+                      style={{ color: "white" }}>
+                      {formatDate(selectedDay)}
+                    </span>
+                    <span
+                      className="text-xs px-2 py-0.5 rounded-full"
+                      style={{ backgroundColor: "#2a2a2a", color: "#aaa" }}>
+                      {selectedJobs.length}건
+                    </span>
+                    {calTechFilter !== "전체" && (
+                      <span
+                        className="text-xs px-2 py-0.5 rounded-full font-bold"
+                        style={{
+                          backgroundColor: TECH_COLOR[calTechFilter] + "22",
+                          color: TECH_COLOR[calTechFilter],
+                        }}>
+                        {calTechFilter}
+                      </span>
+                    )}
+                  </div>
+                  <button
+                    onClick={() => {
+                      setForm({ ...emptyForm(), visit_date: selectedDay });
+                      setEditId(null);
+                      setShowForm(true);
+                    }}
+                    className="text-xs px-3 py-1.5 rounded-lg font-bold"
+                    style={{ backgroundColor: "#2fae8a", color: "white" }}>
+                    + 추가
+                  </button>
+                </div>
+
+                {selectedJobs.length === 0 ? (
+                  <div
+                    className="text-center py-10"
+                    style={{ backgroundColor: "#141414", color: "#333" }}>
+                    <p className="text-2xl mb-2">📋</p>
+                    <p className="text-sm">일정 없음</p>
+                  </div>
+                ) : (
+                  <div
+                    className="flex flex-col gap-0"
+                    style={{ backgroundColor: "#141414" }}>
+                    {/* 시간 있는 일정: 시간순 */}
+                    {[...selectedJobs]
+                      .sort((a, b) => {
+                        if (!a.visit_time && !b.visit_time) return 0;
+                        if (!a.visit_time) return 1;
+                        if (!b.visit_time) return -1;
+                        return a.visit_time.localeCompare(b.visit_time);
+                      })
+                      .map((job, idx, arr) => (
+                        <div key={job.id}>
+                          {/* 시간 구분선 */}
+                          {job.visit_time &&
+                            (idx === 0 ||
+                              !arr[idx - 1].visit_time ||
+                              arr[idx - 1].visit_time?.slice(0, 2) !==
+                                job.visit_time.slice(0, 2)) && (
+                              <div
+                                className="flex items-center gap-2 px-4 py-1.5"
+                                style={{ borderBottom: "1px solid #1f1f1f" }}>
+                                <span
+                                  className="text-xs font-bold"
+                                  style={{ color: "#444" }}>
+                                  {formatTime(job.visit_time)}
+                                </span>
+                                <div
+                                  className="flex-1 h-px"
+                                  style={{ backgroundColor: "#1f1f1f" }}
+                                />
+                              </div>
+                            )}
+                          {!job.visit_time && idx === 0 && (
+                            <div
+                              className="px-4 py-1.5"
+                              style={{ borderBottom: "1px solid #1f1f1f" }}>
+                              <span
+                                className="text-xs font-bold"
+                                style={{ color: "#444" }}>
+                                시간 미정
+                              </span>
+                            </div>
+                          )}
+                          {!job.visit_time &&
+                            idx > 0 &&
+                            arr[idx - 1].visit_time && (
+                              <div
+                                className="px-4 py-1.5"
+                                style={{ borderBottom: "1px solid #1f1f1f" }}>
+                                <span
+                                  className="text-xs font-bold"
+                                  style={{ color: "#444" }}>
+                                  시간 미정
+                                </span>
+                              </div>
+                            )}
+                          <div className="px-3 py-2">
+                            <JobCard
+                              job={job}
+                              onUpdate={update}
+                              onEdit={startEdit}
+                              onDelete={remove}
+                            />
+                          </div>
+                        </div>
+                      ))}
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         )}
 
@@ -886,28 +945,30 @@ export default function AdminDashboard() {
                   </button>
                 ))}
               </div>
-              <div className="flex gap-1">
-                {(["전체", "기사1", "기사2"] as const).map((t) => (
-                  <button
-                    key={t}
-                    onClick={() => setTechFilter(t as Tech | "전체")}
-                    className="rounded-full px-3 py-1.5 text-xs font-semibold"
-                    style={{
-                      backgroundColor:
-                        techFilter === t
-                          ? t === "기사1"
-                            ? "#2fae8a"
-                            : t === "기사2"
-                              ? "#60a5fa"
-                              : "#555"
-                          : "#1e1e1e",
-                      color: techFilter === t ? "white" : "#555",
-                      border: "1px solid #2a2a2a",
-                    }}>
-                    {t}
-                  </button>
-                ))}
-              </div>
+              <select
+                value={techFilter}
+                onChange={(e) => setTechFilter(e.target.value as Tech | "전체")}
+                className="rounded-xl px-3 py-1.5 text-xs font-bold cursor-pointer"
+                style={{
+                  backgroundColor:
+                    techFilter === "기사1"
+                      ? "#2fae8a22"
+                      : techFilter === "기사2"
+                        ? "#60a5fa22"
+                        : "#1e1e1e",
+                  color:
+                    techFilter === "기사1"
+                      ? "#2fae8a"
+                      : techFilter === "기사2"
+                        ? "#60a5fa"
+                        : "#aaa",
+                  border: `1px solid ${techFilter === "기사1" ? "#2fae8a44" : techFilter === "기사2" ? "#60a5fa44" : "#2a2a2a"}`,
+                  outline: "none",
+                }}>
+                <option value="전체">전체 기사</option>
+                <option value="기사1">기사1</option>
+                <option value="기사2">기사2</option>
+              </select>
             </div>
             <div className="flex gap-3 mb-4 text-xs" style={{ color: "#555" }}>
               <span>{filtered.length}건</span>
@@ -930,130 +991,15 @@ export default function AdminDashboard() {
                 <p className="text-sm">접수된 작업이 없어요</p>
               </div>
             ) : (
-              <div className="flex flex-col gap-3">
+              <div className="flex flex-col gap-2">
                 {filtered.map((job) => (
-                  <div
+                  <JobCard
                     key={job.id}
-                    className="rounded-2xl p-4"
-                    style={{
-                      backgroundColor: "#1e1e1e",
-                      border: "1px solid #2a2a2a",
-                    }}>
-                    <div className="flex items-start justify-between gap-3">
-                      <div className="flex-1 min-w-0">
-                        <div className="flex flex-wrap items-center gap-2 mb-2">
-                          <select
-                            value={job.status}
-                            onChange={(e) =>
-                              update(job.id, {
-                                status: e.target.value as Status,
-                              })
-                            }
-                            className="text-xs font-semibold rounded-full px-2 py-0.5 border cursor-pointer"
-                            style={{
-                              ...STATUS_STYLE[job.status],
-                              outline: "none",
-                            }}>
-                            {STATUSES.map((s) => (
-                              <option key={s} value={s}>
-                                {s}
-                              </option>
-                            ))}
-                          </select>
-                          <span className="text-xs" style={{ color: "#555" }}>
-                            {formatDate(job.visit_date)}
-                            {job.visit_time
-                              ? ` ${formatTime(job.visit_time)}`
-                              : ""}
-                          </span>
-                          <select
-                            value={job.tech}
-                            onChange={(e) =>
-                              update(job.id, { tech: e.target.value as Tech })
-                            }
-                            className="text-xs rounded-full px-2 py-0.5 border cursor-pointer"
-                            style={{
-                              backgroundColor: "#2a2a2a",
-                              border: "1px solid #333",
-                              color: job.tech ? TECH_COLOR[job.tech] : "#555",
-                              outline: "none",
-                            }}>
-                            <option value="">미배정</option>
-                            {TECHS.filter(Boolean).map((t) => (
-                              <option key={t} value={t}>
-                                {t}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
-                        <div className="flex flex-wrap items-center gap-2">
-                          <span
-                            className="text-sm font-bold"
-                            style={{ color: "white" }}>
-                            {job.name}
-                          </span>
-                          <span className="text-xs" style={{ color: "#555" }}>
-                            {job.region}
-                          </span>
-                          <span
-                            className="text-xs"
-                            style={{ color: "#7a7a7a" }}>
-                            {job.symptom}
-                          </span>
-                        </div>
-                        <div className="flex flex-wrap items-center gap-3 mt-1.5">
-                          {job.price > 0 && (
-                            <span
-                              className="text-sm font-bold"
-                              style={{ color: "#2fae8a" }}>
-                              {formatPrice(job.price)}
-                            </span>
-                          )}
-                          {job.memo && (
-                            <span
-                              className="text-xs"
-                              style={{ color: "#7a7a7a" }}>
-                              💬 {job.memo}
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                      <div className="flex flex-col gap-1.5 flex-shrink-0">
-                        {job.phone && (
-                          <a
-                            href={`tel:${job.phone}`}
-                            className="text-xs px-2.5 py-1.5 rounded-lg text-center"
-                            style={{
-                              backgroundColor: "#2a2a2a",
-                              color: "#e5e5e5",
-                              border: "1px solid #333",
-                            }}>
-                            📞
-                          </a>
-                        )}
-                        <button
-                          onClick={() => startEdit(job)}
-                          className="text-xs px-2.5 py-1.5 rounded-lg"
-                          style={{
-                            backgroundColor: "#2a2a2a",
-                            color: "#7a7a7a",
-                            border: "1px solid #333",
-                          }}>
-                          수정
-                        </button>
-                        <button
-                          onClick={() => remove(job.id)}
-                          className="text-xs px-2.5 py-1.5 rounded-lg"
-                          style={{
-                            backgroundColor: "#3a2020",
-                            color: "#ef4444",
-                            border: "1px solid #ef444433",
-                          }}>
-                          삭제
-                        </button>
-                      </div>
-                    </div>
-                  </div>
+                    job={job}
+                    onUpdate={update}
+                    onEdit={startEdit}
+                    onDelete={remove}
+                  />
                 ))}
               </div>
             )}
