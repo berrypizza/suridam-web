@@ -129,6 +129,33 @@ function pad(n: number) {
   return String(n).padStart(2, "0");
 }
 
+// ── 이미지 압축 (업로드 전 자동 적용) ─────────────────────
+function compressImage(
+  file: File,
+  maxWidth = 1280,
+  quality = 0.75,
+): Promise<Blob> {
+  return new Promise((resolve) => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      URL.revokeObjectURL(url);
+      let { width, height } = img;
+      if (width > maxWidth) {
+        height = Math.round((height * maxWidth) / width);
+        width = maxWidth;
+      }
+      const canvas = document.createElement("canvas");
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext("2d")!;
+      ctx.drawImage(img, 0, 0, width, height);
+      canvas.toBlob((blob) => resolve(blob!), "image/jpeg", quality);
+    };
+    img.src = url;
+  });
+}
+
 // ── 사진 업로드/관리 팝업 ─────────────────────────────────
 function PhotoCapture({
   jobId,
@@ -145,6 +172,7 @@ function PhotoCapture({
 }) {
   const [list, setList] = useState<string[]>(photos);
   const [uploading, setUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState("");
   const [lightbox, setLightbox] = useState<string | null>(null);
 
   const handleFiles = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -152,12 +180,16 @@ function PhotoCapture({
     if (!files.length) return;
     setUploading(true);
     const newUrls: string[] = [];
-    for (const file of files) {
-      const ext = file.name.split(".").pop() || "jpg";
-      const path = `${jobId}-${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      setUploadProgress(`압축 중... (${i + 1}/${files.length})`);
+      // 압축: 최대 1280px, JPEG 75% 품질 → 평균 200~400KB
+      const compressed = await compressImage(file);
+      const path = `${jobId}-${Date.now()}-${Math.random().toString(36).slice(2)}.jpg`;
+      setUploadProgress(`업로드 중... (${i + 1}/${files.length})`);
       const { error } = await getSupabase()
         .storage.from("completion-photos")
-        .upload(path, file, { upsert: true });
+        .upload(path, compressed, { upsert: true, contentType: "image/jpeg" });
       if (error) {
         alert("업로드 실패: " + error.message);
         continue;
@@ -169,6 +201,7 @@ function PhotoCapture({
     }
     setList((prev) => [...prev, ...newUrls]);
     setUploading(false);
+    setUploadProgress("");
   };
 
   const handleDelete = (url: string) => {
@@ -313,7 +346,7 @@ function PhotoCapture({
                 backgroundColor: "#2fae8a",
                 opacity: uploading ? 0.7 : 1,
               }}>
-              {uploading ? "저장중..." : "확인 ✓"}
+              {uploading ? uploadProgress || "저장중..." : "확인 ✓"}
             </button>
           </div>
         </div>
