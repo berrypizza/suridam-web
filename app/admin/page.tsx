@@ -1,5 +1,5 @@
 //prettier-ignore
-"use client"
+'use client';
 
 export const dynamic = "force-dynamic";
 
@@ -30,6 +30,7 @@ interface Job {
   tech: Tech;
   memo: string;
   review_requested: boolean;
+  completion_photo?: string;
 }
 
 const TECHS: Tech[] = ["기사1", "기사2"];
@@ -117,6 +118,130 @@ function pad(n: number) {
   return String(n).padStart(2, "0");
 }
 
+// ── 완료 사진 팝업 ────────────────────────────────────────
+function PhotoCapture({
+  jobId,
+  onDone,
+  onCancel,
+}: {
+  jobId: string;
+  onDone: (url: string) => void;
+  onCancel: () => void;
+}) {
+  const [preview, setPreview] = useState<string | null>(null);
+  const [file, setFile] = useState<File | null>(null);
+  const [uploading, setUploading] = useState(false);
+
+  const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const f = e.target.files?.[0];
+    if (!f) return;
+    setFile(f);
+    setPreview(URL.createObjectURL(f));
+  };
+
+  const handleUpload = async () => {
+    if (!file) return;
+    setUploading(true);
+    const ext = file.name.split(".").pop() || "jpg";
+    const path = `${jobId}-${Date.now()}.${ext}`;
+    const { error } = await getSupabase()
+      .storage.from("completion-photos")
+      .upload(path, file, { upsert: true });
+    if (error) {
+      alert("업로드 실패: " + error.message);
+      setUploading(false);
+      return;
+    }
+    const { data } = getSupabase()
+      .storage.from("completion-photos")
+      .getPublicUrl(path);
+    setUploading(false);
+    onDone(data.publicUrl);
+  };
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4"
+      style={{ backgroundColor: "rgba(0,0,0,0.92)" }}>
+      <div
+        className="w-full max-w-sm rounded-2xl overflow-hidden"
+        style={{ backgroundColor: "#1e1e1e", border: "1px solid #333" }}>
+        <div
+          className="flex items-center justify-between px-4 py-3"
+          style={{ borderBottom: "1px solid #2a2a2a" }}>
+          <span className="text-sm font-bold" style={{ color: "white" }}>
+            완료 사진 촬영
+          </span>
+          <button onClick={onCancel} style={{ color: "#555" }}>
+            ✕
+          </button>
+        </div>
+
+        {!preview ? (
+          <div className="flex flex-col items-center justify-center py-12 gap-4">
+            <p className="text-sm" style={{ color: "#555" }}>
+              수리 완료 사진을 찍어주세요
+            </p>
+            <label
+              className="rounded-xl px-6 py-3 text-sm font-bold text-white cursor-pointer"
+              style={{ backgroundColor: "#2fae8a" }}>
+              📷 카메라 열기
+              <input
+                type="file"
+                accept="image/*"
+                capture="environment"
+                className="hidden"
+                onChange={handleFile}
+              />
+            </label>
+            <label
+              className="rounded-xl px-6 py-3 text-sm font-bold cursor-pointer"
+              style={{ backgroundColor: "#2a2a2a", color: "#aaa" }}>
+              🖼 갤러리에서 선택
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={handleFile}
+              />
+            </label>
+          </div>
+        ) : (
+          <div>
+            <img
+              src={preview}
+              alt="완료 사진"
+              className="w-full"
+              style={{ maxHeight: 320, objectFit: "cover" }}
+            />
+            <div className="flex gap-2 p-3">
+              <button
+                onClick={() => {
+                  setPreview(null);
+                  setFile(null);
+                }}
+                className="flex-1 rounded-xl py-3 text-sm font-bold"
+                style={{ backgroundColor: "#2a2a2a", color: "#aaa" }}>
+                다시 찍기
+              </button>
+              <button
+                onClick={handleUpload}
+                disabled={uploading}
+                className="flex-1 rounded-xl py-3 text-sm font-bold text-white"
+                style={{
+                  backgroundColor: "#2fae8a",
+                  opacity: uploading ? 0.7 : 1,
+                }}>
+                {uploading ? "저장 중..." : "완료 저장 ✓"}
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 // ── 잡 카드 컴포넌트 ─────────────────────────────────────
 function JobCard({
   job,
@@ -130,121 +255,183 @@ function JobCard({
   onDelete: (id: string) => void;
 }) {
   const techColor = TECH_COLOR[job.tech || ""];
-  return (
-    <div
-      className="rounded-2xl overflow-hidden"
-      style={{
-        backgroundColor: "#1e1e1e",
-        border: "1px solid #2a2a2a",
-        borderLeft: `3px solid ${techColor}`,
-      }}>
-      {/* 상단 행 */}
-      <div className="flex items-center gap-2 px-3 pt-3 pb-2 flex-wrap">
-        <select
-          value={job.status}
-          onChange={(e) =>
-            onUpdate(job.id, { status: e.target.value as Status })
-          }
-          className="text-xs font-semibold rounded-full px-2 py-1 border cursor-pointer"
-          style={{ ...STATUS_STYLE[job.status], outline: "none" }}>
-          {STATUSES.map((s) => (
-            <option key={s} value={s}>
-              {s}
-            </option>
-          ))}
-        </select>
-        {job.visit_time && (
-          <span className="text-xs font-bold" style={{ color: "#aaa" }}>
-            {formatTime(job.visit_time)}
-          </span>
-        )}
-        <select
-          value={job.tech}
-          onChange={(e) => onUpdate(job.id, { tech: e.target.value as Tech })}
-          className="text-xs rounded-full px-2 py-1 border cursor-pointer font-semibold"
-          style={{
-            backgroundColor: "#2a2a2a",
-            border: `1px solid ${techColor}44`,
-            color: techColor,
-            outline: "none",
-          }}>
-          <option value="">미배정</option>
-          {TECHS.filter(Boolean).map((t) => (
-            <option key={t} value={t}>
-              {t}
-            </option>
-          ))}
-        </select>
-      </div>
+  const [showPhoto, setShowPhoto] = useState(false);
+  const [photoPreview, setPhotoPreview] = useState<string | null>(null);
 
-      {/* 메인 정보 */}
-      <div className="flex items-start gap-3 px-3 pb-2">
-        <div className="flex-1 min-w-0">
-          <div className="flex flex-wrap items-center gap-2 mb-0.5">
-            <span className="text-sm font-bold" style={{ color: "white" }}>
-              {job.name || "?"}
+  const handleStatusChange = (newStatus: string) => {
+    if (newStatus === "완료" && job.status !== "완료") {
+      setShowPhoto(true);
+    } else {
+      onUpdate(job.id, { status: newStatus as Status });
+    }
+  };
+
+  const handlePhotoDone = (url: string) => {
+    onUpdate(job.id, { status: "완료", completion_photo: url });
+    setShowPhoto(false);
+  };
+
+  const handlePhotoCancel = () => {
+    setShowPhoto(false);
+  };
+
+  return (
+    <>
+      {showPhoto && (
+        <PhotoCapture
+          jobId={job.id}
+          onDone={handlePhotoDone}
+          onCancel={handlePhotoCancel}
+        />
+      )}
+      <div
+        className="rounded-2xl overflow-hidden"
+        style={{
+          backgroundColor: "#1e1e1e",
+          border: "1px solid #2a2a2a",
+          borderLeft: `3px solid ${techColor}`,
+        }}>
+        {/* 상단 행 */}
+        <div className="flex items-center gap-2 px-3 pt-3 pb-2 flex-wrap">
+          <select
+            value={job.status}
+            onChange={(e) => handleStatusChange(e.target.value)}
+            className="text-xs font-semibold rounded-full px-2 py-1 border cursor-pointer"
+            style={{ ...STATUS_STYLE[job.status], outline: "none" }}>
+            {STATUSES.map((s) => (
+              <option key={s} value={s}>
+                {s}
+              </option>
+            ))}
+          </select>
+          {job.visit_time && (
+            <span className="text-xs font-bold" style={{ color: "#aaa" }}>
+              {formatTime(job.visit_time)}
             </span>
-            <span className="text-xs" style={{ color: "#555" }}>
-              {job.region}
-            </span>
-            <span className="text-xs" style={{ color: "#7a7a7a" }}>
-              {job.symptom}
-            </span>
-          </div>
-          <div className="flex flex-wrap items-center gap-3 mt-1">
-            {job.price > 0 && (
-              <span className="text-sm font-bold" style={{ color: "#2fae8a" }}>
-                {formatPrice(job.price)}
-              </span>
-            )}
-            {job.memo && (
-              <span
-                className="text-xs flex items-center gap-1"
-                style={{ color: "#7a7a7a" }}>
-                <span style={{ fontSize: 10 }}>💬</span>
-                {job.memo}
-              </span>
-            )}
-          </div>
+          )}
+          <select
+            value={job.tech}
+            onChange={(e) => onUpdate(job.id, { tech: e.target.value as Tech })}
+            className="text-xs rounded-full px-2 py-1 border cursor-pointer font-semibold"
+            style={{
+              backgroundColor: "#2a2a2a",
+              border: `1px solid ${techColor}44`,
+              color: techColor,
+              outline: "none",
+            }}>
+            <option value="">미배정</option>
+            {TECHS.filter(Boolean).map((t) => (
+              <option key={t} value={t}>
+                {t}
+              </option>
+            ))}
+          </select>
         </div>
 
-        {/* 액션 버튼들 */}
-        <div className="flex flex-col gap-1 flex-shrink-0">
-          {job.phone && (
-            <a
-              href={`tel:${job.phone}`}
-              className="w-8 h-8 flex items-center justify-center rounded-xl text-sm"
+        {/* 메인 정보 */}
+        <div className="flex items-start gap-3 px-3 pb-2">
+          <div className="flex-1 min-w-0">
+            <div className="flex flex-wrap items-center gap-2 mb-0.5">
+              <span className="text-sm font-bold" style={{ color: "white" }}>
+                {job.name || "?"}
+              </span>
+              <span className="text-xs" style={{ color: "#555" }}>
+                {job.region}
+              </span>
+              <span className="text-xs" style={{ color: "#7a7a7a" }}>
+                {job.symptom}
+              </span>
+            </div>
+            <div className="flex flex-wrap items-center gap-3 mt-1">
+              {job.price > 0 && (
+                <span
+                  className="text-sm font-bold"
+                  style={{ color: "#2fae8a" }}>
+                  {formatPrice(job.price)}
+                </span>
+              )}
+              {job.memo && (
+                <span
+                  className="text-xs flex items-center gap-1"
+                  style={{ color: "#7a7a7a" }}>
+                  <span style={{ fontSize: 10 }}>💬</span>
+                  {job.memo}
+                </span>
+              )}
+            </div>
+
+            {/* 완료 사진 썸네일 */}
+            {job.completion_photo && (
+              <div className="mt-2">
+                <img
+                  src={job.completion_photo}
+                  alt="완료 사진"
+                  onClick={() => setPhotoPreview(job.completion_photo!)}
+                  className="rounded-xl cursor-pointer"
+                  style={{
+                    height: 72,
+                    width: 96,
+                    objectFit: "cover",
+                    border: "1px solid #2fae8a44",
+                  }}
+                />
+              </div>
+            )}
+          </div>
+
+          {/* 액션 버튼들 */}
+          <div className="flex flex-col gap-1 flex-shrink-0">
+            {job.phone && (
+              <a
+                href={`tel:${job.phone}`}
+                className="w-8 h-8 flex items-center justify-center rounded-xl text-sm"
+                style={{
+                  backgroundColor: "#ef444422",
+                  color: "#ef4444",
+                  border: "1px solid #ef444433",
+                }}>
+                📞
+              </a>
+            )}
+            <button
+              onClick={() => onEdit(job)}
+              className="w-8 h-8 flex items-center justify-center rounded-xl text-xs font-bold"
+              style={{
+                backgroundColor: "#2a2a2a",
+                color: "#aaa",
+                border: "1px solid #333",
+              }}>
+              수정
+            </button>
+            <button
+              onClick={() => onDelete(job.id)}
+              className="w-8 h-8 flex items-center justify-center rounded-xl text-xs font-bold"
               style={{
                 backgroundColor: "#ef444422",
                 color: "#ef4444",
                 border: "1px solid #ef444433",
               }}>
-              📞
-            </a>
-          )}
-          <button
-            onClick={() => onEdit(job)}
-            className="w-8 h-8 flex items-center justify-center rounded-xl text-xs font-bold"
-            style={{
-              backgroundColor: "#2a2a2a",
-              color: "#aaa",
-              border: "1px solid #333",
-            }}>
-            수정
-          </button>
-          <button
-            onClick={() => onDelete(job.id)}
-            className="w-8 h-8 flex items-center justify-center rounded-xl text-xs font-bold"
-            style={{
-              backgroundColor: "#ef444422",
-              color: "#ef4444",
-              border: "1px solid #ef444433",
-            }}>
-            삭제
-          </button>
+              삭제
+            </button>
+          </div>
         </div>
       </div>
-    </div>
+
+      {/* 사진 전체보기 */}
+      {photoPreview && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          style={{ backgroundColor: "rgba(0,0,0,0.95)" }}
+          onClick={() => setPhotoPreview(null)}>
+          <img
+            src={photoPreview}
+            alt="완료 사진"
+            className="rounded-2xl max-w-full max-h-full"
+            style={{ maxHeight: "85vh" }}
+          />
+        </div>
+      )}
+    </>
   );
 }
 
