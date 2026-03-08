@@ -58,11 +58,17 @@ const STATUS_DOT: Record<Status, string> = {
   취소: "#ef4444",
 };
 
+function nowKST() {
+  // UTC+9 한국 시간
+  const now = new Date();
+  const kst = new Date(now.getTime() + 9 * 60 * 60 * 1000);
+  return kst;
+}
 function today() {
-  return new Date().toISOString().slice(0, 10);
+  return nowKST().toISOString().slice(0, 10);
 }
 function thisYearMonth() {
-  return new Date().toISOString().slice(0, 7);
+  return nowKST().toISOString().slice(0, 7);
 }
 function formatDate(d: string) {
   if (!d) return "-";
@@ -100,7 +106,7 @@ function reviewSms(job: Job) {
 
 const emptyForm = () => ({
   visit_date: today(),
-  visit_time: "",
+  visit_time: "00:00",
   name: "",
   phone: "",
   region: "",
@@ -126,175 +132,208 @@ function pad(n: number) {
 // ── 사진 업로드/관리 팝업 ─────────────────────────────────
 function PhotoCapture({
   jobId,
-  currentPhoto,
+  photos,
   onDone,
   onCancel,
+  revertStatus,
 }: {
   jobId: string;
-  currentPhoto?: string;
-  onDone: (url: string | null) => void;
+  photos: string[];
+  onDone: (urls: string[]) => void;
   onCancel: () => void;
+  revertStatus?: Status;
 }) {
-  const [preview, setPreview] = useState<string | null>(currentPhoto || null);
-  const [file, setFile] = useState<File | null>(null);
+  const [list, setList] = useState<string[]>(photos);
   const [uploading, setUploading] = useState(false);
-  const isExisting = !!currentPhoto && preview === currentPhoto;
+  const [lightbox, setLightbox] = useState<string | null>(null);
 
-  const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const f = e.target.files?.[0];
-    if (!f) return;
-    setFile(f);
-    setPreview(URL.createObjectURL(f));
-  };
-
-  const handleUpload = async () => {
-    if (!file) return;
+  const handleFiles = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    if (!files.length) return;
     setUploading(true);
-    const ext = file.name.split(".").pop() || "jpg";
-    const path = `${jobId}-${Date.now()}.${ext}`;
-    const { error } = await getSupabase()
-      .storage.from("completion-photos")
-      .upload(path, file, { upsert: true });
-    if (error) {
-      alert("업로드 실패: " + error.message);
-      setUploading(false);
-      return;
+    const newUrls: string[] = [];
+    for (const file of files) {
+      const ext = file.name.split(".").pop() || "jpg";
+      const path = `${jobId}-${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+      const { error } = await getSupabase()
+        .storage.from("completion-photos")
+        .upload(path, file, { upsert: true });
+      if (error) {
+        alert("업로드 실패: " + error.message);
+        continue;
+      }
+      const { data } = getSupabase()
+        .storage.from("completion-photos")
+        .getPublicUrl(path);
+      newUrls.push(data.publicUrl);
     }
-    const { data } = getSupabase()
-      .storage.from("completion-photos")
-      .getPublicUrl(path);
+    setList((prev) => [...prev, ...newUrls]);
     setUploading(false);
-    onDone(data.publicUrl);
   };
 
-  const handleDelete = async () => {
-    if (!confirm("사진을 삭제할까요?")) return;
-    onDone(null);
+  const handleDelete = (url: string) => {
+    if (!confirm("이 사진을 삭제할까요?")) return;
+    setList((prev) => prev.filter((u) => u !== url));
   };
 
-  const handleDownload = () => {
-    if (!preview) return;
+  const handleDownload = (url: string, idx: number) => {
     const a = document.createElement("a");
-    a.href = preview;
-    a.download = `suridam-${jobId}.jpg`;
+    a.href = url;
+    a.download = `suridam-${jobId}-${idx + 1}.jpg`;
     a.target = "_blank";
     a.click();
   };
 
-  return (
-    <div
-      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4"
-      style={{ backgroundColor: "rgba(0,0,0,0.92)" }}>
-      <div
-        className="w-full max-w-sm rounded-2xl overflow-hidden"
-        style={{ backgroundColor: "#1e1e1e", border: "1px solid #333" }}>
-        <div
-          className="flex items-center justify-between px-4 py-3"
-          style={{ borderBottom: "1px solid #2a2a2a" }}>
-          <span className="text-sm font-bold" style={{ color: "white" }}>
-            완료 사진
-          </span>
-          <button onClick={onCancel} style={{ color: "#555" }}>
-            ✕
-          </button>
-        </div>
+  const handleClose = () => {
+    onDone(list);
+  };
 
-        {!preview ? (
-          <div className="flex flex-col items-center justify-center py-10 gap-3">
-            <p className="text-sm" style={{ color: "#555" }}>
-              수리 완료 사진을 추가해주세요
-            </p>
+  const handleCancelWithRevert = () => {
+    onCancel();
+  };
+
+  return (
+    <>
+      <div
+        className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4"
+        style={{ backgroundColor: "rgba(0,0,0,0.92)" }}>
+        <div
+          className="w-full max-w-sm rounded-2xl overflow-hidden flex flex-col"
+          style={{
+            backgroundColor: "#1e1e1e",
+            border: "1px solid #333",
+            maxHeight: "88vh",
+          }}>
+          {/* 헤더 */}
+          <div
+            className="flex items-center justify-between px-4 py-3 flex-shrink-0"
+            style={{ borderBottom: "1px solid #2a2a2a" }}>
+            <div>
+              <span className="text-sm font-bold" style={{ color: "white" }}>
+                완료 사진
+              </span>
+              <span className="text-xs ml-2" style={{ color: "#555" }}>
+                {list.length}장
+              </span>
+            </div>
+            <button
+              onClick={handleCancelWithRevert}
+              style={{ color: "#555", fontSize: 18 }}>
+              ✕
+            </button>
+          </div>
+
+          {/* 사진 그리드 */}
+          <div className="flex-1 overflow-y-auto p-3">
+            {list.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-10 gap-2">
+                <p className="text-3xl">📷</p>
+                <p className="text-sm" style={{ color: "#555" }}>
+                  사진이 없어요
+                </p>
+                {revertStatus && (
+                  <p className="text-xs" style={{ color: "#ef4444" }}>
+                    사진 없이 닫으면 '{revertStatus}'으로 돌아가요
+                  </p>
+                )}
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 gap-2">
+                {list.map((url, idx) => (
+                  <div
+                    key={url}
+                    className="relative rounded-xl overflow-hidden"
+                    style={{ aspectRatio: "1", border: "1px solid #2a2a2a" }}>
+                    <img
+                      src={url}
+                      alt={`사진 ${idx + 1}`}
+                      onClick={() => setLightbox(url)}
+                      className="w-full h-full cursor-pointer"
+                      style={{ objectFit: "cover" }}
+                    />
+                    <div
+                      className="absolute bottom-0 left-0 right-0 flex gap-1 p-1"
+                      style={{ backgroundColor: "rgba(0,0,0,0.6)" }}>
+                      <button
+                        onClick={() => handleDownload(url, idx)}
+                        className="flex-1 rounded-lg py-1 text-xs"
+                        style={{ backgroundColor: "#ffffff18", color: "#ddd" }}>
+                        ⬇
+                      </button>
+                      <button
+                        onClick={() => handleDelete(url)}
+                        className="flex-1 rounded-lg py-1 text-xs"
+                        style={{
+                          backgroundColor: "#ef444430",
+                          color: "#ef4444",
+                        }}>
+                        🗑
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* 하단 버튼 */}
+          <div
+            className="flex gap-2 p-3 flex-shrink-0"
+            style={{ borderTop: "1px solid #2a2a2a" }}>
             <label
-              className="rounded-xl px-6 py-3 text-sm font-bold text-white cursor-pointer"
-              style={{ backgroundColor: "#2fae8a" }}>
-              📷 카메라로 찍기
+              className="flex-1 rounded-xl py-2.5 text-xs font-bold text-center cursor-pointer"
+              style={{ backgroundColor: "#2a2a2a", color: "#aaa" }}>
+              📷 카메라
               <input
                 type="file"
                 accept="image/*"
                 capture="environment"
+                multiple
                 className="hidden"
-                onChange={handleFile}
+                onChange={handleFiles}
               />
             </label>
             <label
-              className="rounded-xl px-6 py-3 text-sm font-bold cursor-pointer"
+              className="flex-1 rounded-xl py-2.5 text-xs font-bold text-center cursor-pointer"
               style={{ backgroundColor: "#2a2a2a", color: "#aaa" }}>
-              🖼 갤러리에서 선택
+              🖼 갤러리
               <input
                 type="file"
                 accept="image/*"
+                multiple
                 className="hidden"
-                onChange={handleFile}
+                onChange={handleFiles}
               />
             </label>
+            <button
+              onClick={handleClose}
+              disabled={uploading}
+              className="flex-1 rounded-xl py-2.5 text-xs font-bold text-white"
+              style={{
+                backgroundColor: "#2fae8a",
+                opacity: uploading ? 0.7 : 1,
+              }}>
+              {uploading ? "저장중..." : "확인 ✓"}
+            </button>
           </div>
-        ) : (
-          <div>
-            <img
-              src={preview}
-              alt="완료 사진"
-              className="w-full"
-              style={{ maxHeight: 340, objectFit: "cover" }}
-            />
-            {isExisting ? (
-              /* 기존 사진 관리 버튼 */
-              <div className="flex gap-2 p-3">
-                <button
-                  onClick={handleDownload}
-                  className="flex-1 rounded-xl py-2.5 text-xs font-bold"
-                  style={{ backgroundColor: "#2a2a2a", color: "#aaa" }}>
-                  ⬇ 다운로드
-                </button>
-                <label
-                  className="flex-1 rounded-xl py-2.5 text-xs font-bold text-center cursor-pointer"
-                  style={{
-                    backgroundColor: "#2fae8a22",
-                    color: "#2fae8a",
-                    border: "1px solid #2fae8a44",
-                  }}>
-                  🔄 교체
-                  <input
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    onChange={handleFile}
-                  />
-                </label>
-                <button
-                  onClick={handleDelete}
-                  className="flex-1 rounded-xl py-2.5 text-xs font-bold"
-                  style={{ backgroundColor: "#ef444422", color: "#ef4444" }}>
-                  🗑 삭제
-                </button>
-              </div>
-            ) : (
-              /* 새 사진 저장 버튼 */
-              <div className="flex gap-2 p-3">
-                <button
-                  onClick={() => {
-                    setPreview(null);
-                    setFile(null);
-                  }}
-                  className="flex-1 rounded-xl py-3 text-sm font-bold"
-                  style={{ backgroundColor: "#2a2a2a", color: "#aaa" }}>
-                  다시 찍기
-                </button>
-                <button
-                  onClick={handleUpload}
-                  disabled={uploading}
-                  className="flex-1 rounded-xl py-3 text-sm font-bold text-white"
-                  style={{
-                    backgroundColor: "#2fae8a",
-                    opacity: uploading ? 0.7 : 1,
-                  }}>
-                  {uploading ? "저장 중..." : "저장 ✓"}
-                </button>
-              </div>
-            )}
-          </div>
-        )}
+        </div>
       </div>
-    </div>
+
+      {/* 라이트박스 */}
+      {lightbox && (
+        <div
+          className="fixed inset-0 z-[60] flex items-center justify-center p-4"
+          style={{ backgroundColor: "rgba(0,0,0,0.97)" }}
+          onClick={() => setLightbox(null)}>
+          <img
+            src={lightbox}
+            alt="사진"
+            className="rounded-2xl max-w-full max-h-full"
+            style={{ maxHeight: "85vh" }}
+          />
+        </div>
+      )}
+    </>
   );
 }
 
@@ -312,21 +351,51 @@ function JobCard({
 }) {
   const techColor = TECH_COLOR[job.tech || ""];
   const [showPhoto, setShowPhoto] = useState(false);
-  const [photoPreview, setPhotoPreview] = useState<string | null>(null);
+  const [prevStatus, setPrevStatus] = useState<Status>(job.status);
 
-  const handlePhotoDone = (url: string | null) => {
-    onUpdate(job.id, { completion_photo: url ?? "" });
+  // photos stored as JSON array in completion_photo field
+  const getPhotos = (): string[] => {
+    if (!job.completion_photo) return [];
+    try {
+      return JSON.parse(job.completion_photo);
+    } catch {
+      return [job.completion_photo];
+    }
+  };
+
+  const handleComplete = () => {
+    setPrevStatus(job.status);
+    onUpdate(job.id, { status: "완료" });
+    setShowPhoto(true);
+  };
+
+  const handlePhotoDone = (urls: string[]) => {
+    if (urls.length === 0 && prevStatus !== "완료") {
+      // 사진 없이 닫으면 이전 상태로 복구
+      onUpdate(job.id, { status: prevStatus, completion_photo: "" });
+    } else {
+      onUpdate(job.id, {
+        completion_photo: urls.length > 0 ? JSON.stringify(urls) : "",
+      });
+    }
     setShowPhoto(false);
   };
+
+  const photos = getPhotos();
 
   return (
     <>
       {showPhoto && (
         <PhotoCapture
           jobId={job.id}
-          currentPhoto={job.completion_photo || undefined}
+          photos={photos}
           onDone={handlePhotoDone}
-          onCancel={() => setShowPhoto(false)}
+          onCancel={() => {
+            if (prevStatus !== "완료")
+              onUpdate(job.id, { status: prevStatus, completion_photo: "" });
+            setShowPhoto(false);
+          }}
+          revertStatus={prevStatus !== "완료" ? prevStatus : undefined}
         />
       )}
       <div
@@ -336,7 +405,7 @@ function JobCard({
           border: "1px solid #2a2a2a",
           borderLeft: `3px solid ${techColor}`,
         }}>
-        {/* 상단 행: 상태 드롭다운 + 날짜 + 시간 + 기사 */}
+        {/* 상단 행 */}
         <div className="flex items-center gap-2 px-3 pt-3 pb-2 flex-wrap">
           <select
             value={job.status}
@@ -410,21 +479,39 @@ function JobCard({
               )}
             </div>
 
-            {/* 완료 사진 썸네일 */}
-            {job.completion_photo && (
-              <div className="mt-2">
-                <img
-                  src={job.completion_photo}
-                  alt="완료 사진"
-                  onClick={() => setPhotoPreview(job.completion_photo!)}
-                  className="rounded-xl cursor-pointer"
-                  style={{
-                    height: 72,
-                    width: 96,
-                    objectFit: "cover",
-                    border: "1px solid #2fae8a44",
-                  }}
-                />
+            {/* 완료 사진 썸네일 그리드 */}
+            {photos.length > 0 && (
+              <div className="flex gap-1.5 mt-2 flex-wrap">
+                {photos.slice(0, 4).map((url, idx) => (
+                  <div key={url} className="relative">
+                    <img
+                      src={url}
+                      alt={`완료 ${idx + 1}`}
+                      onClick={() => {
+                        setPrevStatus(job.status);
+                        setShowPhoto(true);
+                      }}
+                      className="rounded-xl cursor-pointer"
+                      style={{
+                        height: 64,
+                        width: 64,
+                        objectFit: "cover",
+                        border: "1px solid #2fae8a44",
+                      }}
+                    />
+                    {idx === 3 && photos.length > 4 && (
+                      <div
+                        className="absolute inset-0 rounded-xl flex items-center justify-center"
+                        style={{ backgroundColor: "rgba(0,0,0,0.6)" }}>
+                        <span
+                          className="text-xs font-bold"
+                          style={{ color: "white" }}>
+                          +{photos.length - 4}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                ))}
               </div>
             )}
           </div>
@@ -466,47 +553,34 @@ function JobCard({
           </div>
         </div>
 
-        {/* 하단 완료 버튼 바 */}
+        {/* 하단 완료 버튼 */}
         <div className="flex gap-2 px-3 pb-3">
           {job.status !== "완료" ? (
             <button
-              onClick={() => {
-                onUpdate(job.id, { status: "완료" });
-                setShowPhoto(true);
-              }}
+              onClick={handleComplete}
               className="flex-1 rounded-xl py-2.5 text-xs font-bold text-white"
               style={{ backgroundColor: "#2fae8a" }}>
               ✓ 완료 처리
             </button>
           ) : (
             <button
-              onClick={() => setShowPhoto(true)}
+              onClick={() => {
+                setPrevStatus("완료");
+                setShowPhoto(true);
+              }}
               className="flex-1 rounded-xl py-2.5 text-xs font-bold"
               style={{
-                backgroundColor: job.completion_photo ? "#2fae8a22" : "#2a2a2a",
-                color: job.completion_photo ? "#2fae8a" : "#aaa",
-                border: `1px solid ${job.completion_photo ? "#2fae8a44" : "#333"}`,
+                backgroundColor: photos.length > 0 ? "#2fae8a22" : "#2a2a2a",
+                color: photos.length > 0 ? "#2fae8a" : "#aaa",
+                border: `1px solid ${photos.length > 0 ? "#2fae8a44" : "#333"}`,
               }}>
-              {job.completion_photo ? "📷 사진 관리" : "📷 사진 추가"}
+              {photos.length > 0
+                ? `📷 사진 관리 (${photos.length}장)`
+                : "📷 사진 추가"}
             </button>
           )}
         </div>
       </div>
-
-      {/* 사진 전체보기 */}
-      {photoPreview && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4"
-          style={{ backgroundColor: "rgba(0,0,0,0.95)" }}
-          onClick={() => setPhotoPreview(null)}>
-          <img
-            src={photoPreview}
-            alt="완료 사진"
-            className="rounded-2xl max-w-full max-h-full"
-            style={{ maxHeight: "85vh" }}
-          />
-        </div>
-      )}
     </>
   );
 }
@@ -524,8 +598,8 @@ export default function AdminDashboard() {
   const [editId, setEditId] = useState<string | null>(null);
   const [form, setForm] = useState(emptyForm());
   const [saving, setSaving] = useState(false);
-  const [calYear, setCalYear] = useState(new Date().getFullYear());
-  const [calMonth, setCalMonth] = useState(new Date().getMonth());
+  const [calYear, setCalYear] = useState(nowKST().getFullYear());
+  const [calMonth, setCalMonth] = useState(nowKST().getMonth());
   const [selectedDay, setSelectedDay] = useState<string | null>(null);
 
   const load = useCallback(async () => {
@@ -1529,16 +1603,60 @@ export default function AdminDashboard() {
                 <span
                   className="text-xs font-semibold"
                   style={{ color: "#7a7a7a" }}>
-                  도착 시간
+                  도착 시간 (한국시간)
                 </span>
-                <input
-                  type="time"
-                  value={form.visit_time}
-                  onChange={(e) =>
-                    setForm((p) => ({ ...p, visit_time: e.target.value }))
-                  }
-                  style={inputStyle}
-                />
+                <div className="flex items-center gap-1">
+                  <input
+                    type="time"
+                    value={form.visit_time}
+                    onChange={(e) =>
+                      setForm((p) => ({ ...p, visit_time: e.target.value }))
+                    }
+                    style={{ ...inputStyle, flex: 1 }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const [h, m] = (form.visit_time || "00:00")
+                        .split(":")
+                        .map(Number);
+                      const total = h * 60 + m - 30;
+                      const safe = ((total % 1440) + 1440) % 1440;
+                      setForm((p) => ({
+                        ...p,
+                        visit_time: `${String(Math.floor(safe / 60)).padStart(2, "0")}:${String(safe % 60).padStart(2, "0")}`,
+                      }));
+                    }}
+                    className="rounded-xl px-2 py-2 text-sm font-bold flex-shrink-0"
+                    style={{
+                      backgroundColor: "#2a2a2a",
+                      color: "#aaa",
+                      border: "1px solid #333",
+                    }}>
+                    －
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const [h, m] = (form.visit_time || "00:00")
+                        .split(":")
+                        .map(Number);
+                      const total = h * 60 + m + 30;
+                      const safe = total % 1440;
+                      setForm((p) => ({
+                        ...p,
+                        visit_time: `${String(Math.floor(safe / 60)).padStart(2, "0")}:${String(safe % 60).padStart(2, "0")}`,
+                      }));
+                    }}
+                    className="rounded-xl px-2 py-2 text-sm font-bold flex-shrink-0"
+                    style={{
+                      backgroundColor: "#2a2a2a",
+                      color: "#aaa",
+                      border: "1px solid #333",
+                    }}>
+                    ＋
+                  </button>
+                </div>
               </label>
             </div>
             <label className="flex flex-col gap-1">
