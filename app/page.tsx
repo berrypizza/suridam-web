@@ -7,11 +7,13 @@ import FloatingCTA from "@/app/components/FloatingCTA";
 import Navbar from "@/app/components/Navbar";
 import Footer from "@/app/components/Footer";
 import EstimateCalculator from "./components/EstimateCalculator";
+import Intro from "./components/Intro";
 export default function AdPage() {
   return (
     <>
       <main className="min-h-screen" style={{ backgroundColor: "#1e1e1e" }}>
         <HookIntro />
+        <Intro />
         <DifferenceAndReviews />
         <WhySuridam />
         <Staffphotos />

@@ -26,7 +26,7 @@ export default function HookIntro() {
         className="absolute inset-0 z-10"
         style={{
           background:
-            "linear-gradient(to bottom, rgba(0,0,0,0) 30%, rgba(0,0,0,0.72) 100%)",
+            "linear-gradient(to bottom, rgba(0,0,0,0) 7%, rgba(0, 0, 0, 0.99) 100%)",
         }}
       />
 

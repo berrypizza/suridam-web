@@ -6,6 +6,7 @@ import ContactCTASofa from "@/app/sofa/components/ContactCTASofa";
 import Navbar from "@/app/components/Navbar";
 import Footer from "@/app/components/Footer";
 import FloatingCTA from "@/app/components/FloatingCTA";
+import Intro from "../components/Intro";
 
 export const metadata = {
   title: "소파 꺼짐 수리 | 수리담",
@@ -18,6 +19,7 @@ export default function SofaPage() {
     <>
       <main className="min-h-screen" style={{ backgroundColor: "#1e1e1e" }}>
         <HookIntroSofa />
+        <Intro />
         <DifferenceAndReviewsSofa />
         <WhySuridamSofa />
         <StaffPhotosSofa />
