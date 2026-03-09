@@ -1,41 +1,48 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { getSupabase } from "@/lib/supabase";
 
 export default function AuthCallbackPage() {
+  const [msg, setMsg] = useState("로그인 처리 중...");
+
   useEffect(() => {
     const supabase = getSupabase();
 
-    // onAuthStateChange가 해시에서 토큰을 자동으로 읽고 세션 설정
+    // implicit flow: 브라우저 URL 해시에서 자동으로 세션 설정됨
+    // detectSessionInUrl: true 가 설정되어 있으면 자동 처리
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === "SIGNED_IN" && session) {
+        setMsg("로그인 완료! 이동 중...");
         subscription.unsubscribe();
-        window.location.replace("/mypage");
-      }
-      if (event === "SIGNED_OUT") {
-        window.location.replace("/login");
+        setTimeout(() => {
+          window.location.replace("/mypage");
+        }, 500);
       }
     });
 
-    // 이미 세션 있으면 바로 이동
-    supabase.auth.getSession().then(({ data }) => {
+    // 1초 후 세션 직접 체크 (이미 처리됐을 수도 있음)
+    const check = setTimeout(async () => {
+      const { data } = await supabase.auth.getSession();
       if (data.session) {
+        setMsg("로그인 완료! 이동 중...");
         subscription.unsubscribe();
         window.location.replace("/mypage");
       }
-    });
+    }, 1000);
 
-    // 10초 후에도 안 되면 로그인으로
-    const timer = setTimeout(() => {
+    // 15초 타임아웃
+    const timeout = setTimeout(() => {
+      setMsg("로그인 실패. 다시 시도해주세요.");
       subscription.unsubscribe();
-      window.location.replace("/login");
-    }, 10000);
+      setTimeout(() => window.location.replace("/login"), 2000);
+    }, 15000);
 
     return () => {
-      clearTimeout(timer);
+      clearTimeout(check);
+      clearTimeout(timeout);
       subscription.unsubscribe();
     };
   }, []);
@@ -62,7 +69,7 @@ export default function AuthCallbackPage() {
           animation: "spin 0.8s linear infinite",
         }}
       />
-      <div style={{ color: "#555", fontSize: 14 }}>로그인 처리 중...</div>
+      <div style={{ color: "#888", fontSize: 14 }}>{msg}</div>
       <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
     </div>
   );
