@@ -7,44 +7,43 @@ export default function AuthCallbackPage() {
   const [msg, setMsg] = useState("로그인 처리 중...");
 
   useEffect(() => {
-    const supabase = getSupabase();
+    const run = async () => {
+      const supabase = getSupabase();
 
-    // implicit flow: 브라우저 URL 해시에서 자동으로 세션 설정됨
-    // detectSessionInUrl: true 가 설정되어 있으면 자동 처리
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === "SIGNED_IN" && session) {
-        setMsg("로그인 완료! 이동 중...");
-        subscription.unsubscribe();
-        setTimeout(() => {
-          window.location.replace("/mypage");
-        }, 500);
+      // URL에서 에러 확인
+      const params = new URLSearchParams(window.location.search);
+      const errorCode = params.get("error");
+      if (errorCode) {
+        setMsg("로그인 실패. 다시 시도해주세요.");
+        setTimeout(() => window.location.replace("/login"), 2000);
+        return;
       }
-    });
 
-    // 1초 후 세션 직접 체크 (이미 처리됐을 수도 있음)
-    const check = setTimeout(async () => {
+      // PKCE: code를 세션으로 교환
+      const code = params.get("code");
+      if (code) {
+        const { error } = await supabase.auth.exchangeCodeForSession(code);
+        if (error) {
+          setMsg("로그인 실패: " + error.message);
+          setTimeout(() => window.location.replace("/login"), 2000);
+          return;
+        }
+        setMsg("로그인 완료!");
+        window.location.replace("/mypage");
+        return;
+      }
+
+      // 세션 이미 있으면 이동
       const { data } = await supabase.auth.getSession();
       if (data.session) {
-        setMsg("로그인 완료! 이동 중...");
-        subscription.unsubscribe();
         window.location.replace("/mypage");
+        return;
       }
-    }, 1000);
 
-    // 15초 타임아웃
-    const timeout = setTimeout(() => {
-      setMsg("로그인 실패. 다시 시도해주세요.");
-      subscription.unsubscribe();
-      setTimeout(() => window.location.replace("/login"), 2000);
-    }, 15000);
-
-    return () => {
-      clearTimeout(check);
-      clearTimeout(timeout);
-      subscription.unsubscribe();
+      window.location.replace("/login");
     };
+
+    run();
   }, []);
 
   return (
