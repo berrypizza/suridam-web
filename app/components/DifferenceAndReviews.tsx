@@ -296,9 +296,10 @@ export default function DifferenceAndReviews() {
             Before / After
           </span>
 
-          <div className="flex flex-col gap-8">
+          <div className="flex flex-col gap-10">
             {beforeAfterSets.map((set, i) => (
               <div key={i}>
+                {/* 태그 */}
                 <div className="flex items-center gap-3 mb-4">
                   <span
                     className="inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-sm font-bold flex-shrink-0"
@@ -311,49 +312,87 @@ export default function DifferenceAndReviews() {
                   />
                 </div>
 
-                <div className="grid grid-cols-2 gap-3 md:gap-5">
+                {/* 모바일: 세로 스택 / 데스크탑: 좌우 */}
+                <div className="flex flex-col md:grid md:grid-cols-2 gap-3 md:gap-5">
+                  {/* Before */}
                   <div
                     className="rounded-2xl overflow-hidden"
-                    style={{ border: "1px solid #e5e5e5" }}>
+                    style={{ border: "2px solid #e0e0e0" }}>
                     <div
-                      className="relative w-full aspect-[4/3]"
-                      style={{ backgroundColor: "#e5e5e5" }}>
+                      className="relative w-full"
+                      style={{
+                        aspectRatio: "3/2",
+                        backgroundColor: "#e5e5e5",
+                      }}>
                       <Image
                         src={set.before}
                         alt={`${set.tag} 전`}
                         fill
-                        sizes="(max-width: 768px) 50vw, 480px"
+                        sizes="(max-width: 768px) 100vw, 50vw"
                         className="object-cover"
                       />
+                      {/* 하단 레이블 바 */}
                       <div
-                        className="absolute top-3 left-3 px-3 py-1 rounded-lg text-sm font-bold"
+                        className="absolute bottom-0 left-0 right-0 flex items-center justify-between px-4 py-3"
                         style={{
-                          backgroundColor: "rgba(0,0,0,0.6)",
-                          color: "white",
-                          backdropFilter: "blur(4px)",
+                          background:
+                            "linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 100%)",
                         }}>
-                        Before
+                        <span
+                          className="text-base font-black"
+                          style={{ color: "white", letterSpacing: "0.05em" }}>
+                          Before
+                        </span>
+                        <span
+                          className="text-sm font-semibold px-2 py-0.5 rounded-full"
+                          style={{
+                            backgroundColor: "rgba(255,255,255,0.2)",
+                            color: "rgba(255,255,255,0.85)",
+                          }}>
+                          수리 전
+                        </span>
                       </div>
                     </div>
                   </div>
 
+                  {/* After */}
                   <div
                     className="rounded-2xl overflow-hidden"
                     style={{ border: "2px solid #2fae8a" }}>
                     <div
-                      className="relative w-full aspect-[4/3]"
-                      style={{ backgroundColor: "#e5e5e5" }}>
+                      className="relative w-full"
+                      style={{
+                        aspectRatio: "3/2",
+                        backgroundColor: "#e5e5e5",
+                      }}>
                       <Image
                         src={set.after}
                         alt={`${set.tag} 후`}
                         fill
-                        sizes="(max-width: 768px) 50vw, 480px"
+                        sizes="(max-width: 768px) 100vw, 50vw"
                         className="object-cover"
                       />
+                      {/* 하단 레이블 바 */}
                       <div
-                        className="absolute top-3 left-3 px-3 py-1 rounded-lg text-sm font-bold"
-                        style={{ backgroundColor: "#2fae8a", color: "white" }}>
-                        After ✦
+                        className="absolute bottom-0 left-0 right-0 flex items-center justify-between px-4 py-3"
+                        style={{
+                          background:
+                            "linear-gradient(to top, rgba(15,60,40,0.85) 0%, transparent 100%)",
+                        }}>
+                        <span
+                          className="text-base font-black"
+                          style={{ color: "#2fae8a", letterSpacing: "0.05em" }}>
+                          After ✦
+                        </span>
+                        <span
+                          className="text-sm font-semibold px-2 py-0.5 rounded-full"
+                          style={{
+                            backgroundColor: "#2fae8a33",
+                            color: "#2fae8a",
+                            border: "1px solid #2fae8a66",
+                          }}>
+                          수리 완료
+                        </span>
                       </div>
                     </div>
                   </div>
