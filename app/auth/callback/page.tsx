@@ -7,44 +7,37 @@ export default function AuthCallbackPage() {
   useEffect(() => {
     const supabase = getSupabase();
 
-    const handleCallback = async () => {
-      // implicit flow: 토큰이 URL 해시(#)에 들어옴
-      const hash = window.location.hash;
-      if (hash && hash.includes("access_token")) {
-        // Supabase가 해시에서 자동으로 세션 설정
-        const { data, error } = await supabase.auth.getSession();
-        if (data.session) {
-          window.location.href = "/mypage";
-          return;
-        }
-        if (error) {
-          window.location.href = "/login?error=auth_failed";
-          return;
-        }
+    // onAuthStateChange가 해시에서 토큰을 자동으로 읽고 세션 설정
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === "SIGNED_IN" && session) {
+        subscription.unsubscribe();
+        window.location.replace("/mypage");
       }
-
-      // PKCE flow: code가 query string에 있음
-      const params = new URLSearchParams(window.location.search);
-      const code = params.get("code");
-      if (code) {
-        const { error } = await supabase.auth.exchangeCodeForSession(code);
-        if (!error) {
-          window.location.href = "/mypage";
-          return;
-        }
+      if (event === "SIGNED_OUT") {
+        window.location.replace("/login");
       }
+    });
 
-      // 이미 세션 있으면 이동
-      const { data } = await supabase.auth.getSession();
+    // 이미 세션 있으면 바로 이동
+    supabase.auth.getSession().then(({ data }) => {
       if (data.session) {
-        window.location.href = "/mypage";
-      } else {
-        window.location.href = "/login";
+        subscription.unsubscribe();
+        window.location.replace("/mypage");
       }
-    };
+    });
 
-    // 해시 처리를 위해 약간 딜레이
-    setTimeout(handleCallback, 300);
+    // 10초 후에도 안 되면 로그인으로
+    const timer = setTimeout(() => {
+      subscription.unsubscribe();
+      window.location.replace("/login");
+    }, 10000);
+
+    return () => {
+      clearTimeout(timer);
+      subscription.unsubscribe();
+    };
   }, []);
 
   return (
