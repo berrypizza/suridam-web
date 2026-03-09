@@ -10,32 +10,29 @@ export default function AuthCallbackPage() {
   useEffect(() => {
     const run = async () => {
       try {
-        const currentUrl = new URL(window.location.href);
-        const code = currentUrl.searchParams.get("code");
+        const supabase = getSupabase();
 
+        // 해시/세션 반영될 시간 잠깐 대기
+        await new Promise((resolve) => setTimeout(resolve, 700));
+
+        const { data, error } = await supabase.auth.getSession();
+
+        console.log("callback session:", data, error);
         console.log("callback url:", window.location.href);
-        console.log("auth code:", code);
-
-        if (!code) {
-          console.error("No code found in callback URL");
-          router.replace("/login?error=no_code");
-          return;
-        }
-
-        const { data, error } =
-          await getSupabase().auth.exchangeCodeForSession(code);
-
-        console.log("exchange result:", data, error);
 
         if (error) {
-          console.error("Exchange error:", error);
           router.replace(`/login?error=${encodeURIComponent(error.message)}`);
           return;
         }
 
-        router.replace("/");
+        if (data.session) {
+          router.replace("/");
+          return;
+        }
+
+        router.replace("/login?error=session_not_found");
       } catch (err) {
-        console.error("Unexpected callback error:", err);
+        console.error("callback error:", err);
         router.replace("/login?error=unexpected");
       }
     };
