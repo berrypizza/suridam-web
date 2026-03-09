@@ -24,7 +24,7 @@ interface Category {
   countLabel?: string;
 }
 
-// --- 데이터 (기존 데이터 유지) ---
+// --- 데이터 ---
 const categories: Category[] = [
   {
     id: "upper_sag",
@@ -209,7 +209,6 @@ const categories: Category[] = [
     selectLabel: "미싱 여부",
     countLabel: "의자 M당",
     addUnit: "미터(단위m)",
-
     selectOptions: [
       { id: "no_sewing", label: "미싱 없음", pricePerUnit: 30000 },
       { id: "sewing", label: "미싱 있음", pricePerUnit: 40000 },
@@ -306,7 +305,7 @@ function formatPrice(p: number) {
 }
 
 export default function EstimateCalculator() {
-  const [step, setStep] = useState(1); // 1: 대분류, 2: 소분류, 3: 상세설정
+  const [step, setStep] = useState(1);
   const [selectedGroup, setSelectedGroup] = useState<string | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [count, setCount] = useState(1);
@@ -314,14 +313,16 @@ export default function EstimateCalculator() {
 
   const cat = categories.find((c) => c.id === selectedId);
 
-  // 가격 계산 로직 (기존 유지)
   const calcPrice = () => {
     if (!cat) return { total: 0, breakdown: "" };
-    if (cat.type === "fixed")
+
+    if (cat.type === "fixed") {
       return {
         total: cat.fixedPrice!,
         breakdown: `정찰가 ${formatPrice(cat.fixedPrice!)}`,
       };
+    }
+
     if (cat.type === "count") {
       const extra = Math.max(0, count - cat.baseCount!) * cat.addPrice!;
       const total = cat.basePrice! + extra;
@@ -330,6 +331,7 @@ export default function EstimateCalculator() {
         breakdown: `기본 ${formatPrice(cat.basePrice!)} + 추가 ${formatPrice(extra)}`,
       };
     }
+
     if (cat.type === "select_then_count") {
       if (!selectOpt) return { total: 0, breakdown: "옵션을 선택해주세요" };
       const opt = cat.selectOptions!.find((o) => o.id === selectOpt)!;
@@ -339,6 +341,7 @@ export default function EstimateCalculator() {
         breakdown: `출장비 ${formatPrice(cat.visitFee ?? 0)} + 옵션가 ${formatPrice(opt.pricePerUnit * count)}`,
       };
     }
+
     return { total: 0, breakdown: "" };
   };
 
@@ -354,44 +357,83 @@ export default function EstimateCalculator() {
 
   return (
     <section
-      className="px-4 py-12 md:px-6"
-      style={{ backgroundColor: "#f8f9fa" }}>
-      <div className="mx-auto max-w-xl">
+      className="px-4 py-16 md:px-6"
+      style={{
+        background: "linear-gradient(180deg, #f8f9fa 0%, #f3f5f7 100%)",
+      }}>
+      <div className="mx-auto max-w-2xl">
         {/* 헤더 */}
         <div className="mb-10 text-center">
+          <span
+            className="inline-block rounded-full px-3 py-1 text-sm font-semibold tracking-widest uppercase"
+            style={{
+              backgroundColor: "#eaf8f3",
+              color: "#2e9f83",
+              border: "1px solid #bfe8d9",
+            }}>
+            Estimate
+          </span>
+
           <h2
-            className="text-2xl font-bold tracking-tight"
-            style={{ color: "#1a1a1a" }}>
+            className="mt-4 text-3xl md:text-4xl font-bold tracking-tight"
+            style={{ color: "#111827" }}>
             수리 비용 계산기
           </h2>
-          <p className="mt-2 text-sm" style={{ color: "#666" }}>
+
+          <p
+            className="mt-3 text-base md:text-lg leading-relaxed"
+            style={{ color: "#6b7280" }}>
             항목을 선택하시면 대략적인 수리비를 확인할 수 있습니다.
           </p>
         </div>
 
         {/* 메인 카드 */}
         <div
-          className="bg-white rounded-3xl shadow-sm overflow-hidden"
-          style={{ border: "1px solid #eee" }}>
-          {/* 상단 진행 표시바 (Step 1~3) */}
-          <div className="flex border-b border-gray-50">
-            {[1, 2, 3].map((s) => (
-              <div
-                key={s}
-                className="flex-1 h-1.5 transition-all"
-                style={{ backgroundColor: step >= s ? "#2fae8a" : "#eee" }}
-              />
-            ))}
+          className="overflow-hidden rounded-[28px] bg-white shadow-[0_10px_40px_rgba(0,0,0,0.06)]"
+          style={{ border: "1px solid #edf0f2" }}>
+          {/* 진행바 */}
+          <div className="px-6 pt-6 md:px-8">
+            <div className="flex items-center gap-2">
+              {[1, 2, 3].map((s) => (
+                <div
+                  key={s}
+                  className="h-2 flex-1 rounded-full transition-all"
+                  style={{ backgroundColor: step >= s ? "#2fae8a" : "#e5e7eb" }}
+                />
+              ))}
+            </div>
+
+            <div className="mt-4 flex items-center justify-between text-xs font-semibold uppercase tracking-widest">
+              <span style={{ color: step >= 1 ? "#2fae8a" : "#9ca3af" }}>
+                가구 종류
+              </span>
+              <span style={{ color: step >= 2 ? "#2fae8a" : "#9ca3af" }}>
+                상세 증상
+              </span>
+              <span style={{ color: step >= 3 ? "#2fae8a" : "#9ca3af" }}>
+                예상 비용
+              </span>
+            </div>
           </div>
 
           <div className="p-6 md:p-8">
-            {/* --- STEP 1: 대분류 선택 --- */}
+            {/* STEP 1 */}
             {step === 1 && (
-              <div className="space-y-4">
-                <p className="text-sm font-bold text-gray-400 uppercase tracking-widest">
-                  Step 1. 가구 종류 선택
-                </p>
-                <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-5">
+                <div>
+                  <p
+                    className="text-sm font-bold uppercase tracking-widest"
+                    style={{ color: "#9ca3af" }}>
+                    Step 1
+                  </p>
+                  <h3
+                    className="mt-2 text-2xl font-bold"
+                    style={{ color: "#111827" }}>
+                    어떤 가구를 수리하시나요?
+                  </h3>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
                   {groups.map((group) => (
                     <button
                       key={group}
@@ -399,11 +441,17 @@ export default function EstimateCalculator() {
                         setSelectedGroup(group);
                         setStep(2);
                       }}
-                      className="p-5 rounded-2xl text-center transition-all hover:bg-emerald-50 border border-gray-100 active:scale-95">
-                      <div className="text-2xl mb-2">
+                      className="rounded-2xl border p-5 text-center transition-all hover:-translate-y-0.5 active:scale-[0.98]"
+                      style={{
+                        borderColor: "#edf0f2",
+                        backgroundColor: "#ffffff",
+                      }}>
+                      <div className="mb-3 text-3xl">
                         {categories.find((c) => c.group === group)?.icon}
                       </div>
-                      <span className="text-sm font-bold text-gray-700">
+                      <span
+                        className="text-sm md:text-base font-bold"
+                        style={{ color: "#374151" }}>
                         {group}
                       </span>
                     </button>
@@ -412,19 +460,33 @@ export default function EstimateCalculator() {
               </div>
             )}
 
-            {/* --- STEP 2: 소분류 선택 --- */}
+            {/* STEP 2 */}
             {step === 2 && (
-              <div className="space-y-4">
+              <div className="space-y-5">
                 <button
                   onClick={() => setStep(1)}
-                  className="text-xs text-gray-700 mb-2">
+                  className="inline-flex items-center gap-2 text-sm font-semibold"
+                  style={{ color: "#6b7280" }}>
                   ← 이전으로
                 </button>
-                <p className="text-sm font-bold text-gray-700 uppercase tracking-widest">
-                  Step 2. 상세 증상 선택
-                </p>
-                <h3 className="text-xl font-bold mb-4">{selectedGroup} 수리</h3>
-                <div className="space-y-2">
+
+                <div>
+                  <p
+                    className="text-sm font-bold uppercase tracking-widest"
+                    style={{ color: "#9ca3af" }}>
+                    Step 2
+                  </p>
+                  <h3
+                    className="mt-2 text-2xl font-bold"
+                    style={{ color: "#111827" }}>
+                    {selectedGroup} 수리
+                  </h3>
+                  <p className="mt-2 text-base" style={{ color: "#6b7280" }}>
+                    해당 증상을 선택하면 예상 비용을 바로 확인할 수 있습니다.
+                  </p>
+                </div>
+
+                <div className="space-y-3">
                   {categories
                     .filter((c) => c.group === selectedGroup)
                     .map((c) => (
@@ -433,55 +495,85 @@ export default function EstimateCalculator() {
                         onClick={() => {
                           setSelectedId(c.id);
                           setCount(c.baseCount ?? 1);
+                          setSelectOpt("");
                           setStep(3);
                         }}
-                        className="w-full flex items-center justify-between p-4 rounded-xl border border-gray-100 hover:border-emerald-200 hover:bg-emerald-50 transition-all text-left">
-                        <span className="text-sm font-medium text-gray-1000">
-                          {c.label}
-                        </span>
-                        <span className="text-gray-700">→</span>
+                        className="flex w-full items-center justify-between rounded-2xl border px-5 py-4 text-left transition-all hover:-translate-y-0.5 active:scale-[0.99]"
+                        style={{
+                          borderColor: "#edf0f2",
+                          backgroundColor: "#ffffff",
+                        }}>
+                        <div className="flex items-center gap-3">
+                          <span className="text-2xl">{c.icon}</span>
+                          <span
+                            className="text-base md:text-lg font-semibold"
+                            style={{ color: "#111827" }}>
+                            {c.label}
+                          </span>
+                        </div>
+                        <span style={{ color: "#9ca3af" }}>→</span>
                       </button>
                     ))}
                 </div>
               </div>
             )}
 
-            {/* --- STEP 3: 상세 설정 및 결과 --- */}
+            {/* STEP 3 */}
             {step === 3 && cat && (
               <div className="space-y-6">
                 <button
                   onClick={() => setStep(2)}
-                  className="text-xs text-gray-700 mb-2">
+                  className="inline-flex items-center gap-2 text-sm font-semibold"
+                  style={{ color: "#6b7280" }}>
                   ← 이전으로
                 </button>
-                <div className="flex items-center gap-3 pb-4 border-b">
-                  <span className="text-3xl">{cat.icon}</span>
+
+                <div
+                  className="flex items-center gap-4 rounded-2xl p-4"
+                  style={{
+                    backgroundColor: "#f8fafb",
+                    border: "1px solid #edf0f2",
+                  }}>
+                  <span className="text-4xl">{cat.icon}</span>
                   <div>
-                    <p className="text-xs text-gray-700">{cat.group}</p>
-                    <h3 className="text-lg font-bold">{cat.label}</h3>
+                    <p
+                      className="text-sm font-medium"
+                      style={{ color: "#6b7280" }}>
+                      {cat.group}
+                    </p>
+                    <h3
+                      className="text-xl md:text-2xl font-bold"
+                      style={{ color: "#111827" }}>
+                      {cat.label}
+                    </h3>
                   </div>
                 </div>
 
-                {/* 옵션 선택 영역 */}
-                <div className="py-2 space-y-6">
+                <div className="space-y-6">
                   {cat.type === "select_then_count" && (
                     <div>
-                      <label className="block text-sm font-bold mb-3">
+                      <label
+                        className="mb-3 block text-sm font-bold"
+                        style={{ color: "#374151" }}>
                         {cat.selectLabel}
                       </label>
-                      <div className="flex gap-2">
-                        {cat.selectOptions?.map((opt) => (
-                          <button
-                            key={opt.id}
-                            onClick={() => setSelectOpt(opt.id)}
-                            className={`flex-1 py-3 rounded-xl text-sm font-bold border transition-all ${
-                              selectOpt === opt.id
-                                ? "bg-emerald-500 text-white border-emerald-500"
-                                : "bg-gray-50 text-gray-500 border-gray-100"
-                            }`}>
-                            {opt.label}
-                          </button>
-                        ))}
+                      <div className="grid grid-cols-2 gap-3">
+                        {cat.selectOptions?.map((opt) => {
+                          const active = selectOpt === opt.id;
+                          return (
+                            <button
+                              key={opt.id}
+                              onClick={() => setSelectOpt(opt.id)}
+                              className="rounded-2xl border px-4 py-4 text-sm md:text-base font-bold transition-all"
+                              style={{
+                                backgroundColor: active ? "#2fae8a" : "#f9fafb",
+                                color: active ? "#ffffff" : "#4b5563",
+                                borderColor: active ? "#2fae8a" : "#e5e7eb",
+                              }}>
+                              {opt.label}
+                            </button>
+                          );
+                        })}
                       </div>
                     </div>
                   )}
@@ -489,28 +581,53 @@ export default function EstimateCalculator() {
                   {(cat.type === "count" ||
                     cat.type === "select_then_count") && (
                     <div>
-                      <label className="block text-sm font-bold mb-3">
+                      <label
+                        className="mb-3 block text-sm font-bold"
+                        style={{ color: "#374151" }}>
                         {cat.countLabel || "수량"}
                       </label>
-                      <div className="flex items-center justify-between p-2 bg-gray-50 rounded-2xl">
+                      <div
+                        className="flex items-center justify-between rounded-2xl p-3"
+                        style={{
+                          backgroundColor: "#f8fafb",
+                          border: "1px solid #edf0f2",
+                        }}>
                         <button
                           onClick={() =>
                             setCount(Math.max(cat.baseCount ?? 1, count - 1))
                           }
-                          className="w-12 h-12 rounded-xl bg-white shadow-sm flex items-center justify-center text-xl font-bold">
-                          —
+                          className="flex h-12 w-12 items-center justify-center rounded-xl text-2xl font-bold"
+                          style={{
+                            backgroundColor: "#ffffff",
+                            color: "#111827",
+                            border: "1px solid #e5e7eb",
+                          }}>
+                          −
                         </button>
+
                         <div className="text-center">
-                          <span className="text-xl font-bold">{count}</span>
-                          <span className="ml-1 text-gray-400 text-sm">
+                          <div
+                            className="text-3xl font-bold"
+                            style={{ color: "#111827" }}>
+                            {count}
+                          </div>
+                          <div
+                            className="mt-1 text-sm"
+                            style={{ color: "#6b7280" }}>
                             {cat.addUnit || "개"}
-                          </span>
+                          </div>
                         </div>
+
                         <button
                           onClick={() =>
                             setCount(Math.min(cat.maxCount ?? 20, count + 1))
                           }
-                          className="w-12 h-12 rounded-xl bg-emerald-500 text-white shadow-sm flex items-center justify-center text-xl font-bold">
+                          className="flex h-12 w-12 items-center justify-center rounded-xl text-2xl font-bold"
+                          style={{
+                            backgroundColor: "#2fae8a",
+                            color: "#ffffff",
+                            border: "1px solid #2fae8a",
+                          }}>
                           +
                         </button>
                       </div>
@@ -518,37 +635,67 @@ export default function EstimateCalculator() {
                   )}
                 </div>
 
-                {/* 결과창 */}
-                <div className="mt-8 p-6 rounded-2xl bg-gray-900 text-white relative overflow-hidden">
-                  <p className="text-xs text-gray-400 mb-1">예상 수리 비용</p>
-                  <div className="flex items-baseline gap-1">
-                    <span className="text-3xl font-bold text-emerald-400">
+                {/* 결과 */}
+                <div
+                  className="rounded-[24px] p-6"
+                  style={{
+                    background:
+                      "linear-gradient(135deg, #111827 0%, #1f2937 100%)",
+                    border: "1px solid rgba(255,255,255,0.06)",
+                  }}>
+                  <p
+                    className="text-sm font-medium"
+                    style={{ color: "#9ca3af" }}>
+                    예상 수리 비용
+                  </p>
+
+                  <div className="mt-2 flex items-end gap-2">
+                    <span
+                      className="text-4xl md:text-5xl font-bold"
+                      style={{ color: "#34d399" }}>
                       {total > 0 ? formatPrice(total) : "—"}
                     </span>
                     {total > 0 && (
-                      <span className="text-sm text-gray-400">내외</span>
+                      <span
+                        className="pb-1 text-base font-medium"
+                        style={{ color: "#9ca3af" }}>
+                        내외
+                      </span>
                     )}
                   </div>
-                  <p className="mt-2 text-[11px] text-gray-500 leading-relaxed">
+
+                  <p
+                    className="mt-3 text-sm leading-relaxed"
+                    style={{ color: "#d1d5db" }}>
                     {breakdown}
                   </p>
+
                   {cat.fixedNote && (
-                    <p className="mt-2 text-[11px] text-rose-400">
+                    <p
+                      className="mt-3 text-sm font-medium"
+                      style={{ color: "#fca5a5" }}>
                       ⚠️ {cat.fixedNote}
                     </p>
                   )}
                 </div>
 
-                {/* 푸터 버튼 */}
-                <div className="grid grid-cols-1 gap-2">
+                {/* 버튼 */}
+                <div className="grid grid-cols-1 gap-3">
                   <a
                     href="/request"
-                    className="w-full py-4 bg-emerald-500 text-white rounded-xl text-center text-sm font-bold">
+                    className="w-full rounded-2xl py-4 text-center text-base md:text-lg font-bold text-white transition-opacity hover:opacity-90"
+                    style={{ backgroundColor: "#2fae8a" }}>
                     상담 신청하고 정확한 견적 받기
                   </a>
+
                   <button
                     onClick={reset}
-                    className="w-full py-3 text-gray-400 text-xs">
+                    className="w-full rounded-2xl py-4 text-sm font-semibold"
+                    style={{
+                      backgroundColor: "#f8fafb",
+                      color: "#6b7280",
+                      border: "1px solid #edf0f2",
+                    }}>
                     처음부터 다시 계산하기
                   </button>
                 </div>
@@ -557,10 +704,12 @@ export default function EstimateCalculator() {
           </div>
         </div>
 
-        <p className="mt-6 text-center text-[11px] text-gray-400 leading-relaxed">
+        <p
+          className="mt-6 text-center text-sm leading-relaxed"
+          style={{ color: "#9ca3af" }}>
           위 금액은 표준 단가를 기준으로 산출되었습니다.
           <br />
-          현장 상황(가구 브랜드, 파손 정도, 특수 부품 등)에 따라 금액이 변동될
+          현장 상황(가구 브랜드, 파손 정도, 특수 부품 등)에 따라 금액이 달라질
           수 있습니다.
         </p>
       </div>
