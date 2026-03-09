@@ -11,28 +11,50 @@ export default function AuthCallbackPage() {
     const run = async () => {
       try {
         const supabase = getSupabase();
+        const url = new URL(window.location.href);
+        const code = url.searchParams.get("code");
+        const errorDescription = url.searchParams.get("error_description");
+        const error = url.searchParams.get("error");
 
-        // 해시/세션 반영될 시간 잠깐 대기
-        await new Promise((resolve) => setTimeout(resolve, 700));
-
-        const { data, error } = await supabase.auth.getSession();
-
-        console.log("callback session:", data, error);
         console.log("callback url:", window.location.href);
+        console.log("code:", code);
+        console.log("error:", error, errorDescription);
 
         if (error) {
-          router.replace(`/login?error=${encodeURIComponent(error.message)}`);
+          router.replace(
+            `/login?error=${encodeURIComponent(
+              errorDescription || error || "oauth_error",
+            )}`,
+          );
           return;
         }
 
-        if (data.session) {
-          router.replace("/");
+        if (!code) {
+          router.replace("/login?error=no_code");
           return;
         }
 
-        router.replace("/login?error=session_not_found");
+        const { error: exchangeError } =
+          await supabase.auth.exchangeCodeForSession(code);
+
+        if (exchangeError) {
+          console.error("exchangeCodeForSession error:", exchangeError);
+          router.replace(
+            `/login?error=${encodeURIComponent(exchangeError.message)}`,
+          );
+          return;
+        }
+
+        const { data: sessionData } = await supabase.auth.getSession();
+
+        if (!sessionData.session) {
+          router.replace("/login?error=session_not_found");
+          return;
+        }
+
+        router.replace("/");
       } catch (err) {
-        console.error("callback error:", err);
+        console.error("callback unexpected error:", err);
         router.replace("/login?error=unexpected");
       }
     };
