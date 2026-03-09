@@ -5,7 +5,7 @@ import Image from "next/image";
 const photos = [
   { src: "/images/staff-1.jpg", alt: "현장 수리 1" },
   { src: "/images/staff-2.jpg", alt: "현장 수리 2" },
-  { src: "/images/staff-3.jpg", alt: "현장 수리 3" },
+  { src: "/images/staff-10.jpg", alt: "현장 수리 3" },
   { src: "/images/staff-4.jpg", alt: "현장 수리 4" },
 ];
 
