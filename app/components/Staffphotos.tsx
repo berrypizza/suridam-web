@@ -1,11 +1,12 @@
 "use client";
+
 import Image from "next/image";
 
 const photos = [
-  { src: "/images/staff-1.jpg", alt: "현장 수리 작업 1" },
-  { src: "/images/staff-2.jpg", alt: "현장 수리 작업 2" },
-  { src: "/images/staff-3.jpg", alt: "현장 수리 작업 3" },
-  { src: "/images/staff-4.jpg", alt: "현장 수리 작업 4" },
+  { src: "/images/staff-1.jpg", alt: "현장 수리 1" },
+  { src: "/images/staff-2.jpg", alt: "현장 수리 2" },
+  { src: "/images/staff-3.jpg", alt: "현장 수리 3" },
+  { src: "/images/staff-4.jpg", alt: "현장 수리 4" },
 ];
 
 export default function StaffPhotos() {
@@ -13,10 +14,10 @@ export default function StaffPhotos() {
     <section className="px-6 py-20" style={{ backgroundColor: "white" }}>
       <div className="mx-auto max-w-5xl">
         {/* 헤더 */}
-        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-10">
+        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-8 mb-12">
           <div>
             <span
-              className="inline-block text-sm tracking-widest uppercase mb-4 px-3 py-1 rounded-full font-semibold"
+              className="inline-block text-sm tracking-widest uppercase mb-5 px-3 py-1.5 rounded-full font-bold"
               style={{
                 backgroundColor: "#f5f5f5",
                 color: "#7a7a7a",
@@ -25,13 +26,17 @@ export default function StaffPhotos() {
               Our Work
             </span>
 
+            {/* 규칙 5 — 위협 암시 */}
             <h2
-              className="text-3xl md:text-4xl lg:text-5xl font-bold leading-snug"
-              style={{ color: "#1e1e1e" }}>
-              수리담이 온다는 건,
+              className="font-black leading-tight"
+              style={{
+                fontSize: "clamp(2rem, 5vw, 3.2rem)",
+                color: "#1e1e1e",
+              }}>
+              교체 전,
               <br />
               <span className="relative inline-block mt-1">
-                <span className="relative z-10">해결된다는 겁니다.</span>
+                <span className="relative z-10">한 번만 더 확인해보세요.</span>
                 <span
                   className="absolute bottom-1 left-0 w-full h-3 rounded"
                   style={{
@@ -45,30 +50,31 @@ export default function StaffPhotos() {
             </h2>
 
             <p
-              className="mt-4 text-base md:text-lg leading-relaxed"
-              style={{ color: "#666" }}>
-              불필요한 교체를 권하지 않습니다.
-              <br className="hidden md:block" />
-              고칠 수 있으면 고치고, 안 되면 안 된다고 먼저 말합니다.
+              className="mt-5 text-lg md:text-xl leading-relaxed max-w-lg"
+              style={{ color: "#555" }}>
+              수리담이 온 현장의 80%는
+              <br />
+              교체 없이 수리로 해결됐습니다.
+              <br />
+              <span className="font-bold" style={{ color: "#1e1e1e" }}>
+                고칠 수 있으면 고칩니다. 안 되면 먼저 말합니다.
+              </span>
             </p>
           </div>
 
           <div
-            className="flex items-center gap-3 rounded-2xl px-5 py-4 flex-shrink-0 self-start"
+            className="flex items-center gap-4 rounded-2xl px-6 py-5 flex-shrink-0 self-start"
             style={{ backgroundColor: "#f0faf6", border: "1px solid #2fae8a" }}>
             <div
-              className="h-9 w-9 rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0"
+              className="h-10 w-10 rounded-full flex items-center justify-center text-white text-base font-black flex-shrink-0"
               style={{ backgroundColor: "#2fae8a" }}>
               ✓
             </div>
-
             <div>
-              <p className="text-sm" style={{ color: "#666" }}>
+              <p className="text-sm" style={{ color: "#555" }}>
                 방문 전 사진으로 1차 판단
               </p>
-              <p
-                className="text-base md:text-lg font-semibold"
-                style={{ color: "#1e1e1e" }}>
+              <p className="text-lg font-black" style={{ color: "#1e1e1e" }}>
                 가능할 때만 출장 갑니다
               </p>
             </div>
@@ -92,10 +98,9 @@ export default function StaffPhotos() {
                   sizes="(max-width: 768px) 50vw, 25vw"
                   className="object-cover transition-transform duration-500 group-hover:scale-105"
                 />
-
                 <div
                   className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                  style={{ backgroundColor: "rgba(47,174,138,0.15)" }}
+                  style={{ backgroundColor: "rgba(47,174,138,0.18)" }}
                 />
               </div>
             </div>
@@ -103,17 +108,15 @@ export default function StaffPhotos() {
         </div>
 
         {/* 태그라인 */}
-        <div className="mt-8 flex items-center gap-3">
+        <div className="mt-10 flex items-center gap-3">
           <div className="h-px flex-1" style={{ backgroundColor: "#e5e5e5" }} />
-
           <p
-            className="text-sm md:text-base flex items-center gap-2 font-medium"
-            style={{ color: "#666" }}>
+            className="text-base md:text-lg flex items-center gap-2 font-bold"
+            style={{ color: "#444" }}>
             <span style={{ color: "#2fae8a" }}>✦</span>
-            수리담은 결과로 말합니다
+            말이 아닌 결과로 증명합니다
             <span style={{ color: "#2fae8a" }}>✦</span>
           </p>
-
           <div className="h-px flex-1" style={{ backgroundColor: "#e5e5e5" }} />
         </div>
       </div>

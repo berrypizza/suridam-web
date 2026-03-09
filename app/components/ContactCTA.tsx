@@ -2,24 +2,24 @@ import React from "react";
 
 const steps = [
   { num: "01", text: "가구 사진 1~3장 찍기" },
-  { num: "02", text: "지역 + 증상 한 줄 적기" },
+  { num: "02", text: "지역 + 증상 한 줄 남기기" },
   { num: "03", text: "수리 가능 여부 + 비용 범위 먼저 안내" },
 ];
 
 const badges = [
-  "수리 불가 시 먼저 말씀드립니다",
+  "수리 불가 시 먼저 말합니다",
   "방문 전 사진으로 1차 판단",
   "비용 범위 먼저 공유",
 ];
 
 export default function ContactCTA() {
   return (
-    <section className="px-6 py-24" style={{ backgroundColor: "#1e1e1e" }}>
+    <section className="px-6 py-24" style={{ backgroundColor: "#0d0d0d" }}>
       <div className="mx-auto max-w-5xl">
-        {/* 헤더 */}
+        {/* 헤드라인 — 위협 (규칙 5) + 간결함 */}
         <div className="text-center mb-14">
           <span
-            className="inline-block text-sm tracking-widest uppercase mb-4 px-3 py-1 rounded-full font-semibold"
+            className="inline-block text-sm tracking-widest uppercase mb-5 px-3 py-1.5 rounded-full font-bold"
             style={{
               backgroundColor: "#2fae8a22",
               color: "#2fae8a",
@@ -29,21 +29,29 @@ export default function ContactCTA() {
           </span>
 
           <h2
-            className="text-3xl md:text-4xl lg:text-5xl font-bold leading-snug"
-            style={{ color: "white" }}>
-            아직 고민 중이어도 괜찮습니다.
+            className="font-black leading-tight"
+            style={{ fontSize: "clamp(2.2rem, 6vw, 4rem)", color: "white" }}>
+            방치할수록
+            <br />
+            <span style={{ color: "#ef4444" }}>교체 얘기가 나옵니다.</span>
           </h2>
 
+          {/* 행동 유도 — 긍정 반전 (규칙 6 호기심) */}
           <p
-            className="mt-4 text-base md:text-lg leading-relaxed"
-            style={{ color: "#bdbdbd" }}>
-            사진 한 장이면 가능 여부만 먼저 알 수 있어요.
+            className="mt-6 font-semibold leading-relaxed"
+            style={{
+              fontSize: "clamp(1.1rem, 2.5vw, 1.35rem)",
+              color: "#888",
+            }}>
+            작은 이상이 느껴질 때가
+            <br />
+            제일 싸게 고칠 수 있는 타이밍입니다.
           </p>
 
           <p
-            className="mt-3 text-lg md:text-xl font-semibold"
-            style={{ color: "#2fae8a" }}>
-            그것만으로도 충분합니다.
+            className="mt-3 font-black"
+            style={{ fontSize: "1.25rem", color: "#2fae8a" }}>
+            사진 한 장이면 충분합니다.
           </p>
         </div>
 
@@ -52,20 +60,22 @@ export default function ContactCTA() {
           {steps.map((s, i) => (
             <div
               key={s.num}
-              className="rounded-2xl px-6 py-6 flex items-start gap-4"
+              className="rounded-2xl px-6 py-7 flex items-start gap-5"
               style={{
-                backgroundColor: i === 2 ? "#2fae8a18" : "#2a2a2a",
-                border: `1px solid ${i === 2 ? "#2fae8a55" : "#333"}`,
+                backgroundColor: i === 2 ? "#2fae8a18" : "#161616",
+                border: `1px solid ${i === 2 ? "#2fae8a55" : "#1e1e1e"}`,
               }}>
               <span
-                className="text-3xl md:text-4xl font-bold leading-none select-none flex-shrink-0"
-                style={{ color: i === 2 ? "#2fae8a" : "#555" }}>
+                className="text-4xl font-black leading-none select-none flex-shrink-0 mt-0.5"
+                style={{ color: i === 2 ? "#2fae8a" : "#2a2a2a" }}>
                 {s.num}
               </span>
-
               <p
-                className="text-base md:text-lg font-medium leading-loose pt-0.5"
-                style={{ color: "#f0f0f0" }}>
+                className="font-bold leading-snug pt-1"
+                style={{
+                  fontSize: "clamp(1rem, 2.2vw, 1.2rem)",
+                  color: "#f0f0f0",
+                }}>
                 {s.text}
               </p>
             </div>
@@ -76,18 +86,18 @@ export default function ContactCTA() {
         <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
           <a
             href="/request"
-            className="rounded-xl px-8 py-4 text-white font-bold text-center text-base md:text-lg transition-opacity hover:opacity-90"
-            style={{ backgroundColor: "#2fae8a" }}>
-            💬 사진 상담 시작하기 →
+            className="rounded-2xl px-9 py-5 text-white font-black text-center transition-opacity hover:opacity-90"
+            style={{ backgroundColor: "#2fae8a", fontSize: "1.15rem" }}>
+            📷 사진 상담 시작하기 →
           </a>
-
           <a
             href="tel:01091273024"
-            className="rounded-xl px-8 py-4 font-bold text-center text-base md:text-lg transition-opacity hover:opacity-70"
+            className="rounded-2xl px-9 py-5 font-black text-center transition-opacity hover:opacity-70"
             style={{
-              border: "1px solid #333",
+              border: "1px solid #2a2a2a",
               color: "#f0f0f0",
-              backgroundColor: "#2a2a2a",
+              backgroundColor: "#161616",
+              fontSize: "1.05rem",
             }}>
             📞 010-9127-3024
           </a>
@@ -96,19 +106,18 @@ export default function ContactCTA() {
         {/* 신뢰 배지 */}
         <div
           className="flex flex-col sm:flex-row items-center justify-center gap-4"
-          style={{ color: "#888" }}>
+          style={{ color: "#444" }}>
           {badges.map((b, i) => (
             <React.Fragment key={b}>
-              <span className="flex items-center gap-2 text-sm md:text-base font-medium">
+              <span className="flex items-center gap-2 text-base font-semibold">
                 <span
                   className="h-2 w-2 rounded-full inline-block flex-shrink-0"
                   style={{ backgroundColor: "#2fae8a" }}
                 />
                 {b}
               </span>
-
               {i < badges.length - 1 && (
-                <span className="hidden sm:block" style={{ color: "#333" }}>
+                <span className="hidden sm:block" style={{ color: "#1e1e1e" }}>
                   ·
                 </span>
               )}
