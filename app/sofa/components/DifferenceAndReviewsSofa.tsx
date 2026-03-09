@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef } from "react";
+import { useRef } from "react";
 import Image from "next/image";
 
 type Review = { who: string; title: string; body: string; stars?: number };
@@ -36,7 +36,6 @@ const repairTags = [
   "리클라이너 소파",
 ];
 
-// 상단 맛보기용 — 구매 전 불안 해소 포인트
 const previewReviews: Review[] = [
   {
     who: "부천 상동 / 이** 고객님",
@@ -58,7 +57,6 @@ const previewReviews: Review[] = [
   },
 ];
 
-// 하단 슬라이드용 — 신뢰·차별점 확신 포인트
 const allReviews: Review[] = [
   {
     who: "마포구 합정 / 최** 고객님",
@@ -102,13 +100,13 @@ export default function DifferenceAndReviewsSofa() {
 
   return (
     <section>
-      {/* ━━━━ 리뷰 맛보기 ━━━━ */}
-      <div className="px-6 pt-16 pb-12" style={{ backgroundColor: "#1e1e1e" }}>
+      {/* 리뷰 맛보기 */}
+      <div className="px-6 pt-20 pb-14" style={{ backgroundColor: "#1e1e1e" }}>
         <div className="mx-auto max-w-5xl">
-          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-8">
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-10">
             <div>
               <span
-                className="inline-block text-xs tracking-widest uppercase mb-3 px-3 py-1 rounded-full font-semibold"
+                className="inline-block text-sm tracking-widest uppercase mb-3 px-3 py-1 rounded-full font-semibold"
                 style={{
                   backgroundColor: "#2fae8a22",
                   color: "#2fae8a",
@@ -116,73 +114,81 @@ export default function DifferenceAndReviewsSofa() {
                 }}>
                 Real Reviews
               </span>
+
               <h2
-                className="text-2xl md:text-3xl font-bold leading-snug"
+                className="text-3xl md:text-4xl font-bold leading-snug"
                 style={{ color: "white" }}>
                 소파 바꾸기 전,
                 <br />
                 후기 먼저 보세요
               </h2>
-              <p className="mt-2 text-sm" style={{ color: "#7a7a7a" }}>
+
+              <p
+                className="mt-3 text-base md:text-lg leading-relaxed"
+                style={{ color: "#bdbdbd" }}>
                 실제로 수리한 고객들의 한 줄 후기예요.
               </p>
             </div>
+
             <div
-              className="flex items-center gap-3 px-4 py-3 rounded-2xl flex-shrink-0"
+              className="flex items-center gap-3 px-5 py-4 rounded-2xl flex-shrink-0"
               style={{ backgroundColor: "#2a2a2a", border: "1px solid #333" }}>
-              <span style={{ color: "#2fae8a", fontSize: 18 }}>★★★★★</span>
+              <span style={{ color: "#2fae8a", fontSize: 22 }}>★★★★★</span>
               <div>
-                <div className="text-xs font-bold" style={{ color: "white" }}>
+                <div className="text-sm font-bold" style={{ color: "white" }}>
                   4.9 / 5.0
                 </div>
-                <div className="text-xs" style={{ color: "#7a7a7a" }}>
+                <div className="text-sm" style={{ color: "#bdbdbd" }}>
                   실제 고객 후기
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-3">
+          <div className="grid gap-5 sm:grid-cols-3">
             {previewReviews.map((r, i) => (
               <div
                 key={i}
-                className="rounded-2xl p-5 flex flex-col gap-3"
+                className="rounded-2xl p-6 flex flex-col gap-4"
                 style={{
                   backgroundColor: "#2a2a2a",
                   border: "1px solid #333",
                 }}>
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between gap-3">
                   <div
-                    className="flex gap-0.5 text-sm"
+                    className="flex gap-0.5 text-base"
                     style={{ color: "#2fae8a" }}>
                     {"★".repeat(r.stars ?? 5)}
                   </div>
+
                   <span
-                    className="text-xs px-2 py-0.5 rounded-full"
+                    className="text-sm px-2.5 py-1 rounded-full whitespace-nowrap"
                     style={{
                       backgroundColor: "#1e1e1e",
-                      color: "#7a7a7a",
+                      color: "#bdbdbd",
                       border: "1px solid #333",
                     }}>
                     {r.title}
                   </span>
                 </div>
+
                 <p
-                  className="text-sm leading-relaxed flex-1"
-                  style={{ color: "#e5e5e5" }}>
-                  <span style={{ color: "#2fae8a", fontSize: 20 }}>"</span>
+                  className="text-base md:text-lg leading-loose flex-1"
+                  style={{ color: "#f0f0f0" }}>
+                  <span style={{ color: "#2fae8a", fontSize: 22 }}>"</span>
                   {r.body}
-                  <span style={{ color: "#2fae8a", fontSize: 20 }}>"</span>
+                  <span style={{ color: "#2fae8a", fontSize: 22 }}>"</span>
                 </p>
+
                 <div
-                  className="flex items-center gap-2 pt-2"
+                  className="flex items-center gap-2 pt-3"
                   style={{ borderTop: "1px solid #333" }}>
                   <div
-                    className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0"
+                    className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0"
                     style={{ backgroundColor: "#2fae8a22", color: "#2fae8a" }}>
                     {r.who[0]}
                   </div>
-                  <span className="text-xs" style={{ color: "#7a7a7a" }}>
+                  <span className="text-sm" style={{ color: "#bdbdbd" }}>
                     {r.who}
                   </span>
                 </div>
@@ -192,12 +198,12 @@ export default function DifferenceAndReviewsSofa() {
         </div>
       </div>
 
-      {/* ━━━━ Before / After ━━━━ */}
-      <div className="px-6 py-16" style={{ backgroundColor: "#f5f5f5" }}>
+      {/* Before / After */}
+      <div className="px-6 py-20" style={{ backgroundColor: "#f5f5f5" }}>
         <div className="mx-auto max-w-5xl">
-          <div className="mb-12">
+          <div className="mb-14">
             <span
-              className="inline-block text-xs tracking-widest uppercase mb-3 px-3 py-1 rounded-full font-semibold"
+              className="inline-block text-sm tracking-widest uppercase mb-3 px-3 py-1 rounded-full font-semibold"
               style={{
                 backgroundColor: "#f0faf6",
                 color: "#2fae8a",
@@ -205,8 +211,9 @@ export default function DifferenceAndReviewsSofa() {
               }}>
               Before / After
             </span>
+
             <h2
-              className="text-2xl md:text-3xl lg:text-4xl font-bold leading-snug"
+              className="text-3xl md:text-4xl lg:text-5xl font-bold leading-snug"
               style={{ color: "#1e1e1e" }}>
               꺼진 소파, 교체 전에
               <br />
@@ -214,27 +221,32 @@ export default function DifferenceAndReviewsSofa() {
                 수리로 되는지 먼저 확인하세요.
               </span>
             </h2>
-            <p className="mt-3 text-sm" style={{ color: "#7a7a7a" }}>
+
+            <p
+              className="mt-4 text-base md:text-lg leading-relaxed"
+              style={{ color: "#666" }}>
               대부분의 소파 꺼짐은 스프링·우레탄 교체로 해결됩니다. 새 소파
               가격의 1/5 이하로요.
             </p>
           </div>
 
-          <div className="flex flex-col gap-6">
+          <div className="flex flex-col gap-8">
             {beforeAfterSets.map((set, i) => (
               <div key={i}>
-                <div className="flex items-center gap-3 mb-3">
+                <div className="flex items-center gap-3 mb-4">
                   <span
-                    className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold flex-shrink-0"
+                    className="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-semibold flex-shrink-0"
                     style={{ backgroundColor: "#1e1e1e", color: "white" }}>
                     {set.tag}
                   </span>
+
                   <div
                     className="h-px flex-1"
-                    style={{ backgroundColor: "#e5e5e5" }}
+                    style={{ backgroundColor: "#dddddd" }}
                   />
                 </div>
-                <div className="grid grid-cols-2 gap-2 md:gap-4">
+
+                <div className="grid grid-cols-2 gap-3 md:gap-5">
                   <div
                     className="rounded-2xl overflow-hidden"
                     style={{ border: "1px solid #e5e5e5" }}>
@@ -249,7 +261,7 @@ export default function DifferenceAndReviewsSofa() {
                         className="object-cover"
                       />
                       <div
-                        className="absolute top-2 left-2 px-2 py-0.5 rounded-md text-xs font-bold"
+                        className="absolute top-3 left-3 px-2.5 py-1 rounded-md text-sm font-bold"
                         style={{
                           backgroundColor: "rgba(0,0,0,0.55)",
                           color: "white",
@@ -259,6 +271,7 @@ export default function DifferenceAndReviewsSofa() {
                       </div>
                     </div>
                   </div>
+
                   <div
                     className="rounded-2xl overflow-hidden"
                     style={{ border: "2px solid #2fae8a" }}>
@@ -273,7 +286,7 @@ export default function DifferenceAndReviewsSofa() {
                         className="object-cover"
                       />
                       <div
-                        className="absolute top-2 left-2 px-2 py-0.5 rounded-md text-xs font-bold"
+                        className="absolute top-3 left-3 px-2.5 py-1 rounded-md text-sm font-bold"
                         style={{ backgroundColor: "#2fae8a", color: "white" }}>
                         After ✦
                       </div>
@@ -284,21 +297,22 @@ export default function DifferenceAndReviewsSofa() {
             ))}
           </div>
 
-          <div className="mt-10 flex flex-wrap gap-2">
+          <div className="mt-12 flex flex-wrap gap-2.5">
             {repairTags.map((tag) => (
               <span
                 key={tag}
-                className="rounded-full px-3 py-1 text-xs font-medium"
+                className="rounded-full px-3 py-1.5 text-sm font-medium"
                 style={{
                   backgroundColor: "white",
                   border: "1px solid #e5e5e5",
-                  color: "#7a7a7a",
+                  color: "#666",
                 }}>
                 {tag}
               </span>
             ))}
+
             <span
-              className="rounded-full px-3 py-1 text-xs font-medium"
+              className="rounded-full px-3 py-1.5 text-sm font-medium"
               style={{
                 backgroundColor: "#f0faf6",
                 border: "1px solid #2fae8a",
@@ -310,13 +324,13 @@ export default function DifferenceAndReviewsSofa() {
         </div>
       </div>
 
-      {/* ━━━━ 리뷰 전체 슬라이드 ━━━━ */}
-      <div className="px-6 py-14" style={{ backgroundColor: "white" }}>
+      {/* 리뷰 전체 슬라이드 */}
+      <div className="px-6 py-16" style={{ backgroundColor: "white" }}>
         <div className="mx-auto max-w-5xl">
-          <div className="flex items-end justify-between gap-4 mb-6">
+          <div className="flex items-end justify-between gap-4 mb-8">
             <div>
               <span
-                className="inline-block text-xs tracking-widest uppercase mb-3 px-3 py-1 rounded-full font-semibold"
+                className="inline-block text-sm tracking-widest uppercase mb-3 px-3 py-1 rounded-full font-semibold"
                 style={{
                   backgroundColor: "#f5f5f5",
                   color: "#7a7a7a",
@@ -324,23 +338,30 @@ export default function DifferenceAndReviewsSofa() {
                 }}>
                 All Reviews
               </span>
-              <h3 className="text-xl font-bold" style={{ color: "#1e1e1e" }}>
+
+              <h3
+                className="text-2xl md:text-3xl font-bold"
+                style={{ color: "#1e1e1e" }}>
                 직접 경험한 고객들의 이야기
               </h3>
-              <p className="mt-1 text-sm" style={{ color: "#7a7a7a" }}>
+
+              <p
+                className="mt-2 text-base md:text-lg leading-relaxed"
+                style={{ color: "#666" }}>
                 짧은 한 줄이 긴 설명보다 정확합니다.
               </p>
             </div>
+
             <div className="hidden md:flex gap-2 flex-shrink-0">
               <button
                 onClick={() => scrollByCard("left")}
-                className="rounded-xl px-3 py-2 hover:opacity-70"
+                className="rounded-xl px-4 py-2.5 hover:opacity-70 text-base"
                 style={{ border: "1px solid #e5e5e5", color: "#1e1e1e" }}>
                 ←
               </button>
               <button
                 onClick={() => scrollByCard("right")}
-                className="rounded-xl px-3 py-2 hover:opacity-70"
+                className="rounded-xl px-4 py-2.5 hover:opacity-70 text-base"
                 style={{ border: "1px solid #e5e5e5", color: "#1e1e1e" }}>
                 →
               </button>
@@ -354,39 +375,42 @@ export default function DifferenceAndReviewsSofa() {
               <article
                 key={`${r.title}-${idx}`}
                 data-card="review"
-                className="min-w-[85%] sm:min-w-[360px] snap-start rounded-2xl p-6 flex flex-col gap-3"
+                className="min-w-[85%] sm:min-w-[380px] snap-start rounded-2xl p-6 flex flex-col gap-4"
                 style={{
                   backgroundColor: "#f5f5f5",
                   border: "1px solid #e5e5e5",
                 }}>
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between gap-3">
                   <div
-                    className="flex gap-0.5 text-sm"
+                    className="flex gap-0.5 text-base"
                     style={{ color: "#2fae8a" }}>
                     {"★".repeat(r.stars ?? 5)}
                   </div>
+
                   <span
-                    className="text-xs px-2 py-0.5 rounded-full"
+                    className="text-sm px-2.5 py-1 rounded-full whitespace-nowrap"
                     style={{
                       backgroundColor: "white",
                       border: "1px solid #e5e5e5",
-                      color: "#7a7a7a",
+                      color: "#666",
                     }}>
                     {r.title}
                   </span>
                 </div>
+
                 <p
-                  className="leading-relaxed flex-1"
+                  className="text-base md:text-lg leading-loose flex-1"
                   style={{ color: "#1e1e1e" }}>
                   <span style={{ color: "#2fae8a", fontSize: 22 }}>"</span>
                   {r.body}
                   <span style={{ color: "#2fae8a", fontSize: 22 }}>"</span>
                 </p>
+
                 <div
                   className="flex items-center gap-2 pt-3"
                   style={{ borderTop: "1px solid #e5e5e5" }}>
                   <div
-                    className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0"
+                    className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0"
                     style={{
                       backgroundColor: "#f0faf6",
                       color: "#2fae8a",
@@ -394,7 +418,8 @@ export default function DifferenceAndReviewsSofa() {
                     }}>
                     {r.who[0]}
                   </div>
-                  <span className="text-xs" style={{ color: "#7a7a7a" }}>
+
+                  <span className="text-sm" style={{ color: "#666" }}>
                     {r.who}
                   </span>
                 </div>

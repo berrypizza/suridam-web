@@ -40,11 +40,11 @@ const diffs = [
 export default function WhySuridam() {
   return (
     <section style={{ backgroundColor: "#1e1e1e" }}>
-      <div className="px-6 py-16 mx-auto max-w-5xl">
-        {/* 섹션 헤더 */}
-        <div className="mb-12">
+      <div className="px-6 py-20 mx-auto max-w-5xl">
+        {/* 헤더 */}
+        <div className="mb-14">
           <span
-            className="inline-block text-xs tracking-widest uppercase mb-4 px-3 py-1 rounded-full font-semibold"
+            className="inline-block text-sm tracking-widest uppercase mb-4 px-3 py-1 rounded-full font-semibold"
             style={{
               backgroundColor: "#2fae8a22",
               color: "#2fae8a",
@@ -52,12 +52,14 @@ export default function WhySuridam() {
             }}>
             Why Suridam
           </span>
+
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
             <h2
-              className="text-2xl md:text-3xl lg:text-4xl font-bold"
+              className="text-3xl md:text-4xl font-bold"
               style={{ color: "white" }}>
               그래서 뭐가 다른가요?
             </h2>
+
             <div className="hidden md:flex items-center gap-2 text-sm font-semibold pb-1">
               <span
                 className="px-3 py-1 rounded-full"
@@ -68,7 +70,9 @@ export default function WhySuridam() {
                 }}>
                 일반 업체
               </span>
+
               <span style={{ color: "#555" }}>vs</span>
+
               <span
                 className="px-3 py-1 rounded-full"
                 style={{
@@ -82,23 +86,23 @@ export default function WhySuridam() {
           </div>
         </div>
 
-        {/* 비교 카드 */}
-        <div className="flex flex-col gap-6">
+        {/* 카드 */}
+        <div className="flex flex-col gap-8">
           {diffs.map((d, i) => (
             <div
               key={i}
               className="rounded-2xl overflow-hidden"
               style={{ border: "1px solid #2a2a2a" }}>
               <div className="grid grid-cols-1 md:grid-cols-[1fr_1fr_300px]">
-                {/* 일반 업체 (좌) */}
+                {/* 일반 업체 */}
                 <div
-                  className="flex items-start gap-3 px-5 py-5"
+                  className="flex items-start gap-4 px-6 py-6"
                   style={{
                     backgroundColor: "#2a2a2a",
                     borderBottom: "1px solid #2e2e2e",
                   }}>
                   <div
-                    className="flex-shrink-0 mt-0.5 h-6 w-6 rounded-full flex items-center justify-center font-bold text-xs"
+                    className="flex-shrink-0 mt-1 h-6 w-6 rounded-full flex items-center justify-center font-bold text-xs"
                     style={{
                       backgroundColor: "#ef444422",
                       color: "#ef4444",
@@ -106,75 +110,84 @@ export default function WhySuridam() {
                     }}>
                     ✕
                   </div>
+
                   <div>
                     <div className="flex items-center gap-2 mb-2">
                       <span
-                        className="text-[10px] font-semibold tracking-widest uppercase rounded-full px-2 py-0.5"
+                        className="text-xs font-semibold tracking-widest uppercase rounded-full px-2 py-0.5"
                         style={{
                           backgroundColor: "#ef444422",
                           color: "#ef4444",
                         }}>
                         일반 업체
                       </span>
-                      <span className="text-xs" style={{ color: "#444" }}>
+
+                      <span
+                        className="text-sm font-semibold"
+                        style={{ color: "#888" }}>
                         {d.theme}
                       </span>
                     </div>
+
                     <p
-                      className="text-sm md:text-base leading-relaxed whitespace-pre-line"
+                      className="text-base md:text-lg leading-loose whitespace-pre-line"
                       style={{
-                        color: "#979797",
+                        color: "#cfcfcf",
                         textDecoration: "line-through",
-                        textDecorationColor: "#ff0000b7",
+                        textDecorationColor: "#ff4d4db7",
                       }}>
                       {d.problem}
                     </p>
                   </div>
                 </div>
 
-                {/* 수리담 (중) */}
+                {/* 수리담 */}
                 <div
-                  className="flex items-start gap-3 px-5 py-5"
+                  className="flex items-start gap-4 px-6 py-6"
                   style={{
                     backgroundColor: "#242424",
                     borderBottom: "1px solid #2e2e2e",
                   }}>
                   <div
-                    className="flex-shrink-0 mt-0.5 h-6 w-6 rounded-full flex items-center justify-center text-white font-bold text-xs"
+                    className="flex-shrink-0 mt-1 h-6 w-6 rounded-full flex items-center justify-center text-white font-bold text-xs"
                     style={{ backgroundColor: "#2fae8a" }}>
                     ✓
                   </div>
+
                   <div>
                     <div className="flex items-center gap-2 mb-2">
                       <span
-                        className="text-[10px] font-semibold tracking-widest uppercase rounded-full px-2 py-0.5"
+                        className="text-xs font-semibold tracking-widest uppercase rounded-full px-2 py-0.5"
                         style={{
                           backgroundColor: "#2fae8a22",
                           color: "#2fae8a",
                         }}>
                         수리담
                       </span>
+
                       <span className="text-lg">{d.icon}</span>
                     </div>
+
                     <p
-                      className="text-sm md:text-base font-semibold leading-relaxed whitespace-pre-line"
-                      style={{ color: "#e5e5e5" }}>
+                      className="text-base md:text-lg font-semibold leading-loose whitespace-pre-line"
+                      style={{ color: "#ffffff" }}>
                       {d.solution}
                     </p>
                   </div>
                 </div>
 
-                {/* 이미지 (우) */}
+                {/* 이미지 */}
                 <div
-                  className="relative w-full h-40 md:h-auto overflow-hidden"
-                  style={{ backgroundColor: "#1a1a1a", minHeight: "160px" }}>
+                  className="relative w-full h-44 md:h-auto overflow-hidden"
+                  style={{ backgroundColor: "#1a1a1a", minHeight: "180px" }}>
                   <Image
                     src={d.image}
                     alt={d.imageAlt}
                     fill
                     sizes="(max-width: 768px) 100vw, 300px"
-                    className="object-cover opacity-97"
+                    className="object-cover"
                   />
+
                   <div
                     className="absolute inset-0"
                     style={{
@@ -188,19 +201,22 @@ export default function WhySuridam() {
           ))}
         </div>
 
-        {/* 하단 약속 배너 */}
+        {/* 하단 약속 */}
         <div
-          className="mt-8 rounded-2xl px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-4"
+          className="mt-10 rounded-2xl px-6 py-6 flex flex-col sm:flex-row items-center justify-between gap-4"
           style={{
             backgroundColor: "#2fae8a18",
             border: "1px solid #2fae8a55",
           }}>
           <div>
-            <p className="text-xs mb-1" style={{ color: "#2fae8a" }}>
+            <p
+              className="text-sm mb-1 font-semibold"
+              style={{ color: "#2fae8a" }}>
               수리담의 약속
             </p>
+
             <p
-              className="text-sm md:text-base font-medium"
+              className="text-base md:text-lg font-medium"
               style={{ color: "white" }}>
               위 4가지 기준, 수리담이 지키지 못하면{" "}
               <strong style={{ color: "#2fae8a" }}>
@@ -208,9 +224,10 @@ export default function WhySuridam() {
               </strong>
             </p>
           </div>
+
           <a
             href="/request"
-            className="flex-shrink-0 rounded-xl px-5 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90 whitespace-nowrap"
+            className="flex-shrink-0 rounded-xl px-6 py-3 text-base font-semibold text-white transition-opacity hover:opacity-90 whitespace-nowrap"
             style={{ backgroundColor: "#2fae8a" }}>
             사진 상담 시작하기 →
           </a>
