@@ -7,6 +7,7 @@ function getSupabase() {
   return createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    { auth: { flowType: "implicit" } },
   );
 }
 
@@ -14,26 +15,44 @@ export default function AuthCallbackPage() {
   useEffect(() => {
     const supabase = getSupabase();
 
-    // URL 해시에서 토큰 자동 처리 (Supabase가 알아서 함)
-    supabase.auth.onAuthStateChange((event, session) => {
-      if (event === "SIGNED_IN" && session) {
-        window.location.href = "/mypage";
+    const handleCallback = async () => {
+      // implicit flow: 토큰이 URL 해시(#)에 들어옴
+      const hash = window.location.hash;
+      if (hash && hash.includes("access_token")) {
+        // Supabase가 해시에서 자동으로 세션 설정
+        const { data, error } = await supabase.auth.getSession();
+        if (data.session) {
+          window.location.href = "/mypage";
+          return;
+        }
+        if (error) {
+          window.location.href = "/login?error=auth_failed";
+          return;
+        }
       }
-    });
 
-    // 혹시 이미 세션이 있으면 바로 이동
-    supabase.auth.getSession().then(({ data }) => {
+      // PKCE flow: code가 query string에 있음
+      const params = new URLSearchParams(window.location.search);
+      const code = params.get("code");
+      if (code) {
+        const { error } = await supabase.auth.exchangeCodeForSession(code);
+        if (!error) {
+          window.location.href = "/mypage";
+          return;
+        }
+      }
+
+      // 이미 세션 있으면 이동
+      const { data } = await supabase.auth.getSession();
       if (data.session) {
         window.location.href = "/mypage";
+      } else {
+        window.location.href = "/login";
       }
-    });
+    };
 
-    // 5초 후에도 안 되면 홈으로
-    const timer = setTimeout(() => {
-      window.location.href = "/";
-    }, 5000);
-
-    return () => clearTimeout(timer);
+    // 해시 처리를 위해 약간 딜레이
+    setTimeout(handleCallback, 300);
   }, []);
 
   return (
