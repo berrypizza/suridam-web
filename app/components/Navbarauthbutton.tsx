@@ -89,7 +89,7 @@ export default function NavbarAuthButton() {
       className="inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-sm font-semibold transition-opacity hover:opacity-80"
       style={{ backgroundColor: "#FEE500", color: "#191919" }}>
       <span style={{ fontSize: 12 }}>👤</span>
-      <span className="hidden sm:inline" style={{ fontSize: 13 }}>
+      <span className=" sm:inline" style={{ fontSize: 13 }}>
         로그인
       </span>
     </Link>
