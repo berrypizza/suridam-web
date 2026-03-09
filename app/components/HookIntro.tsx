@@ -43,7 +43,7 @@ export default function HookIntro() {
         {/* 메인 헤드라인 */}
         <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.15] tracking-tight text-white">
           <span className="relative inline-block">
-            <span className="relative z-10">가구 수리 전 사진 한 장,</span>
+            <span className="relative z-10">가구수리 전 사진 한 장,</span>
             <span
               className="absolute left-0 w-full rounded"
               style={{
