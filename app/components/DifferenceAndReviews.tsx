@@ -213,33 +213,74 @@ export default function DifferenceAndReviews() {
       <div className="px-6 py-20" style={{ backgroundColor: "#f5f5f5" }}>
         <div className="mx-auto max-w-5xl">
           <div className="mb-14">
-            <span
-              className="inline-block text-sm tracking-widest uppercase mb-3 px-3 py-1 rounded-full font-semibold"
-              style={{
-                backgroundColor: "#f0faf6",
-                color: "#2fae8a",
-                border: "1px solid #2fae8a",
-              }}>
-              Before / After
-            </span>
-
             <h2
               className="text-3xl md:text-4xl lg:text-5xl font-bold leading-snug"
-              style={{ color: "#1e1e1e" }}>
-              소파든, 장롱이든, 문짝이든
-              <br />
-              <span style={{ color: "#2fae8a" }}>
-                수리담은 가구를 가리지 않습니다.
+              style={{ color: "#1e1e1e", marginBottom: 12 }}>
+              가구수리 업체, <br />
+              <span
+                style={{
+                  color: "#0cd199",
+                  boxShadow: "0 0 0 2px #0cd199",
+                }}>
+                검색 많이 하셨나요?
               </span>
             </h2>
 
+            <h2
+              className="text-3xl md:text-4xl lg:text-5xl font-bold leading-snug"
+              style={{ color: "#1e1e1e", marginBottom: 12 }}>
+              많은 업체들, <br />
+              <span
+                style={{
+                  color: "#0cd199",
+                  boxShadow: "0 0 0 2px #0cd199",
+                  backgroundColor: "#00000027",
+                }}>
+                견적 받아 보셨나요?
+              </span>
+            </h2>
+            <h2
+              className="text-3xl md:text-4xl lg:text-5xl font-bold leading-snug"
+              style={{ color: "#1e1e1e", marginBottom: 12 }}>
+              견적은 여러 군데 받았는데, <br />
+              <span
+                style={{
+                  color: "#0cd199",
+                  boxShadow: "0 0 0 2px #0cd199",
+                  backgroundColor: "#000000a2",
+                }}>
+                금액이 다 달라서 머리 아프죠?
+              </span>
+            </h2>
+            <h2
+              className="text-3xl md:text-4xl lg:text-5xl font-bold leading-snug"
+              style={{ color: "#1e1e1e", marginBottom: 12 }}>
+              저렴한 업체 낮은 퀄리티, <br />
+              <span
+                style={{
+                  color: "#0cd199",
+                  boxShadow: "0 0 0 2px #0cd199",
+                  backgroundColor: "#000000e5",
+                }}>
+                실망 하셨죠??
+              </span>
+            </h2>
             <p
               className="mt-4 text-base md:text-lg leading-relaxed"
               style={{ color: "#666" }}>
-              다양한 수리 경험이 쌓인 만큼, 어떤 상황에서도 판단이 빠릅니다.
+              대표가 대형 가구회사 출신으로, 가구의 재질부터 마감, 구조, 생산
+              공정까지 모두 이해하고 있습니다.{" "}
             </p>
           </div>
-
+          <span
+            className="inline-block text-sm tracking-widest uppercase mb-3 px-3 py-1 rounded-full font-semibold"
+            style={{
+              backgroundColor: "#f0faf6",
+              color: "#2fae8a",
+              border: "1px solid #2fae8a",
+            }}>
+            Before / After
+          </span>
           <div className="flex flex-col gap-8">
             {beforeAfterSets.map((set, i) => (
               <div key={i}>
