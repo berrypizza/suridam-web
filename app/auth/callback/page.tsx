@@ -1,15 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { createClient } from "@supabase/supabase-js";
-
-function getSupabase() {
-  return createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    { auth: { flowType: "implicit" } },
-  );
-}
+import { getSupabase } from "@/lib/supabase";
 
 export default function AuthCallbackPage() {
   useEffect(() => {
