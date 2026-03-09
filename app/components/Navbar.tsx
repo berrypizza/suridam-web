@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import NavbarAuthButton from "./Navbarauthbutton";
 
 function NaverIcon() {
   return (
@@ -66,6 +67,9 @@ export default function Navbar() {
             className="hidden sm:block h-4 w-px"
             style={{ backgroundColor: "#333" }}
           />
+
+          {/* 로그인/프로필 */}
+          <NavbarAuthButton />
 
           {/* 전화 CTA */}
           <a
