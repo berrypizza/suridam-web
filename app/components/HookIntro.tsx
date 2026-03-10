@@ -19,6 +19,7 @@ export default function HookIntro() {
       />
 
       <div className="absolute bottom-0 left-0 right-0 z-20 mx-auto max-w-5xl px-6 pb-14 md:pb-16">
+        {/* 규칙 5 금지/위협 배지 */}
         <FadeIn delay={0}>
           <div className="mb-7">
             <span
@@ -33,6 +34,7 @@ export default function HookIntro() {
           </div>
         </FadeIn>
 
+        {/* 규칙 1 상식파괴 + 4 자아흠집 */}
         <FadeIn delay={120}>
           <h1
             className="font-black leading-[1.1] tracking-tight"
@@ -43,26 +45,46 @@ export default function HookIntro() {
             고칠 수 있는 가구를
             <br />
             <span style={{ color: "#2fae8a" }}>버렸습니다.</span>
+            <br />
+            <span
+              style={{
+                color: "rgba(255,255,255,0.45)",
+                fontSize: "clamp(1.4rem, 3.5vw, 2.4rem)",
+                fontWeight: 700,
+              }}>
+              수리담이 없었다면.
+            </span>
           </h1>
         </FadeIn>
 
+        {/* 규칙 4 라포르 + Yes-set 1줄 */}
         <FadeIn delay={240}>
-          <p
-            className="mt-6 max-w-lg font-medium leading-relaxed"
-            style={{
-              fontSize: "clamp(1.1rem, 2.5vw, 1.4rem)",
-              color: "rgba(255,255,255,0.72)",
-            }}>
-            "일단 와봐야 알아요"라는 말에
-            <br />
-            포기하신 분들이 많습니다.
-            <br />
-            <span style={{ color: "#2fae8a", fontWeight: 800 }}>
-              수리담은 사진 한 장으로 먼저 판단합니다.
-            </span>
-          </p>
+          <div className="mt-6 max-w-lg">
+            {/* 규칙 4 마인드리딩 */}
+            <p
+              className="font-bold mb-3"
+              style={{
+                fontSize: "clamp(1rem, 2vw, 1.15rem)",
+                color: "rgba(255,255,255,0.55)",
+              }}>
+              ✓ 전화했더니 "일단 와봐야 알아요" — 맞죠?
+            </p>
+            <p
+              className="font-medium leading-relaxed"
+              style={{
+                fontSize: "clamp(1.1rem, 2.5vw, 1.4rem)",
+                color: "rgba(255,255,255,0.72)",
+              }}>
+              그 말에 포기하신 분들이 많습니다.
+              <br />
+              <span style={{ color: "#2fae8a", fontWeight: 800 }}>
+                수리담은 사진 한 장으로 먼저 판단합니다.
+              </span>
+            </p>
+          </div>
         </FadeIn>
 
+        {/* CTA */}
         <FadeIn delay={360}>
           <div className="mt-9 flex flex-col gap-3 sm:flex-row">
             <a

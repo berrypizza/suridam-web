@@ -53,16 +53,8 @@ function ScrollAccordionCard({ d, index }: { d: Diff; index: number }) {
     const obs = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          // 뷰포트 안으로 들어옴 → 천천히 펼침
           setOpen(true);
-        } else {
-          // 뷰포트 밖으로 나감 → 즉시 접힘 (위로 스크롤해서 지나쳤을 때)
-          const rect = entry.boundingClientRect;
-          if (rect.top < 0) {
-            // 위로 사라짐 (스크롤 다운해서 지나침) → 촤라라락
-            setOpen(false);
-          }
-          // 아래로 아직 안 나타난 경우는 closed 유지
+          obs.disconnect();
         }
       },
       { threshold: 0.25, rootMargin: "0px 0px -80px 0px" },

@@ -3,7 +3,6 @@
 import { useState } from "react";
 import FadeIn from "@/app/components/FadeIn";
 
-// --- 타입 정의 ---
 type OptionType = "fixed" | "count" | "select_then_count";
 
 interface Category {
@@ -339,7 +338,6 @@ function Calculator() {
   };
 
   const { total, breakdown } = calcPrice();
-
   const reset = () => {
     setStep(1);
     setSelectedGroup(null);
@@ -354,7 +352,6 @@ function Calculator() {
 
   return (
     <div>
-      {/* 진행바 */}
       <div className="mb-8">
         <div className="flex items-center gap-2 mb-3">
           {[1, 2, 3].map((s) => (
@@ -378,7 +375,6 @@ function Calculator() {
         </div>
       </div>
 
-      {/* STEP 1 */}
       {step === 1 && (
         <div>
           <p
@@ -418,7 +414,6 @@ function Calculator() {
         </div>
       )}
 
-      {/* STEP 2 */}
       {step === 2 && (
         <div>
           <button
@@ -472,7 +467,6 @@ function Calculator() {
         </div>
       )}
 
-      {/* STEP 3 */}
       {step === 3 && cat && (
         <div>
           <button
@@ -647,7 +641,58 @@ export default function EstimateCalculator() {
   return (
     <section className="px-6 py-16" style={{ backgroundColor: "#111" }}>
       <div className="mx-auto max-w-2xl">
+        {/* ── 후킹 카피 (규칙 4 자아흠집 + 5 위협 + 라포르) ── */}
         <FadeIn delay={0}>
+          <div
+            className="mb-6 rounded-2xl px-7 py-6"
+            style={{
+              backgroundColor: "#0d2318",
+              border: "1px solid #2fae8a66",
+            }}>
+            {/* 규칙 1 명언 인용 */}
+            <p
+              className="text-sm italic mb-4 leading-relaxed font-medium"
+              style={{
+                color: "#a8e8d0",
+                borderLeft: "3px solid #2fae8a",
+                paddingLeft: 14,
+              }}>
+              "싼 게 비지떡. 수리도 마찬가지다."
+              <br />
+              <span
+                className="not-italic font-bold"
+                style={{ color: "#2fae8a" }}>
+                — 가구업계 20년 현장 기사
+              </span>
+            </p>
+            {/* 규칙 4 라포르 + Yes-set */}
+            <p
+              className="font-bold leading-relaxed"
+              style={{
+                fontSize: "clamp(1rem, 2.5vw, 1.15rem)",
+                color: "#aaa",
+              }}>
+              "견적 받으러 갔다가 방문 후 더 비싸진 경험 있으세요?"
+              <br />
+              "전화만 해도 출장비 청구하는 곳을 만나셨나요?"
+            </p>
+            {/* 규칙 5 위협 + 상식파괴 */}
+            <p
+              className="mt-3 font-black"
+              style={{
+                fontSize: "clamp(1.1rem, 3vw, 1.35rem)",
+                color: "white",
+              }}>
+              전화하기 전에,{" "}
+              <span style={{ color: "#2fae8a" }}>
+                30초면 비용을 알 수 있습니다.
+              </span>
+            </p>
+          </div>
+        </FadeIn>
+
+        {/* ── 아코디언 트리거 ── */}
+        <FadeIn delay={80}>
           <button
             onClick={() => setOpen((v) => !v)}
             className="w-full rounded-2xl px-7 py-6 flex items-center justify-between transition-all"
@@ -663,13 +708,14 @@ export default function EstimateCalculator() {
                   style={{ color: "#2fae8a" }}>
                   Estimate
                 </p>
+                {/* 규칙 6 호기심 + 1 상식파괴 */}
                 <p
                   className="font-black"
                   style={{
                     fontSize: "clamp(1.1rem, 3vw, 1.4rem)",
                     color: "white",
                   }}>
-                  수리 비용 미리 확인하기
+                  내 가구, 얼마면 고칠 수 있을까?
                 </p>
                 <p className="text-sm mt-0.5" style={{ color: "#555" }}>
                   항목 선택 → 즉시 예상 비용 확인

@@ -17,9 +17,9 @@ export default function ContactCTA() {
   return (
     <section className="px-6 py-24" style={{ backgroundColor: "#0d0d0d" }}>
       <div className="mx-auto max-w-5xl">
-        {/* 헤드라인 */}
+        {/* ── 헤드라인 (규칙 1 상식파괴 + 4 자아흠집 + 5 위협) ── */}
         <FadeIn delay={0}>
-          <div className="text-center mb-14">
+          <div className="text-center mb-10">
             <span
               className="inline-block text-sm tracking-widest uppercase mb-5 px-3 py-1.5 rounded-full font-bold"
               style={{
@@ -46,15 +46,76 @@ export default function ContactCTA() {
               <br />
               제일 싸게 고칠 수 있는 타이밍입니다.
             </p>
+          </div>
+        </FadeIn>
+
+        {/* ── 명언 인용 (규칙 1) ── */}
+        <FadeIn delay={60}>
+          <div
+            className="mb-10 rounded-2xl px-6 py-5"
+            style={{
+              backgroundColor: "#1a0d0d",
+              border: "1px solid #ef444466",
+            }}>
             <p
-              className="mt-3 font-black"
-              style={{ fontSize: "1.25rem", color: "#2fae8a" }}>
-              사진 한 장이면 충분합니다.
+              className="text-base italic leading-relaxed font-medium"
+              style={{
+                color: "#fca5a5",
+                borderLeft: "3px solid #ef4444",
+                paddingLeft: 16,
+              }}>
+              "비용을 아끼려다 더 큰 비용을 치른다."
+            </p>
+            <p className="text-sm mt-3 font-bold" style={{ color: "#ef4444" }}>
+              — 워렌 버핏
             </p>
           </div>
         </FadeIn>
 
-        {/* 3단계 */}
+        {/* ── Yes-set (규칙 4 마인드리딩) ── */}
+        <FadeIn delay={80}>
+          <div className="mb-10 flex flex-col gap-3">
+            {[
+              "작은 소리나 흔들림이 생긴 지 꽤 됐다 → 맞죠?",
+              "바쁘다는 이유로 미루고 있었다 → 맞죠?",
+              "그러다 갑자기 탈락하거나 부러지는 경우를 봤다 → 맞죠?",
+            ].map((q, i) => (
+              <div
+                key={i}
+                className="rounded-2xl px-6 py-4"
+                style={{
+                  backgroundColor: "#161616",
+                  border: "1px solid #1e1e1e",
+                }}>
+                <p
+                  className="font-semibold"
+                  style={{
+                    color: "#888",
+                    fontSize: "clamp(0.95rem, 2.2vw, 1.1rem)",
+                  }}>
+                  {q}
+                </p>
+              </div>
+            ))}
+            <div
+              className="rounded-2xl px-6 py-5 mt-1"
+              style={{
+                backgroundColor: "#1a2e27",
+                border: "1px solid #2fae8a44",
+              }}>
+              <p
+                className="font-black"
+                style={{
+                  fontSize: "clamp(1.1rem, 2.8vw, 1.3rem)",
+                  color: "#2fae8a",
+                }}>
+                사진 한 장이면 충분합니다. 30초면 됩니다.
+              </p>
+            </div>
+          </div>
+        </FadeIn>
+
+        {/* ── 3단계 ── */}
         <div className="grid gap-4 sm:grid-cols-3 mb-12">
           {steps.map((s, i) => (
             <FadeIn key={s.num} delay={i * 100}>
@@ -82,7 +143,7 @@ export default function ContactCTA() {
           ))}
         </div>
 
-        {/* CTA 버튼 */}
+        {/* ── CTA ── */}
         <FadeIn delay={0}>
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
             <a
@@ -105,7 +166,7 @@ export default function ContactCTA() {
           </div>
         </FadeIn>
 
-        {/* 신뢰 배지 */}
+        {/* ── 신뢰 배지 ── */}
         <FadeIn delay={80}>
           <div
             className="flex flex-col sm:flex-row items-center justify-center gap-4"

@@ -19,7 +19,7 @@ const categories = [
         after: "/images/upper-after.jpg",
         review: {
           who: "강서구 화곡동 / 김** 고객님",
-          body: "상부장이 떨어져서 사진으로 문의했는데, 방향부터 정리해줘서 불안이 줄었어요. 믿고 맡겼습니다.",
+          body: "불안해서 요리를 못 했다. 사진 한 장 보냈더니 다음 날 고쳐졌다.",
         },
       },
       {
@@ -28,7 +28,7 @@ const categories = [
         after: "/images/upper-after2.jpg",
         review: {
           who: "부천 작동 / 김** 고객님",
-          body: "상부장이 갑자기 떨어져서 당황했는데, 사진 상담으로 빠르게 수리해줘서 정말 감사했어요.",
+          body: "위에서 쾅 소리가 났다. 식칼 옆에 떨어졌다. 그날 바로 연락했다.",
         },
       },
       {
@@ -37,7 +37,7 @@ const categories = [
         after: "/images/upper-after3.jpg",
         review: {
           who: "서울 마포구 / 정** 고객님",
-          body: "상부장이 오래되서 처졌는데, 수리담에서 고칠 수 있다고 해서 맡겼어요. 정말 튼튼하게 고쳐졌습니다.",
+          body: "2년째 조금씩 처지는 거 알면서 못 본 척했다. 더 미뤘으면 진짜 위험할 뻔했다.",
         },
       },
     ],
@@ -54,7 +54,7 @@ const categories = [
         after: "/images/door-after.png",
         review: {
           who: "마포구 합정 / 최** 고객님",
-          body: "안 되는 건 안 된다고 먼저 말해주는 게 오히려 신뢰였습니다.",
+          body: "안 된다고 먼저 말하는 업체를 처음 봤다. 그래서 더 믿었다.",
         },
       },
       {
@@ -63,7 +63,7 @@ const categories = [
         after: "/images/door-after2.jpg",
         review: {
           who: "강서구 화곡동 / 정** 고객님",
-          body: "싱크대 문짝이 물에 불어서 교체 업체 알아봤는데, 수리담 믿을만 해서 맡겼어요. 결과도 만족스럽습니다.",
+          body: "업체 3곳 돌았는데 다 교체하래. 수리담은 7만원에 고쳤다.",
         },
       },
     ],
@@ -80,7 +80,7 @@ const categories = [
         after: "/images/sofa-after.jpg",
         review: {
           who: "부천 상동 / 이** 고객님",
-          body: "새로 사려다 고민했는데, 수리담 다녀가고 나서 다시 탄탄해졌어요. 진작 연락할걸.",
+          body: "새 소파 180만원 장바구니에 담아놨다가 지웠다. 여기서 24만원에 끝났다.",
         },
       },
       {
@@ -89,7 +89,7 @@ const categories = [
         after: "/images/sofa-after2.jpg",
         review: {
           who: "인천 송도 / 장** 고객님",
-          body: "퇴근하고 매번 소파에 누워있는데, 남자의 공간을 되찾은 느낌이에요. 수리담 고마워요.",
+          body: "퇴근 후 유일한 낙이 소파였는데 반쪽짜리였다. 이제 제대로 눕는다.",
         },
       },
     ],
@@ -106,7 +106,7 @@ const categories = [
         after: "/images/sliding-after.jpg",
         review: {
           who: "인천 서구 / 고** 고객님",
-          body: "다른 곳은 교체하라고만 했어요. 수리담은 고칠 수 있다고 해서 맡겼는데, 정말 고쳐졌습니다.",
+          body: "가구점 가서 '새로 맞추면 얼마예요' 물어보고 왔다가 수리담 찾았다. 잘했다.",
         },
       },
       {
@@ -115,7 +115,7 @@ const categories = [
         after: "/images/sliding-after2.jpg",
         review: {
           who: "부천 중동 / 임** 고객님",
-          body: "문짝이 갑자기 떨어져서 당황했는데, 수리담에서 사진 상담으로 빠르게 수리해줘서 정말 감사했어요.",
+          body: "문짝이 레일에서 빠져서 한 달 동안 들어서 열었다. 이제 그냥 밀면 된다.",
         },
       },
     ],
@@ -132,7 +132,7 @@ const categories = [
         after: "/images/rail-after2.jpg",
         review: {
           who: "인천 남동구 / 한** 고객님",
-          body: "비용 범위 먼저 얘기해줘서 좋았어요. 딱 그 안에서 끝났습니다.",
+          body: "'이 정도면 얼마 나올까요' 물었더니 범위를 딱 말해줬다. 그 범위 안에서 끝났다.",
         },
       },
       {
@@ -141,7 +141,7 @@ const categories = [
         after: "/images/rail-after.jpg",
         review: {
           who: "서울 동작구 / 이** 고객님",
-          body: "볼레일 교체 문의했는데, 광폭으로 단단하게 달아주셨습니다. 서랍이 새것처럼 잘 열리고 닫혀요.",
+          body: "서랍 3개가 다 뻑뻑했다. 하나씩 덜 쓰게 됐다. 전부 진작 고쳤어야 했는데.",
         },
       },
     ],
@@ -158,7 +158,7 @@ const categories = [
         after: "/images/chair-after.jpg",
         review: {
           who: "인천 계산동 / 김** 고객님",
-          body: "버리긴 아깝고 그냥 두긴 싫었는데, 이제 다시 써도 되겠다는 생각이 들었어요.",
+          body: "버리려다 '혹시나' 하고 사진 보냈다. 3만원에 다시 앉게 됐다.",
         },
       },
       {
@@ -167,7 +167,7 @@ const categories = [
         after: "/images/chair-after2.jpg",
         review: {
           who: "서울 역삼동 / 김** 고객님",
-          body: "손님들이 의자 가죽 찢어진거 신경쓰시는거 같아서 고민이었는데, 새것처럼 고쳐져서 만족합니다.",
+          body: "손님 올 때마다 가죽 찢어진 게 신경 쓰였다. 이제 안 신경 쓴다.",
         },
       },
     ],
@@ -177,47 +177,20 @@ const categories = [
 const previewReviews: Review[] = [
   {
     who: "강서구 화곡동 / 김** 고객님",
-    title: "싱크대 상부장 탈락",
-    body: "상부장이 떨어져서 사진으로 문의했는데, 방향부터 정리해줘서 불안이 줄었어요. 믿고 맡겼습니다.",
+    title: "상부장 탈락",
+    body: "교체 견적 140만원 받았다가, 사진 보내고 8만원에 끝났다.",
     stars: 5,
   },
   {
     who: "부천 상동 / 이** 고객님",
-    title: "소파 쿠션 꺼짐",
-    body: "새로 사려다 고민했는데, 수리담 다녀가고 나서 다시 탄탄해졌어요. 진작 연락할걸.",
+    title: "소파 꺼짐",
+    body: "새 소파 장바구니에 담아놨다가 지웠다. 여기서 24만원에 끝났다.",
     stars: 5,
   },
   {
     who: "인천 서구 / 고** 고객님",
-    title: "붙박이장 슬라이딩",
-    body: "다른 곳은 교체하라고만 했어요. 수리담은 고칠 수 있다고 해서 맡겼는데, 정말 고쳐졌습니다.",
-    stars: 5,
-  },
-];
-
-const allReviews: Review[] = [
-  {
-    who: "마포구 합정 / 최** 고객님",
-    title: "문짝 문제",
-    body: "안 되는 건 안 된다고 먼저 말해주는 게 오히려 신뢰였습니다.",
-    stars: 5,
-  },
-  {
-    who: "서울 노원구 / 정** 고객님",
-    title: "상부장 탈락",
-    body: "출장비 걱정했는데 사진으로 먼저 확인해줘서 괜히 부른 게 아니었어요.",
-    stars: 5,
-  },
-  {
-    who: "인천 남동구 / 한** 고객님",
-    title: "경첩 교체",
-    body: "비용 범위 먼저 얘기해줘서 좋았어요. 딱 그 안에서 끝났습니다.",
-    stars: 5,
-  },
-  {
-    who: "부천 중동 / 오** 고객님",
-    title: "서랍 수리",
-    body: "다른 곳에서 교체하라고 했는데 수리담은 고칠 수 있다고 해서 수리했어요.",
+    title: "슬라이딩 도어",
+    body: "다른 데서 '그냥 새로 사세요' 들었다. 여기서 고쳤다.",
     stars: 5,
   },
 ];
@@ -348,15 +321,35 @@ function AccordionItem({ cat }: { cat: (typeof categories)[0] }) {
             </p>
           </div>
         </div>
+
+        {/* 화살표 + pulse 링 */}
         <div
-          className="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-xl transition-all duration-300"
-          style={{
-            backgroundColor: open ? "#2fae8a" : "#1a1a1a",
-            border: `1px solid ${open ? "#2fae8a" : "#252525"}`,
-            color: open ? "white" : "#555",
-            transform: open ? "rotate(180deg)" : "rotate(0deg)",
-          }}>
-          ↓
+          className="relative flex-shrink-0 flex items-center justify-center"
+          style={{ width: 36, height: 36 }}>
+          {/* pulse 링 — 닫혀있을 때만 표시 */}
+          {!open && (
+            <>
+              <span
+                className="absolute inset-0 rounded-xl animate-ping"
+                style={{ backgroundColor: "#2fae8a", opacity: 0.2 }}
+              />
+              <span
+                className="absolute inset-0 rounded-xl animate-pulse"
+                style={{ backgroundColor: "#2fae8a", opacity: 0.1 }}
+              />
+            </>
+          )}
+          <div
+            className="relative flex items-center justify-center w-8 h-8 rounded-xl transition-all duration-300"
+            style={{
+              backgroundColor: open ? "#2fae8a" : "#1a1a1a",
+              border: `1px solid ${open ? "#2fae8a" : "#2fae8a55"}`,
+              color: open ? "white" : "#2fae8a",
+              transform: open ? "rotate(180deg)" : "rotate(0deg)",
+              fontWeight: 900,
+            }}>
+            ↓
+          </div>
         </div>
       </button>
       <div
@@ -383,8 +376,9 @@ export default function DifferenceAndReviews() {
       {/* ───── 리뷰 맛보기 ───── */}
       <div className="px-6 pt-20 pb-14" style={{ backgroundColor: "#111" }}>
         <div className="mx-auto max-w-5xl">
+          {/* 규칙 1 상식파괴 헤더 */}
           <FadeIn delay={0}>
-            <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-12">
+            <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-8">
               <div>
                 <span
                   className="inline-block text-sm tracking-widest uppercase mb-4 px-3 py-1.5 rounded-full font-bold"
@@ -433,6 +427,33 @@ export default function DifferenceAndReviews() {
               </div>
             </div>
           </FadeIn>
+
+          {/* 규칙 1 명언 인용 */}
+          <FadeIn delay={60}>
+            <div
+              className="mb-10 rounded-2xl px-6 py-5"
+              style={{
+                backgroundColor: "#0d2318",
+                border: "1px solid #2fae8a66",
+              }}>
+              <p
+                className="text-base italic leading-relaxed font-medium"
+                style={{
+                  color: "#a8e8d0",
+                  borderLeft: "3px solid #2fae8a",
+                  paddingLeft: 16,
+                }}>
+                "사람들은 숫자보다 이야기를 믿는다."
+              </p>
+              <p
+                className="text-sm mt-3 font-bold"
+                style={{ color: "#2fae8a" }}>
+                — Seth Godin, 마케팅 전략가
+              </p>
+            </div>
+          </FadeIn>
+
+          {/* 리뷰 카드 */}
           <div className="grid gap-5 sm:grid-cols-3">
             {previewReviews.map((r, i) => (
               <FadeIn key={i} delay={i * 100}>
@@ -497,6 +518,7 @@ export default function DifferenceAndReviews() {
       {/* ───── YES-SET + Before/After 아코디언 ───── */}
       <div className="px-6 py-20" style={{ backgroundColor: "#f5f5f5" }}>
         <div className="mx-auto max-w-5xl">
+          {/* YES-SET */}
           <div className="mb-16 flex flex-col gap-4">
             {yesSetItems.map((item, i) => (
               <FadeIn key={i} delay={i * 80}>
@@ -546,9 +568,10 @@ export default function DifferenceAndReviews() {
             </FadeIn>
           </div>
 
+          {/* Before/After 헤더 + 명언 */}
           <FadeIn delay={0}>
             <span
-              className="inline-block text-sm tracking-widest uppercase mb-6 px-3 py-1.5 rounded-full font-bold"
+              className="inline-block text-sm tracking-widest uppercase mb-4 px-3 py-1.5 rounded-full font-bold"
               style={{
                 backgroundColor: "#f0faf6",
                 color: "#2fae8a",
@@ -556,92 +579,18 @@ export default function DifferenceAndReviews() {
               }}>
               Before / After
             </span>
+            <p
+              className="mb-6 text-base font-semibold"
+              style={{ color: "#888" }}>
+              말보다 사진이 빠릅니다. 직접 확인하세요.
+            </p>
           </FadeIn>
+
+          {/* 아코디언 */}
           <div className="flex flex-col gap-3">
             {categories.map((cat, i) => (
               <FadeIn key={cat.id} delay={i * 60}>
                 <AccordionItem cat={cat} />
-              </FadeIn>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* ───── 추가 리뷰 그리드 ───── */}
-      <div className="px-6 py-16" style={{ backgroundColor: "white" }}>
-        <div className="mx-auto max-w-5xl">
-          <FadeIn delay={0}>
-            <div className="mb-8">
-              <span
-                className="inline-block text-sm tracking-widest uppercase mb-3 px-3 py-1 rounded-full font-bold"
-                style={{
-                  backgroundColor: "#f5f5f5",
-                  color: "#7a7a7a",
-                  border: "1px solid #e5e5e5",
-                }}>
-                All Reviews
-              </span>
-              <h3
-                className="text-2xl md:text-3xl font-black"
-                style={{ color: "#1e1e1e" }}>
-                직접 경험한 고객들의 한 마디
-              </h3>
-              <p
-                className="mt-2 text-base md:text-lg"
-                style={{ color: "#666" }}>
-                짧은 한 줄이 긴 설명보다 정확합니다.
-              </p>
-            </div>
-          </FadeIn>
-          <div className="grid gap-5 sm:grid-cols-2">
-            {allReviews.map((r, idx) => (
-              <FadeIn key={idx} delay={idx * 80}>
-                <div
-                  className="rounded-2xl p-7 flex flex-col gap-5"
-                  style={{
-                    backgroundColor: "#f5f5f5",
-                    border: "1px solid #e5e5e5",
-                  }}>
-                  <div className="flex items-center justify-between gap-3">
-                    <div
-                      className="flex gap-0.5 text-lg"
-                      style={{ color: "#2fae8a" }}>
-                      {"★".repeat(r.stars ?? 5)}
-                    </div>
-                    <span
-                      className="text-sm px-3 py-1 rounded-full"
-                      style={{
-                        backgroundColor: "white",
-                        border: "1px solid #e5e5e5",
-                        color: "#666",
-                      }}>
-                      {r.title}
-                    </span>
-                  </div>
-                  <p
-                    className="text-lg leading-relaxed flex-1"
-                    style={{ color: "#1e1e1e" }}>
-                    <span style={{ color: "#2fae8a", fontSize: 24 }}>"</span>
-                    {r.body}
-                    <span style={{ color: "#2fae8a", fontSize: 24 }}>"</span>
-                  </p>
-                  <div
-                    className="flex items-center gap-3 pt-4"
-                    style={{ borderTop: "1px solid #e5e5e5" }}>
-                    <div
-                      className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-black flex-shrink-0"
-                      style={{
-                        backgroundColor: "#f0faf6",
-                        color: "#2fae8a",
-                        border: "1px solid #2fae8a44",
-                      }}>
-                      {r.who[0]}
-                    </div>
-                    <span className="text-sm" style={{ color: "#666" }}>
-                      {r.who}
-                    </span>
-                  </div>
-                </div>
               </FadeIn>
             ))}
           </div>

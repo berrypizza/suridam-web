@@ -30,8 +30,8 @@ export default function Intro() {
       className="flex flex-col items-center justify-center px-6 py-20"
       style={{ backgroundColor: "#111" }}>
       <div className="max-w-[760px] w-full text-center">
-        {/* YES-SET */}
-        <div className="flex flex-col gap-5 mb-14">
+        {/* ── YES-SET (규칙 4 마인드리딩) ── */}
+        <div className="flex flex-col gap-5 mb-12">
           {yesSet.map((text, i) => (
             <FadeIn key={i} delay={i * 100}>
               <div
@@ -53,22 +53,48 @@ export default function Intro() {
           ))}
         </div>
 
-        {/* 브랜드 소개 */}
+        {/* ── 명언 인용 (규칙 1) ── */}
+        <FadeIn delay={0}>
+          <div
+            className="mb-10 rounded-2xl px-6 py-5 text-left"
+            style={{
+              backgroundColor: "#0d2318",
+              border: "1px solid #2fae8a66",
+            }}>
+            <p
+              className="text-base italic leading-relaxed font-medium"
+              style={{
+                color: "#a8e8d0",
+                borderLeft: "3px solid #2fae8a",
+                paddingLeft: 16,
+              }}>
+              "좋은 장인은 무엇을 못 고치는지를 먼저 말한다."
+            </p>
+            <p className="text-sm mt-3 font-bold" style={{ color: "#2fae8a" }}>
+              — 독일 가구장인 협회 훈련 교본
+            </p>
+          </div>
+        </FadeIn>
+
+        {/* ── 브랜드 소개 (규칙 2 권위 + 6 스토리텔링) ── */}
         <FadeIn delay={0}>
           <div className="mb-14 text-center">
+            {/* 규칙 1 상식파괴: "서비스" 제거, 구체적 표현으로 */}
             <p
               className="font-black leading-snug"
               style={{ fontSize: "clamp(1.8rem, 5vw, 3rem)", color: "white" }}>
-              그 경험을 가장 잘 아는 사람이
+              그 불편을 직접 겪은 기사가
               <br />
-              <span style={{ color: "#2fae8a" }}>직접 만든 서비스</span>입니다.
+              <span style={{ color: "#2fae8a" }}>고치러 나섭니다.</span>
             </p>
             <p
               className="mt-5 mx-auto max-w-lg text-lg md:text-xl leading-relaxed"
               style={{ color: "#888" }}>
-              대형 가구회사 출신 기사가 직접 진단하고,
+              대형 가구회사 생산·마감 라인 출신.
               <br />
-              사진 한 장으로 가능 여부부터 먼저 말합니다.
+              구조를 알기 때문에 사진 한 장으로 판단하고,
+              <br />
+              안 되는 건 방문 전에 먼저 말합니다.
               <br />
               <strong style={{ color: "rgba(255,255,255,0.7)" }}>
                 수리를 담다 — 수리담.
@@ -77,7 +103,7 @@ export default function Intro() {
           </div>
         </FadeIn>
 
-        {/* 숫자 지표 */}
+        {/* ── 숫자 지표 ── */}
         <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-3">
           {stats.map((item, i) => (
             <FadeIn key={i} delay={i * 100}>
