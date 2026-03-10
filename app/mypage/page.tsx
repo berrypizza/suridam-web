@@ -46,6 +46,13 @@ function formatPrice(p: number) {
   return p.toLocaleString("ko-KR") + "원";
 }
 
+// 카카오 전화번호 파싱 (+82 10-0000-0000 → 01000000000)
+function parseKakaoPhone(raw: string): string {
+  return raw
+    .replace(/^\+82\s?/, "0") // +82 → 0
+    .replace(/[^0-9]/g, ""); // 숫자만
+}
+
 export default function MyPage() {
   const [user, setUser] = useState<{
     id: string;
@@ -58,6 +65,8 @@ export default function MyPage() {
   const [phoneInput, setPhoneInput] = useState("");
   const [phoneLinked, setPhoneLinked] = useState(false);
   const [phoneError, setPhoneError] = useState("");
+  // 카카오에서 전화번호를 못 받았을 때만 true
+  const [needManualPhone, setNeedManualPhone] = useState(false);
 
   useEffect(() => {
     const supabase = getSupabase();
@@ -67,26 +76,48 @@ export default function MyPage() {
         return;
       }
       const u = data.session.user;
-      const phone = u.user_metadata?.phone_number || u.phone || "";
+
+      // ── 카카오 전화번호 우선순위 ──────────────────────────
+      // 1) kakao_account.phone_number  ← 비즈앱 심사 통과 후 동의 시
+      // 2) user_metadata.phone_number  ← 일부 환경에서 올 수 있음
+      // 3) u.phone                     ← Supabase phone auth
+      const rawPhone =
+        u.user_metadata?.kakao_account?.phone_number ||
+        u.user_metadata?.phone_number ||
+        u.phone ||
+        "";
+
+      const phone = rawPhone ? parseKakaoPhone(rawPhone) : "";
+
+      // ── 이름 / 아바타 ─────────────────────────────────────
       const name =
-        u.user_metadata?.name || u.user_metadata?.full_name || "회원";
-      setUser({
-        id: u.id,
-        name,
-        avatar: u.user_metadata?.avatar_url,
-        phone,
-      });
+        u.user_metadata?.kakao_account?.name ||
+        u.user_metadata?.name ||
+        u.user_metadata?.full_name ||
+        "회원";
+
+      const avatar =
+        u.user_metadata?.kakao_account?.profile?.profile_image_url ||
+        u.user_metadata?.avatar_url ||
+        "";
+
+      setUser({ id: u.id, name, avatar, phone });
 
       if (phone) {
+        // 전화번호 자동 확보 → 수리내역 바로 로드, 입력창 생략
         await loadJobs(phone);
         setPhoneLinked(true);
+      } else {
+        // 카카오에서 전화번호 못 받음 → 수동 입력창 표시
+        setNeedManualPhone(true);
       }
+
       setLoading(false);
     });
   }, []);
 
   const loadJobs = async (phone: string) => {
-    const clean = phone.replace(/-/g, "");
+    const clean = phone.replace(/[^0-9]/g, "");
     const { data } = await getSupabase()
       .from("jobs")
       .select(
@@ -98,7 +129,7 @@ export default function MyPage() {
   };
 
   const handleLinkPhone = async () => {
-    const clean = phoneInput.replace(/-/g, "").trim();
+    const clean = phoneInput.replace(/[^0-9]/g, "").trim();
     if (clean.length < 10) {
       setPhoneError("올바른 전화번호를 입력해주세요");
       return;
@@ -106,6 +137,7 @@ export default function MyPage() {
     setPhoneError("");
     await loadJobs(clean);
     setPhoneLinked(true);
+    setNeedManualPhone(false);
   };
 
   const handleLogout = async () => {
@@ -238,13 +270,15 @@ export default function MyPage() {
               {user?.name}님
             </div>
             <div style={{ fontSize: 12, color: "#555", marginTop: 2 }}>
-              카카오 로그인
+              {user?.phone
+                ? `📱 ${user.phone.replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3")} 연결됨`
+                : "카카오 로그인"}
             </div>
           </div>
         </div>
 
-        {/* 전화번호 연결 */}
-        {!phoneLinked ? (
+        {/* 수동 전화번호 입력 (카카오에서 못 받았을 때만 표시) */}
+        {needManualPhone && !phoneLinked && (
           <div
             style={{
               backgroundColor: "#1a1a1a",
@@ -258,7 +292,7 @@ export default function MyPage() {
                 fontSize: 15,
                 fontWeight: 700,
                 color: "white",
-                marginBottom: 6,
+                marginBottom: 4,
               }}>
               수리 내역 불러오기
             </div>
@@ -277,6 +311,7 @@ export default function MyPage() {
                 type="tel"
                 value={phoneInput}
                 onChange={(e) => setPhoneInput(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && handleLinkPhone()}
                 placeholder="010-0000-0000"
                 style={{ ...inputStyle, flex: 1 }}
               />
@@ -303,7 +338,7 @@ export default function MyPage() {
               </div>
             )}
           </div>
-        ) : null}
+        )}
 
         {/* 수리 내역 */}
         {phoneLinked && (
@@ -369,7 +404,6 @@ export default function MyPage() {
                         padding: "18px",
                         border: "1px solid #222",
                       }}>
-                      {/* 상태 + 날짜 */}
                       <div
                         style={{
                           display: "flex",
@@ -395,8 +429,6 @@ export default function MyPage() {
                             : ""}
                         </span>
                       </div>
-
-                      {/* 내용 */}
                       <div
                         style={{
                           display: "flex",
@@ -456,7 +488,6 @@ export default function MyPage() {
               </div>
             )}
 
-            {/* 추가 접수 버튼 */}
             <div style={{ marginTop: 20, textAlign: "center" }}>
               <Link
                 href="/request"
