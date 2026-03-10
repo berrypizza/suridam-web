@@ -1,5 +1,5 @@
 // app/admin/layout.tsx
-// 어드민 전용 레이아웃 - PWA 메타태그 + 서비스워커 등록
+// 어드민 전용 레이아웃 - 어드민 manifest 참조
 
 import { Metadata, Viewport } from "next";
 import Script from "next/script";
@@ -7,7 +7,8 @@ import Script from "next/script";
 export const metadata: Metadata = {
   title: "수리담 관리자",
   description: "수리담 기사 전용 관리 앱",
-  manifest: "/manifest.json",
+  // 루트 layout의 manifest.json을 덮어씀
+  manifest: "/manifest-admin.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
@@ -17,10 +18,6 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: "#2fae8a",
-  width: "device-width",
-  initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
 };
 
 export default function AdminLayout({
@@ -30,23 +27,8 @@ export default function AdminLayout({
 }) {
   return (
     <>
-      {/* iOS PWA 아이콘 */}
-      <link rel="apple-touch-icon" href="/icons/icon-192.png" />
-
-      {/* 서비스워커 등록 */}
-      <Script id="sw-register" strategy="afterInteractive">
-        {`
-          if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-              navigator.serviceWorker
-                .register('/sw.js')
-                .then(() => console.log('[SW] 등록 완료'))
-                .catch((e) => console.log('[SW] 등록 실패', e));
-            });
-          }
-        `}
-      </Script>
-
+      {/* iOS용 어드민 아이콘 (별도 아이콘 없으면 icon-192.png 그대로 써도 됨) */}
+      <link rel="apple-touch-icon" href="/icons/icon-admin-192.png" />
       {children}
     </>
   );
