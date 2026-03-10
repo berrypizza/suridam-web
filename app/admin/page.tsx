@@ -911,7 +911,7 @@ export default function AdminDashboard() {
                   border: `1px solid ${calTechFilter === "기사1" ? "#2fae8a44" : calTechFilter === "기사2" ? "#60a5fa44" : "#2e2e2e"}`,
                   outline: "none",
                 }}>
-                <option value="전체">전체</option>
+                <option value="전체">기사 선택</option>
                 <option value="기사1">기사1</option>
                 <option value="기사2">기사2</option>
               </select>
@@ -1000,19 +1000,28 @@ export default function AdminDashboard() {
                       {dayJobs.slice(0, 3).map((j) => (
                         <div
                           key={j.id}
-                          className="flex items-center gap-1 overflow-hidden">
-                          <span
-                            className="h-1.5 w-1.5 rounded-full flex-shrink-0"
-                            style={{
-                              backgroundColor: TECH_COLOR[j.tech || ""],
-                            }}
-                          />
-                          <span
-                            className="truncate"
-                            style={{ color: "#bbb", fontSize: 10 }}>
-                            {j.visit_time ? formatTime(j.visit_time) + " " : ""}
-                            {j.name}
-                          </span>
+                          className="flex flex-col overflow-hidden">
+                          <div className="flex items-center gap-1">
+                            <span
+                              className="h-1.5 w-1.5 rounded-full flex-shrink-0"
+                              style={{
+                                backgroundColor: TECH_COLOR[j.tech || ""],
+                              }}
+                            />
+                            <span
+                              className="truncate font-semibold"
+                              style={{ color: "#e5e5e5", fontSize: 10 }}>
+                              {j.name}
+                              {j.symptom ? ` · ${j.symptom}` : ""}
+                            </span>
+                          </div>
+                          {j.visit_time && (
+                            <span
+                              className="pl-3"
+                              style={{ color: "#666", fontSize: 9 }}>
+                              {formatTime(j.visit_time)}
+                            </span>
+                          )}
                         </div>
                       ))}
                       {dayJobs.length > 3 && (
