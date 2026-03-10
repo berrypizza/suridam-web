@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import NavbarAuthButton from "./Navbarauthbutton";
+import DrawerMenu from "./Drawermenu";
 
 function NaverIcon() {
   return (
@@ -38,7 +39,7 @@ export default function Navbar() {
 
         {/* 우측 */}
         <div className="flex items-center gap-2">
-          {/* SNS 아이콘 */}
+          {/* SNS 아이콘 — 데스크탑만 */}
           <div
             className="hidden sm:flex items-center gap-1 rounded-full px-1.5 py-1.5"
             style={{ backgroundColor: "#2a2a2a", border: "1px solid #333" }}>
@@ -80,6 +81,9 @@ export default function Navbar() {
             <span className="hidden sm:inline">전화 문의</span>
             <span className="sm:hidden">문의</span>
           </a>
+
+          {/* 드로어 메뉴 버튼 */}
+          <DrawerMenu />
         </div>
       </div>
     </header>
