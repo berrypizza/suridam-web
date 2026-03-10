@@ -1,4 +1,5 @@
 import React from "react";
+import FadeIn from "@/app/components/FadeIn";
 
 const steps = [
   { num: "01", text: "가구 사진 1~3장 찍기" },
@@ -16,114 +17,119 @@ export default function ContactCTA() {
   return (
     <section className="px-6 py-24" style={{ backgroundColor: "#0d0d0d" }}>
       <div className="mx-auto max-w-5xl">
-        {/* 헤드라인 — 위협 (규칙 5) + 간결함 */}
-        <div className="text-center mb-14">
-          <span
-            className="inline-block text-sm tracking-widest uppercase mb-5 px-3 py-1.5 rounded-full font-bold"
-            style={{
-              backgroundColor: "#2fae8a22",
-              color: "#2fae8a",
-              border: "1px solid #2fae8a55",
-            }}>
-            Contact
-          </span>
-
-          <h2
-            className="font-black leading-tight"
-            style={{ fontSize: "clamp(2.2rem, 6vw, 4rem)", color: "white" }}>
-            방치할수록
-            <br />
-            <span style={{ color: "#ef4444" }}>교체 얘기가 나옵니다.</span>
-          </h2>
-
-          {/* 행동 유도 — 긍정 반전 (규칙 6 호기심) */}
-          <p
-            className="mt-6 font-semibold leading-relaxed"
-            style={{
-              fontSize: "clamp(1.1rem, 2.5vw, 1.35rem)",
-              color: "#888",
-            }}>
-            작은 이상이 느껴질 때가
-            <br />
-            제일 싸게 고칠 수 있는 타이밍입니다.
-          </p>
-
-          <p
-            className="mt-3 font-black"
-            style={{ fontSize: "1.25rem", color: "#2fae8a" }}>
-            사진 한 장이면 충분합니다.
-          </p>
-        </div>
+        {/* 헤드라인 */}
+        <FadeIn delay={0}>
+          <div className="text-center mb-14">
+            <span
+              className="inline-block text-sm tracking-widest uppercase mb-5 px-3 py-1.5 rounded-full font-bold"
+              style={{
+                backgroundColor: "#2fae8a22",
+                color: "#2fae8a",
+                border: "1px solid #2fae8a55",
+              }}>
+              Contact
+            </span>
+            <h2
+              className="font-black leading-tight"
+              style={{ fontSize: "clamp(2.2rem, 6vw, 4rem)", color: "white" }}>
+              방치할수록
+              <br />
+              <span style={{ color: "#ef4444" }}>교체 얘기가 나옵니다.</span>
+            </h2>
+            <p
+              className="mt-6 font-semibold leading-relaxed"
+              style={{
+                fontSize: "clamp(1.1rem, 2.5vw, 1.35rem)",
+                color: "#888",
+              }}>
+              작은 이상이 느껴질 때가
+              <br />
+              제일 싸게 고칠 수 있는 타이밍입니다.
+            </p>
+            <p
+              className="mt-3 font-black"
+              style={{ fontSize: "1.25rem", color: "#2fae8a" }}>
+              사진 한 장이면 충분합니다.
+            </p>
+          </div>
+        </FadeIn>
 
         {/* 3단계 */}
         <div className="grid gap-4 sm:grid-cols-3 mb-12">
           {steps.map((s, i) => (
-            <div
-              key={s.num}
-              className="rounded-2xl px-6 py-7 flex items-start gap-5"
-              style={{
-                backgroundColor: i === 2 ? "#2fae8a18" : "#161616",
-                border: `1px solid ${i === 2 ? "#2fae8a55" : "#1e1e1e"}`,
-              }}>
-              <span
-                className="text-4xl font-black leading-none select-none flex-shrink-0 mt-0.5"
-                style={{ color: i === 2 ? "#2fae8a" : "#2a2a2a" }}>
-                {s.num}
-              </span>
-              <p
-                className="font-bold leading-snug pt-1"
+            <FadeIn key={s.num} delay={i * 100}>
+              <div
+                className="rounded-2xl px-6 py-7 flex items-start gap-5"
                 style={{
-                  fontSize: "clamp(1rem, 2.2vw, 1.2rem)",
-                  color: "#f0f0f0",
+                  backgroundColor: i === 2 ? "#2fae8a18" : "#161616",
+                  border: `1px solid ${i === 2 ? "#2fae8a55" : "#1e1e1e"}`,
                 }}>
-                {s.text}
-              </p>
-            </div>
+                <span
+                  className="text-4xl font-black leading-none select-none flex-shrink-0 mt-0.5"
+                  style={{ color: i === 2 ? "#2fae8a" : "#2a2a2a" }}>
+                  {s.num}
+                </span>
+                <p
+                  className="font-bold leading-snug pt-1"
+                  style={{
+                    fontSize: "clamp(1rem, 2.2vw, 1.2rem)",
+                    color: "#f0f0f0",
+                  }}>
+                  {s.text}
+                </p>
+              </div>
+            </FadeIn>
           ))}
         </div>
 
         {/* CTA 버튼 */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-          <a
-            href="/request"
-            className="rounded-2xl px-9 py-5 text-white font-black text-center transition-opacity hover:opacity-90"
-            style={{ backgroundColor: "#2fae8a", fontSize: "1.15rem" }}>
-            📷 사진 상담 시작하기 →
-          </a>
-          <a
-            href="tel:01091273024"
-            className="rounded-2xl px-9 py-5 font-black text-center transition-opacity hover:opacity-70"
-            style={{
-              border: "1px solid #2a2a2a",
-              color: "#f0f0f0",
-              backgroundColor: "#161616",
-              fontSize: "1.05rem",
-            }}>
-            📞 010-9127-3024
-          </a>
-        </div>
+        <FadeIn delay={0}>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+            <a
+              href="/request"
+              className="rounded-2xl px-9 py-5 text-white font-black text-center transition-opacity hover:opacity-90"
+              style={{ backgroundColor: "#2fae8a", fontSize: "1.15rem" }}>
+              📷 사진 상담 시작하기 →
+            </a>
+            <a
+              href="tel:01091273024"
+              className="rounded-2xl px-9 py-5 font-black text-center transition-opacity hover:opacity-70"
+              style={{
+                border: "1px solid #2a2a2a",
+                color: "#f0f0f0",
+                backgroundColor: "#161616",
+                fontSize: "1.05rem",
+              }}>
+              📞 010-9127-3024
+            </a>
+          </div>
+        </FadeIn>
 
         {/* 신뢰 배지 */}
-        <div
-          className="flex flex-col sm:flex-row items-center justify-center gap-4"
-          style={{ color: "#444" }}>
-          {badges.map((b, i) => (
-            <React.Fragment key={b}>
-              <span className="flex items-center gap-2 text-base font-semibold">
-                <span
-                  className="h-2 w-2 rounded-full inline-block flex-shrink-0"
-                  style={{ backgroundColor: "#2fae8a" }}
-                />
-                {b}
-              </span>
-              {i < badges.length - 1 && (
-                <span className="hidden sm:block" style={{ color: "#1e1e1e" }}>
-                  ·
+        <FadeIn delay={80}>
+          <div
+            className="flex flex-col sm:flex-row items-center justify-center gap-4"
+            style={{ color: "#444" }}>
+            {badges.map((b, i) => (
+              <React.Fragment key={b}>
+                <span className="flex items-center gap-2 text-base font-semibold">
+                  <span
+                    className="h-2 w-2 rounded-full inline-block flex-shrink-0"
+                    style={{ backgroundColor: "#2fae8a" }}
+                  />
+                  {b}
                 </span>
-              )}
-            </React.Fragment>
-          ))}
-        </div>
+                {i < badges.length - 1 && (
+                  <span
+                    className="hidden sm:block"
+                    style={{ color: "#1e1e1e" }}>
+                    ·
+                  </span>
+                )}
+              </React.Fragment>
+            ))}
+          </div>
+        </FadeIn>
       </div>
     </section>
   );

@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import FadeIn from "@/app/components/FadeIn";
 
 const diffs = [
   {
@@ -41,169 +42,175 @@ export default function WhySuridam() {
   return (
     <section style={{ backgroundColor: "#0d0d0d" }}>
       <div className="px-6 py-20 mx-auto max-w-5xl">
-        {/* 헤더 — 위협·금지 규칙 5 */}
-        <div className="mb-14">
-          <span
-            className="inline-block text-sm tracking-widest uppercase mb-5 px-3 py-1.5 rounded-full font-bold"
-            style={{
-              backgroundColor: "#2fae8a22",
-              color: "#2fae8a",
-              border: "1px solid #2fae8a55",
-            }}>
-            Why Suridam
-          </span>
-
-          <h2
-            className="font-black leading-tight mb-5"
-            style={{ fontSize: "clamp(2rem, 5.5vw, 3.5rem)", color: "white" }}>
-            수리담에 <span style={{ color: "#2fae8a" }}>없는 것</span> 4가지
-          </h2>
-
-          <p
-            className="text-lg md:text-xl leading-relaxed max-w-xl"
-            style={{ color: "#888" }}>
-            가구수리 업체를 고를 때<br />이 4가지 없는 곳 찾기가 가장
-            어렵습니다.
-          </p>
-        </div>
+        {/* 헤더 */}
+        <FadeIn delay={0}>
+          <div className="mb-14">
+            <span
+              className="inline-block text-sm tracking-widest uppercase mb-5 px-3 py-1.5 rounded-full font-bold"
+              style={{
+                backgroundColor: "#2fae8a22",
+                color: "#2fae8a",
+                border: "1px solid #2fae8a55",
+              }}>
+              Why Suridam
+            </span>
+            <h2
+              className="font-black leading-tight mb-5"
+              style={{
+                fontSize: "clamp(2rem, 5.5vw, 3.5rem)",
+                color: "white",
+              }}>
+              수리담에 <span style={{ color: "#2fae8a" }}>없는 것</span> 4가지
+            </h2>
+            <p
+              className="text-lg md:text-xl leading-relaxed max-w-xl"
+              style={{ color: "#888" }}>
+              가구수리 업체를 고를 때<br />이 4가지 없는 곳 찾기가 가장
+              어렵습니다.
+            </p>
+          </div>
+        </FadeIn>
 
         {/* 카드 */}
         <div className="flex flex-col gap-6">
           {diffs.map((d, i) => (
-            <div
-              key={i}
-              className="rounded-2xl overflow-hidden"
-              style={{ border: "1px solid #1e1e1e" }}>
-              <div className="grid grid-cols-1 md:grid-cols-[1fr_1fr_280px]">
-                {/* 일반 업체 */}
-                <div
-                  className="flex items-start gap-4 px-6 py-7"
-                  style={{
-                    backgroundColor: "#161616",
-                    borderBottom: "1px solid #1e1e1e",
-                  }}>
+            <FadeIn key={i} delay={i * 80}>
+              <div
+                className="rounded-2xl overflow-hidden"
+                style={{ border: "1px solid #1e1e1e" }}>
+                <div className="grid grid-cols-1 md:grid-cols-[1fr_1fr_280px]">
+                  {/* 일반 업체 */}
                   <div
-                    className="flex-shrink-0 mt-1 h-7 w-7 rounded-full flex items-center justify-center font-black text-xs"
+                    className="flex items-start gap-4 px-6 py-7"
                     style={{
-                      backgroundColor: "#ef444415",
-                      color: "#ef4444",
-                      border: "1px solid #ef444433",
+                      backgroundColor: "#161616",
+                      borderBottom: "1px solid #1e1e1e",
                     }}>
-                    ✕
-                  </div>
-                  <div>
-                    <div className="flex items-center gap-2 mb-3">
-                      <span
-                        className="text-xs font-black tracking-widest uppercase rounded-full px-2.5 py-0.5"
-                        style={{
-                          backgroundColor: "#ef444415",
-                          color: "#ef4444",
-                        }}>
-                        일반 업체
-                      </span>
-                      <span
-                        className="text-sm font-semibold"
-                        style={{ color: "#555" }}>
-                        {d.theme}
-                      </span>
-                    </div>
-                    <p
-                      className="text-lg md:text-xl leading-relaxed whitespace-pre-line"
+                    <div
+                      className="flex-shrink-0 mt-1 h-7 w-7 rounded-full flex items-center justify-center font-black text-xs"
                       style={{
-                        color: "#888",
-                        textDecoration: "line-through",
-                        textDecorationColor: "#ef4444aa",
+                        backgroundColor: "#ef444415",
+                        color: "#ef4444",
+                        border: "1px solid #ef444433",
                       }}>
-                      {d.problem}
-                    </p>
-                  </div>
-                </div>
-
-                {/* 수리담 */}
-                <div
-                  className="flex items-start gap-4 px-6 py-7"
-                  style={{
-                    backgroundColor: "#121212",
-                    borderBottom: "1px solid #1e1e1e",
-                  }}>
-                  <div
-                    className="flex-shrink-0 mt-1 h-7 w-7 rounded-full flex items-center justify-center text-white font-black text-xs"
-                    style={{ backgroundColor: "#2fae8a" }}>
-                    ✓
-                  </div>
-                  <div>
-                    <div className="flex items-center gap-2 mb-3">
-                      <span
-                        className="text-xs font-black tracking-widest uppercase rounded-full px-2.5 py-0.5"
-                        style={{
-                          backgroundColor: "#2fae8a22",
-                          color: "#2fae8a",
-                        }}>
-                        수리담
-                      </span>
-                      <span className="text-lg">{d.icon}</span>
+                      ✕
                     </div>
-                    <p
-                      className="text-lg md:text-xl font-bold leading-relaxed whitespace-pre-line"
-                      style={{ color: "white" }}>
-                      {d.solution}
-                    </p>
+                    <div>
+                      <div className="flex items-center gap-2 mb-3">
+                        <span
+                          className="text-xs font-black tracking-widest uppercase rounded-full px-2.5 py-0.5"
+                          style={{
+                            backgroundColor: "#ef444415",
+                            color: "#ef4444",
+                          }}>
+                          일반 업체
+                        </span>
+                        <span
+                          className="text-sm font-semibold"
+                          style={{ color: "#555" }}>
+                          {d.theme}
+                        </span>
+                      </div>
+                      <p
+                        className="text-lg md:text-xl leading-relaxed whitespace-pre-line"
+                        style={{
+                          color: "#888",
+                          textDecoration: "line-through",
+                          textDecorationColor: "#ef4444aa",
+                        }}>
+                        {d.problem}
+                      </p>
+                    </div>
                   </div>
-                </div>
 
-                {/* 이미지 */}
-                <div
-                  className="relative w-full overflow-hidden"
-                  style={{ backgroundColor: "#0a0a0a", minHeight: "180px" }}>
-                  <Image
-                    src={d.image}
-                    alt={d.imageAlt}
-                    fill
-                    sizes="(max-width: 768px) 100vw, 280px"
-                    className="object-cover opacity-80"
-                  />
+                  {/* 수리담 */}
                   <div
-                    className="absolute inset-0"
+                    className="flex items-start gap-4 px-6 py-7"
                     style={{
-                      background:
-                        "linear-gradient(135deg, rgba(47,174,138,0.2) 0%, transparent 60%)",
-                    }}
-                  />
+                      backgroundColor: "#121212",
+                      borderBottom: "1px solid #1e1e1e",
+                    }}>
+                    <div
+                      className="flex-shrink-0 mt-1 h-7 w-7 rounded-full flex items-center justify-center text-white font-black text-xs"
+                      style={{ backgroundColor: "#2fae8a" }}>
+                      ✓
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2 mb-3">
+                        <span
+                          className="text-xs font-black tracking-widest uppercase rounded-full px-2.5 py-0.5"
+                          style={{
+                            backgroundColor: "#2fae8a22",
+                            color: "#2fae8a",
+                          }}>
+                          수리담
+                        </span>
+                        <span className="text-lg">{d.icon}</span>
+                      </div>
+                      <p
+                        className="text-lg md:text-xl font-bold leading-relaxed whitespace-pre-line"
+                        style={{ color: "white" }}>
+                        {d.solution}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* 이미지 */}
+                  <div
+                    className="relative w-full overflow-hidden"
+                    style={{ backgroundColor: "#0a0a0a", minHeight: "180px" }}>
+                    <Image
+                      src={d.image}
+                      alt={d.imageAlt}
+                      fill
+                      sizes="(max-width: 768px) 100vw, 280px"
+                      className="object-cover opacity-80"
+                    />
+                    <div
+                      className="absolute inset-0"
+                      style={{
+                        background:
+                          "linear-gradient(135deg, rgba(47,174,138,0.2) 0%, transparent 60%)",
+                      }}
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
+            </FadeIn>
           ))}
         </div>
 
         {/* 하단 약속 */}
-        <div
-          className="mt-10 rounded-2xl px-7 py-7 flex flex-col sm:flex-row items-center justify-between gap-5"
-          style={{
-            backgroundColor: "#2fae8a15",
-            border: "1px solid #2fae8a55",
-          }}>
-          <div>
-            <p
-              className="text-base font-black mb-2"
-              style={{ color: "#2fae8a" }}>
-              수리담의 약속
-            </p>
-            <p
-              className="text-lg md:text-xl font-bold leading-snug"
-              style={{ color: "white" }}>
-              위 4가지 지키지 못하면{" "}
-              <strong style={{ color: "#2fae8a" }}>
-                출장비를 받지 않습니다.
-              </strong>
-            </p>
+        <FadeIn delay={0}>
+          <div
+            className="mt-10 rounded-2xl px-7 py-7 flex flex-col sm:flex-row items-center justify-between gap-5"
+            style={{
+              backgroundColor: "#2fae8a15",
+              border: "1px solid #2fae8a55",
+            }}>
+            <div>
+              <p
+                className="text-base font-black mb-2"
+                style={{ color: "#2fae8a" }}>
+                수리담의 약속
+              </p>
+              <p
+                className="text-lg md:text-xl font-bold leading-snug"
+                style={{ color: "white" }}>
+                위 4가지 지키지 못하면{" "}
+                <strong style={{ color: "#2fae8a" }}>
+                  출장비를 받지 않습니다.
+                </strong>
+              </p>
+            </div>
+            <a
+              href="/request"
+              className="flex-shrink-0 rounded-xl px-7 py-4 text-base font-black text-white transition-opacity hover:opacity-90 whitespace-nowrap"
+              style={{ backgroundColor: "#2fae8a" }}>
+              사진 상담 시작하기 →
+            </a>
           </div>
-          <a
-            href="/request"
-            className="flex-shrink-0 rounded-xl px-7 py-4 text-base font-black text-white transition-opacity hover:opacity-90 whitespace-nowrap"
-            style={{ backgroundColor: "#2fae8a" }}>
-            사진 상담 시작하기 →
-          </a>
-        </div>
+        </FadeIn>
       </div>
     </section>
   );

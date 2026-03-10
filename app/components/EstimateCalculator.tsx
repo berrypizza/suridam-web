@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import FadeIn from "@/app/components/FadeIn";
 
 // --- 타입 정의 ---
 type OptionType = "fixed" | "count" | "select_then_count";
@@ -480,8 +481,6 @@ function Calculator() {
             style={{ color: "#555" }}>
             ← 이전으로
           </button>
-
-          {/* 선택 항목 */}
           <div
             className="flex items-center gap-4 rounded-2xl p-4 mb-6"
             style={{ backgroundColor: "#141414", border: "1px solid #222" }}>
@@ -497,7 +496,6 @@ function Calculator() {
               </h3>
             </div>
           </div>
-
           <div className="flex flex-col gap-6">
             {cat.type === "select_then_count" && (
               <div>
@@ -526,7 +524,6 @@ function Calculator() {
                 </div>
               </div>
             )}
-
             {(cat.type === "count" || cat.type === "select_then_count") && (
               <div>
                 <label
@@ -578,8 +575,6 @@ function Calculator() {
               </div>
             )}
           </div>
-
-          {/* 결과 */}
           <div
             className="rounded-2xl p-6 mt-6"
             style={{
@@ -617,8 +612,6 @@ function Calculator() {
               </p>
             )}
           </div>
-
-          {/* 버튼 */}
           <div className="flex flex-col gap-3 mt-5">
             <a
               href="/request"
@@ -639,7 +632,6 @@ function Calculator() {
           </div>
         </div>
       )}
-
       <p
         className="mt-6 text-center text-sm leading-relaxed"
         style={{ color: "#3a3a3a" }}>
@@ -655,51 +647,49 @@ export default function EstimateCalculator() {
   return (
     <section className="px-6 py-16" style={{ backgroundColor: "#111" }}>
       <div className="mx-auto max-w-2xl">
-        {/* 아코디언 트리거 */}
-        <button
-          onClick={() => setOpen((v) => !v)}
-          className="w-full rounded-2xl px-7 py-6 flex items-center justify-between transition-all"
-          style={{
-            backgroundColor: open ? "#1a2e27" : "#161616",
-            border: `1px solid ${open ? "#2fae8a55" : "#222"}`,
-          }}>
-          <div className="flex items-center gap-4 text-left">
-            <span className="text-3xl">🧮</span>
-            <div>
-              <p
-                className="text-xs font-black uppercase tracking-widest mb-1"
-                style={{ color: "#2fae8a" }}>
-                Estimate
-              </p>
-              <p
-                className="font-black"
-                style={{
-                  fontSize: "clamp(1.1rem, 3vw, 1.4rem)",
-                  color: "white",
-                }}>
-                수리 비용 미리 확인하기
-              </p>
-              <p className="text-sm mt-0.5" style={{ color: "#555" }}>
-                항목 선택 → 즉시 예상 비용 확인
-              </p>
-            </div>
-          </div>
-
-          {/* 화살표 아이콘 */}
-          <div
-            className="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300"
+        <FadeIn delay={0}>
+          <button
+            onClick={() => setOpen((v) => !v)}
+            className="w-full rounded-2xl px-7 py-6 flex items-center justify-between transition-all"
             style={{
-              backgroundColor: open ? "#2fae8a" : "#1e1e1e",
-              border: `1px solid ${open ? "#2fae8a" : "#2a2a2a"}`,
-              transform: open ? "rotate(180deg)" : "rotate(0deg)",
-              color: open ? "white" : "#555",
-              fontSize: "1.1rem",
+              backgroundColor: open ? "#1a2e27" : "#161616",
+              border: `1px solid ${open ? "#2fae8a55" : "#222"}`,
             }}>
-            ↓
-          </div>
-        </button>
+            <div className="flex items-center gap-4 text-left">
+              <span className="text-3xl">🧮</span>
+              <div>
+                <p
+                  className="text-xs font-black uppercase tracking-widest mb-1"
+                  style={{ color: "#2fae8a" }}>
+                  Estimate
+                </p>
+                <p
+                  className="font-black"
+                  style={{
+                    fontSize: "clamp(1.1rem, 3vw, 1.4rem)",
+                    color: "white",
+                  }}>
+                  수리 비용 미리 확인하기
+                </p>
+                <p className="text-sm mt-0.5" style={{ color: "#555" }}>
+                  항목 선택 → 즉시 예상 비용 확인
+                </p>
+              </div>
+            </div>
+            <div
+              className="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300"
+              style={{
+                backgroundColor: open ? "#2fae8a" : "#1e1e1e",
+                border: `1px solid ${open ? "#2fae8a" : "#2a2a2a"}`,
+                transform: open ? "rotate(180deg)" : "rotate(0deg)",
+                color: open ? "white" : "#555",
+                fontSize: "1.1rem",
+              }}>
+              ↓
+            </div>
+          </button>
+        </FadeIn>
 
-        {/* 아코디언 콘텐츠 */}
         <div
           style={{
             maxHeight: open ? "2000px" : "0px",

@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import FadeIn from "@/app/components/FadeIn";
 
 type Review = { who: string; title: string; body: string; stars?: number };
 
-// ── 카테고리별 데이터 ─────────────────────────────────────────
 const categories = [
   {
     id: "upper",
@@ -222,7 +222,13 @@ const allReviews: Review[] = [
   },
 ];
 
-// ── CaseCard ──────────────────────────────────────────────────
+const yesSetItems = [
+  { q: "가구수리 업체, 여러 곳 검색해봤다 → 맞죠?", dim: false },
+  { q: '전화하면 전부 "와봐야 알아요" → 답답했죠?', dim: false },
+  { q: "막상 방문 후 견적이 처음보다 비쌌다 → 황당했죠?", dim: false },
+  { q: "저렴한 곳 골랐다가 퀄리티에 실망했다 → 결국 손해였죠?", dim: true },
+];
+
 function CaseCard({ c }: { c: (typeof categories)[0]["cases"][0] }) {
   return (
     <div
@@ -305,7 +311,6 @@ function CaseCard({ c }: { c: (typeof categories)[0]["cases"][0] }) {
   );
 }
 
-// ── AccordionItem ─────────────────────────────────────────────
 function AccordionItem({ cat }: { cat: (typeof categories)[0] }) {
   const [open, setOpen] = useState(false);
   return (
@@ -372,114 +377,118 @@ function AccordionItem({ cat }: { cat: (typeof categories)[0] }) {
   );
 }
 
-// ── 메인 컴포넌트 ─────────────────────────────────────────────
 export default function DifferenceAndReviews() {
   return (
     <section>
       {/* ───── 리뷰 맛보기 ───── */}
       <div className="px-6 pt-20 pb-14" style={{ backgroundColor: "#111" }}>
         <div className="mx-auto max-w-5xl">
-          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-12">
-            <div>
-              <span
-                className="inline-block text-sm tracking-widest uppercase mb-4 px-3 py-1.5 rounded-full font-bold"
-                style={{
-                  backgroundColor: "#2fae8a22",
-                  color: "#2fae8a",
-                  border: "1px solid #2fae8a55",
-                }}>
-                Real Reviews
-              </span>
-              <h2
-                className="font-black leading-tight"
-                style={{
-                  fontSize: "clamp(2rem, 5vw, 3.2rem)",
-                  color: "white",
-                }}>
-                긴 설명보다
-                <br />
-                <span style={{ color: "#2fae8a" }}>
-                  후기 한 줄이 정직합니다
-                </span>
-              </h2>
-              <p
-                className="mt-4 text-lg leading-relaxed"
-                style={{ color: "#888" }}>
-                광고 카피가 아닌, 실제 고객의 말입니다.
-              </p>
-            </div>
-            <div
-              className="flex items-center gap-4 px-6 py-5 rounded-2xl flex-shrink-0"
-              style={{
-                backgroundColor: "#1a1a1a",
-                border: "1px solid #2a2a2a",
-              }}>
-              <span style={{ color: "#2fae8a", fontSize: 26 }}>★★★★★</span>
+          <FadeIn delay={0}>
+            <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-12">
               <div>
-                <div className="text-xl font-black" style={{ color: "white" }}>
-                  4.9 / 5.0
-                </div>
-                <div className="text-sm mt-0.5" style={{ color: "#666" }}>
-                  실제 고객 후기 기준
-                </div>
+                <span
+                  className="inline-block text-sm tracking-widest uppercase mb-4 px-3 py-1.5 rounded-full font-bold"
+                  style={{
+                    backgroundColor: "#2fae8a22",
+                    color: "#2fae8a",
+                    border: "1px solid #2fae8a55",
+                  }}>
+                  Real Reviews
+                </span>
+                <h2
+                  className="font-black leading-tight"
+                  style={{
+                    fontSize: "clamp(2rem, 5vw, 3.2rem)",
+                    color: "white",
+                  }}>
+                  긴 설명보다
+                  <br />
+                  <span style={{ color: "#2fae8a" }}>
+                    후기 한 줄이 정직합니다
+                  </span>
+                </h2>
+                <p
+                  className="mt-4 text-lg leading-relaxed"
+                  style={{ color: "#888" }}>
+                  광고 카피가 아닌, 실제 고객의 말입니다.
+                </p>
               </div>
-            </div>
-          </div>
-          <div className="grid gap-5 sm:grid-cols-3">
-            {previewReviews.map((r, i) => (
               <div
-                key={i}
-                className="rounded-2xl p-7 flex flex-col gap-5"
+                className="flex items-center gap-4 px-6 py-5 rounded-2xl flex-shrink-0"
                 style={{
                   backgroundColor: "#1a1a1a",
-                  border: "1px solid #252525",
+                  border: "1px solid #2a2a2a",
                 }}>
-                <div className="flex items-center justify-between">
+                <span style={{ color: "#2fae8a", fontSize: 26 }}>★★★★★</span>
+                <div>
                   <div
-                    className="flex gap-0.5 text-lg"
-                    style={{ color: "#2fae8a" }}>
-                    {"★".repeat(r.stars ?? 5)}
+                    className="text-xl font-black"
+                    style={{ color: "white" }}>
+                    4.9 / 5.0
                   </div>
-                  <span
-                    className="text-sm px-3 py-1 rounded-full"
-                    style={{
-                      backgroundColor: "#111",
-                      color: "#888",
-                      border: "1px solid #2a2a2a",
-                    }}>
-                    {r.title}
-                  </span>
-                </div>
-                <p
-                  className="text-lg leading-relaxed flex-1"
-                  style={{ color: "#e8e8e8" }}>
-                  <span
-                    style={{ color: "#2fae8a", fontSize: 24, lineHeight: 0 }}>
-                    "
-                  </span>
-                  {r.body}
-                  <span
-                    style={{ color: "#2fae8a", fontSize: 24, lineHeight: 0 }}>
-                    "
-                  </span>
-                </p>
-                <div
-                  className="flex items-center gap-3 pt-4"
-                  style={{ borderTop: "1px solid #222" }}>
-                  <div
-                    className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-black flex-shrink-0"
-                    style={{
-                      backgroundColor: "#2fae8a22",
-                      color: "#2fae8a",
-                      border: "1px solid #2fae8a44",
-                    }}>
-                    {r.who[0]}
+                  <div className="text-sm mt-0.5" style={{ color: "#666" }}>
+                    실제 고객 후기 기준
                   </div>
-                  <span className="text-sm" style={{ color: "#666" }}>
-                    {r.who}
-                  </span>
                 </div>
               </div>
+            </div>
+          </FadeIn>
+          <div className="grid gap-5 sm:grid-cols-3">
+            {previewReviews.map((r, i) => (
+              <FadeIn key={i} delay={i * 100}>
+                <div
+                  className="rounded-2xl p-7 flex flex-col gap-5"
+                  style={{
+                    backgroundColor: "#1a1a1a",
+                    border: "1px solid #252525",
+                  }}>
+                  <div className="flex items-center justify-between">
+                    <div
+                      className="flex gap-0.5 text-lg"
+                      style={{ color: "#2fae8a" }}>
+                      {"★".repeat(r.stars ?? 5)}
+                    </div>
+                    <span
+                      className="text-sm px-3 py-1 rounded-full"
+                      style={{
+                        backgroundColor: "#111",
+                        color: "#888",
+                        border: "1px solid #2a2a2a",
+                      }}>
+                      {r.title}
+                    </span>
+                  </div>
+                  <p
+                    className="text-lg leading-relaxed flex-1"
+                    style={{ color: "#e8e8e8" }}>
+                    <span
+                      style={{ color: "#2fae8a", fontSize: 24, lineHeight: 0 }}>
+                      "
+                    </span>
+                    {r.body}
+                    <span
+                      style={{ color: "#2fae8a", fontSize: 24, lineHeight: 0 }}>
+                      "
+                    </span>
+                  </p>
+                  <div
+                    className="flex items-center gap-3 pt-4"
+                    style={{ borderTop: "1px solid #222" }}>
+                    <div
+                      className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-black flex-shrink-0"
+                      style={{
+                        backgroundColor: "#2fae8a22",
+                        color: "#2fae8a",
+                        border: "1px solid #2fae8a44",
+                      }}>
+                      {r.who[0]}
+                    </div>
+                    <span className="text-sm" style={{ color: "#666" }}>
+                      {r.who}
+                    </span>
+                  </div>
+                </div>
+              </FadeIn>
             ))}
           </div>
         </div>
@@ -489,74 +498,70 @@ export default function DifferenceAndReviews() {
       <div className="px-6 py-20" style={{ backgroundColor: "#f5f5f5" }}>
         <div className="mx-auto max-w-5xl">
           <div className="mb-16 flex flex-col gap-4">
-            {[
-              { q: "가구수리 업체, 여러 곳 검색해봤다 → 맞죠?", dim: false },
-              { q: '전화하면 전부 "와봐야 알아요" → 답답했죠?', dim: false },
-              {
-                q: "막상 방문 후 견적이 처음보다 비쌌다 → 황당했죠?",
-                dim: false,
-              },
-              {
-                q: "저렴한 곳 골랐다가 퀄리티에 실망했다 → 결국 손해였죠?",
-                dim: true,
-              },
-            ].map((item, i) => (
+            {yesSetItems.map((item, i) => (
+              <FadeIn key={i} delay={i * 80}>
+                <div
+                  className="rounded-2xl px-7 py-5"
+                  style={{
+                    backgroundColor: item.dim ? "#1e1e1e" : "white",
+                    border: `1px solid ${item.dim ? "#2fae8a33" : "#e5e5e5"}`,
+                  }}>
+                  <p
+                    className="font-bold"
+                    style={{
+                      fontSize: "clamp(1.1rem, 3vw, 1.4rem)",
+                      color: item.dim ? "#2fae8a" : "#1e1e1e",
+                    }}>
+                    {item.q}
+                  </p>
+                </div>
+              </FadeIn>
+            ))}
+            <FadeIn delay={320}>
               <div
-                key={i}
-                className="rounded-2xl px-7 py-5"
+                className="rounded-2xl px-7 py-6 mt-2"
                 style={{
-                  backgroundColor: item.dim ? "#1e1e1e" : "white",
-                  border: `1px solid ${item.dim ? "#2fae8a33" : "#e5e5e5"}`,
+                  backgroundColor: "#1e1e1e",
+                  border: "1px solid #2fae8a55",
                 }}>
                 <p
-                  className="font-bold"
+                  className="text-base font-semibold mb-2"
+                  style={{ color: "#2fae8a" }}>
+                  ✦ 대형 가구회사 생산·마감·구조 전문 출신
+                </p>
+                <p
+                  className="font-black leading-snug"
                   style={{
-                    fontSize: "clamp(1.1rem, 3vw, 1.4rem)",
-                    color: item.dim ? "#2fae8a" : "#1e1e1e",
+                    fontSize: "clamp(1.4rem, 3.5vw, 2rem)",
+                    color: "white",
                   }}>
-                  {item.q}
+                  그래서 수리담은
+                  <br />
+                  사진 보고{" "}
+                  <span style={{ color: "#2fae8a" }}>
+                    안 된다고 먼저 말합니다.
+                  </span>
                 </p>
               </div>
-            ))}
-            <div
-              className="rounded-2xl px-7 py-6 mt-2"
-              style={{
-                backgroundColor: "#1e1e1e",
-                border: "1px solid #2fae8a55",
-              }}>
-              <p
-                className="text-base font-semibold mb-2"
-                style={{ color: "#2fae8a" }}>
-                ✦ 대형 가구회사 생산·마감·구조 전문 출신
-              </p>
-              <p
-                className="font-black leading-snug"
-                style={{
-                  fontSize: "clamp(1.4rem, 3.5vw, 2rem)",
-                  color: "white",
-                }}>
-                그래서 수리담은
-                <br />
-                사진 보고{" "}
-                <span style={{ color: "#2fae8a" }}>
-                  안 된다고 먼저 말합니다.
-                </span>
-              </p>
-            </div>
+            </FadeIn>
           </div>
 
-          <span
-            className="inline-block text-sm tracking-widest uppercase mb-6 px-3 py-1.5 rounded-full font-bold"
-            style={{
-              backgroundColor: "#f0faf6",
-              color: "#2fae8a",
-              border: "1px solid #2fae8a",
-            }}>
-            Before / After
-          </span>
+          <FadeIn delay={0}>
+            <span
+              className="inline-block text-sm tracking-widest uppercase mb-6 px-3 py-1.5 rounded-full font-bold"
+              style={{
+                backgroundColor: "#f0faf6",
+                color: "#2fae8a",
+                border: "1px solid #2fae8a",
+              }}>
+              Before / After
+            </span>
+          </FadeIn>
           <div className="flex flex-col gap-3">
-            {categories.map((cat) => (
-              <AccordionItem key={cat.id} cat={cat} />
+            {categories.map((cat, i) => (
+              <FadeIn key={cat.id} delay={i * 60}>
+                <AccordionItem cat={cat} />
+              </FadeIn>
             ))}
           </div>
         </div>
@@ -565,74 +570,79 @@ export default function DifferenceAndReviews() {
       {/* ───── 추가 리뷰 그리드 ───── */}
       <div className="px-6 py-16" style={{ backgroundColor: "white" }}>
         <div className="mx-auto max-w-5xl">
-          <div className="mb-8">
-            <span
-              className="inline-block text-sm tracking-widest uppercase mb-3 px-3 py-1 rounded-full font-bold"
-              style={{
-                backgroundColor: "#f5f5f5",
-                color: "#7a7a7a",
-                border: "1px solid #e5e5e5",
-              }}>
-              All Reviews
-            </span>
-            <h3
-              className="text-2xl md:text-3xl font-black"
-              style={{ color: "#1e1e1e" }}>
-              직접 경험한 고객들의 한 마디
-            </h3>
-            <p className="mt-2 text-base md:text-lg" style={{ color: "#666" }}>
-              짧은 한 줄이 긴 설명보다 정확합니다.
-            </p>
-          </div>
-          <div className="grid gap-5 sm:grid-cols-2">
-            {allReviews.map((r, idx) => (
-              <div
-                key={idx}
-                className="rounded-2xl p-7 flex flex-col gap-5"
+          <FadeIn delay={0}>
+            <div className="mb-8">
+              <span
+                className="inline-block text-sm tracking-widest uppercase mb-3 px-3 py-1 rounded-full font-bold"
                 style={{
                   backgroundColor: "#f5f5f5",
+                  color: "#7a7a7a",
                   border: "1px solid #e5e5e5",
                 }}>
-                <div className="flex items-center justify-between gap-3">
-                  <div
-                    className="flex gap-0.5 text-lg"
-                    style={{ color: "#2fae8a" }}>
-                    {"★".repeat(r.stars ?? 5)}
-                  </div>
-                  <span
-                    className="text-sm px-3 py-1 rounded-full"
-                    style={{
-                      backgroundColor: "white",
-                      border: "1px solid #e5e5e5",
-                      color: "#666",
-                    }}>
-                    {r.title}
-                  </span>
-                </div>
-                <p
-                  className="text-lg leading-relaxed flex-1"
-                  style={{ color: "#1e1e1e" }}>
-                  <span style={{ color: "#2fae8a", fontSize: 24 }}>"</span>
-                  {r.body}
-                  <span style={{ color: "#2fae8a", fontSize: 24 }}>"</span>
-                </p>
+                All Reviews
+              </span>
+              <h3
+                className="text-2xl md:text-3xl font-black"
+                style={{ color: "#1e1e1e" }}>
+                직접 경험한 고객들의 한 마디
+              </h3>
+              <p
+                className="mt-2 text-base md:text-lg"
+                style={{ color: "#666" }}>
+                짧은 한 줄이 긴 설명보다 정확합니다.
+              </p>
+            </div>
+          </FadeIn>
+          <div className="grid gap-5 sm:grid-cols-2">
+            {allReviews.map((r, idx) => (
+              <FadeIn key={idx} delay={idx * 80}>
                 <div
-                  className="flex items-center gap-3 pt-4"
-                  style={{ borderTop: "1px solid #e5e5e5" }}>
-                  <div
-                    className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-black flex-shrink-0"
-                    style={{
-                      backgroundColor: "#f0faf6",
-                      color: "#2fae8a",
-                      border: "1px solid #2fae8a44",
-                    }}>
-                    {r.who[0]}
+                  className="rounded-2xl p-7 flex flex-col gap-5"
+                  style={{
+                    backgroundColor: "#f5f5f5",
+                    border: "1px solid #e5e5e5",
+                  }}>
+                  <div className="flex items-center justify-between gap-3">
+                    <div
+                      className="flex gap-0.5 text-lg"
+                      style={{ color: "#2fae8a" }}>
+                      {"★".repeat(r.stars ?? 5)}
+                    </div>
+                    <span
+                      className="text-sm px-3 py-1 rounded-full"
+                      style={{
+                        backgroundColor: "white",
+                        border: "1px solid #e5e5e5",
+                        color: "#666",
+                      }}>
+                      {r.title}
+                    </span>
                   </div>
-                  <span className="text-sm" style={{ color: "#666" }}>
-                    {r.who}
-                  </span>
+                  <p
+                    className="text-lg leading-relaxed flex-1"
+                    style={{ color: "#1e1e1e" }}>
+                    <span style={{ color: "#2fae8a", fontSize: 24 }}>"</span>
+                    {r.body}
+                    <span style={{ color: "#2fae8a", fontSize: 24 }}>"</span>
+                  </p>
+                  <div
+                    className="flex items-center gap-3 pt-4"
+                    style={{ borderTop: "1px solid #e5e5e5" }}>
+                    <div
+                      className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-black flex-shrink-0"
+                      style={{
+                        backgroundColor: "#f0faf6",
+                        color: "#2fae8a",
+                        border: "1px solid #2fae8a44",
+                      }}>
+                      {r.who[0]}
+                    </div>
+                    <span className="text-sm" style={{ color: "#666" }}>
+                      {r.who}
+                    </span>
+                  </div>
                 </div>
-              </div>
+              </FadeIn>
             ))}
           </div>
         </div>
