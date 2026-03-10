@@ -382,7 +382,9 @@ function JobCard({
 
   const handleComplete = () => {
     setPrevStatus(job.status);
-    onUpdate(job.id, { status: "완료" });
+    // 완료 처리 시 오늘 기준 1년 AS 자동 설정
+    const asUntil = addOneYear(nowKST().toISOString().slice(0, 10));
+    onUpdate(job.id, { status: "완료", as_until: asUntil });
     setShowPhoto(true);
   };
 
@@ -540,7 +542,8 @@ function JobCard({
             </div>
 
             {/* AS 기간 */}
-            {job.as_until &&
+            {job.status === "완료" &&
+              job.as_until &&
               (() => {
                 const today = nowKST().toISOString().slice(0, 10);
                 const expired = job.as_until < today;
