@@ -30,6 +30,7 @@ interface Job {
   memo: string;
   review_requested: boolean;
   completion_photo?: string;
+  as_until?: string;
 }
 
 const TECHS: Tech[] = ["기사1", "기사2"];
@@ -101,6 +102,12 @@ function naverMapUrl(region: string) {
   return `https://map.naver.com/v5/search/${encodeURIComponent(region)}`;
 }
 
+function addOneYear(dateStr: string) {
+  const d = new Date(dateStr);
+  d.setFullYear(d.getFullYear() + 1);
+  return d.toISOString().slice(0, 10);
+}
+
 const emptyForm = () => ({
   visit_date: today(),
   visit_time: "00:00",
@@ -112,6 +119,7 @@ const emptyForm = () => ({
   status: "대기" as Status,
   tech: "" as Tech,
   memo: "",
+  as_until: addOneYear(today()),
 });
 
 function getCalendarDays(year: number, month: number) {
@@ -531,6 +539,46 @@ function JobCard({
               )}
             </div>
 
+            {/* AS 기간 */}
+            {job.as_until &&
+              (() => {
+                const today = nowKST().toISOString().slice(0, 10);
+                const expired = job.as_until < today;
+                const daysLeft = Math.ceil(
+                  (new Date(job.as_until).getTime() -
+                    new Date(today).getTime()) /
+                    (1000 * 60 * 60 * 24),
+                );
+                return (
+                  <div
+                    className="flex items-center gap-1.5 mt-1 px-2 py-1 rounded-lg"
+                    style={{
+                      backgroundColor: expired
+                        ? "#3a202022"
+                        : daysLeft <= 30
+                          ? "#f59e0b18"
+                          : "#2fae8a12",
+                      border: `1px solid ${expired ? "#ef444433" : daysLeft <= 30 ? "#f59e0b33" : "#2fae8a33"}`,
+                      display: "inline-flex",
+                      width: "fit-content",
+                    }}>
+                    <span style={{ fontSize: 11 }}>🛡</span>
+                    <span
+                      className="text-xs font-medium"
+                      style={{
+                        color: expired
+                          ? "#ef4444"
+                          : daysLeft <= 30
+                            ? "#f59e0b"
+                            : "#2fae8a",
+                      }}>
+                      AS {expired ? "만료" : `${job.as_until} 까지`}
+                      {!expired && daysLeft <= 30 && ` (${daysLeft}일 남음)`}
+                    </span>
+                  </div>
+                );
+              })()}
+
             {/* 완료 사진 썸네일 */}
             {photos.length > 0 && (
               <div className="flex gap-1.5 mt-2.5 flex-wrap">
@@ -710,6 +758,7 @@ export default function AdminDashboard() {
       status: job.status,
       tech: job.tech,
       memo: job.memo,
+      as_until: job.as_until || addOneYear(job.visit_date || today()),
     });
     setEditId(job.id);
     setShowForm(true);
@@ -1866,6 +1915,42 @@ export default function AdminDashboard() {
                 </select>
               </label>
             </div>
+            {/* AS 기간 - 방문일 바꾸면 자동 재계산, 수동 변경도 가능 */}
+            <label className="flex flex-col gap-1.5">
+              <span className="text-xs font-semibold" style={{ color: "#888" }}>
+                🛡 AS 만료일
+                <span className="ml-1 font-normal" style={{ color: "#555" }}>
+                  (기본 1년)
+                </span>
+              </span>
+              <div className="flex gap-2 items-center">
+                <input
+                  type="date"
+                  value={form.as_until || ""}
+                  onChange={(e) =>
+                    setForm((p) => ({ ...p, as_until: e.target.value }))
+                  }
+                  style={{ ...inputStyle, flex: 1 }}
+                />
+                <button
+                  type="button"
+                  onClick={() =>
+                    setForm((p) => ({
+                      ...p,
+                      as_until: addOneYear(p.visit_date || today()),
+                    }))
+                  }
+                  className="rounded-xl px-3 py-2 text-xs font-bold flex-shrink-0"
+                  style={{
+                    backgroundColor: "#252525",
+                    color: "#aaa",
+                    border: "1px solid #383838",
+                  }}>
+                  1년
+                </button>
+              </div>
+            </label>
+
             <label className="flex flex-col gap-1.5">
               <span className="text-xs font-semibold" style={{ color: "#888" }}>
                 메모
