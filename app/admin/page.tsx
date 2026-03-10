@@ -643,6 +643,7 @@ export default function AdminDashboard() {
   const [calYear, setCalYear] = useState(nowKST().getFullYear());
   const [calMonth, setCalMonth] = useState(nowKST().getMonth());
   const [selectedDay, setSelectedDay] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const load = useCallback(async () => {
     const { data } = await getSupabase()
@@ -714,11 +715,21 @@ export default function AdminDashboard() {
     setShowForm(true);
   };
 
+  // 검색어 필터 (이름 or 전화번호)
+  const matchSearch = (j: Job) => {
+    if (!searchQuery.trim()) return true;
+    const q = searchQuery.replace(/-/g, "").toLowerCase();
+    const name = (j.name ?? "").toLowerCase();
+    const phone = (j.phone ?? "").replace(/-/g, "");
+    return name.includes(q) || phone.includes(q);
+  };
+
   const filtered = jobs.filter((j) => {
     if (tab === "오늘" && j.visit_date !== dateFilter) return false;
     if (tab === "전체" && !j.visit_date?.startsWith(monthFilter)) return false;
     if (statusFilter !== "전체" && j.status !== statusFilter) return false;
     if (techFilter !== "전체" && j.tech !== techFilter) return false;
+    if (!matchSearch(j)) return false;
     return true;
   });
 
@@ -749,7 +760,9 @@ export default function AdminDashboard() {
 
   const selectedJobs = selectedDay
     ? (jobsByDate[selectedDay] ?? []).filter(
-        (j) => calTechFilter === "전체" || j.tech === calTechFilter,
+        (j) =>
+          (calTechFilter === "전체" || j.tech === calTechFilter) &&
+          matchSearch(j),
       )
     : [];
   const todayStr = today();
@@ -843,6 +856,86 @@ export default function AdminDashboard() {
             </button>
           ))}
         </div>
+
+        {/* 검색창 */}
+        <div className="relative mb-4">
+          <span
+            className="absolute left-3.5 top-1/2 -translate-y-1/2 text-base pointer-events-none"
+            style={{ color: "#555" }}>
+            🔍
+          </span>
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="이름 또는 전화번호로 검색"
+            style={{
+              width: "100%",
+              backgroundColor: "#1a1a1a",
+              border: `1px solid ${searchQuery ? "#2fae8a55" : "#2a2a2a"}`,
+              borderRadius: 12,
+              padding: "10px 36px 10px 38px",
+              color: "white",
+              fontSize: 14,
+              outline: "none",
+              fontFamily: "inherit",
+              boxSizing: "border-box",
+              transition: "border-color 0.2s",
+            }}
+          />
+          {searchQuery && (
+            <button
+              onClick={() => setSearchQuery("")}
+              className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 flex items-center justify-center rounded-full text-xs font-bold"
+              style={{ backgroundColor: "#333", color: "#888" }}>
+              ✕
+            </button>
+          )}
+        </div>
+
+        {/* 검색 결과 모드 */}
+        {searchQuery && (
+          <div className="mb-4">
+            <div className="flex items-center gap-2 mb-3">
+              <span className="text-xs font-bold" style={{ color: "#2fae8a" }}>
+                검색 결과
+              </span>
+              <span
+                className="text-xs px-2 py-0.5 rounded-full font-medium"
+                style={{ backgroundColor: "#2fae8a22", color: "#2fae8a" }}>
+                {jobs.filter(matchSearch).length}건
+              </span>
+            </div>
+            {jobs.filter(matchSearch).length === 0 ? (
+              <div
+                className="rounded-2xl py-10 text-center"
+                style={{
+                  backgroundColor: "#1a1a1a",
+                  border: "1px solid #222",
+                }}>
+                <p className="text-2xl mb-2">🔍</p>
+                <p className="text-sm" style={{ color: "#555" }}>
+                  검색 결과 없음
+                </p>
+              </div>
+            ) : (
+              <div className="flex flex-col gap-2">
+                {jobs
+                  .filter(matchSearch)
+                  .sort((a, b) => b.visit_date.localeCompare(a.visit_date))
+                  .map((job) => (
+                    <JobCard
+                      key={job.id}
+                      job={job}
+                      onUpdate={update}
+                      onEdit={startEdit}
+                      onDelete={remove}
+                    />
+                  ))}
+              </div>
+            )}
+          </div>
+        )}
 
         {loading && (
           <div className="text-center py-20" style={{ color: "#555" }}>
