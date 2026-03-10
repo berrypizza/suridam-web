@@ -15,6 +15,7 @@ type Job = {
   status: string;
   tech: string;
   memo: string;
+  as_until?: string;
 };
 
 const STATUS_COLOR: Record<
@@ -121,7 +122,7 @@ export default function MyPage() {
     const { data } = await getSupabase()
       .from("jobs")
       .select(
-        "id,visit_date,visit_time,name,region,symptom,price,status,tech,memo",
+        "id,visit_date,visit_time,name,region,symptom,price,status,tech,memo,as_until",
       )
       .eq("phone", clean)
       .order("visit_date", { ascending: false });
@@ -481,6 +482,52 @@ export default function MyPage() {
                             💬 {job.memo}
                           </div>
                         )}
+                        {job.status === "완료" &&
+                          job.as_until &&
+                          (() => {
+                            const todayStr = new Date()
+                              .toISOString()
+                              .slice(0, 10);
+                            const expired = job.as_until < todayStr;
+                            const daysLeft = Math.ceil(
+                              (new Date(job.as_until).getTime() -
+                                new Date(todayStr).getTime()) /
+                                (1000 * 60 * 60 * 24),
+                            );
+                            return (
+                              <div
+                                style={{
+                                  display: "inline-flex",
+                                  alignItems: "center",
+                                  gap: 6,
+                                  marginTop: 6,
+                                  padding: "5px 10px",
+                                  borderRadius: 8,
+                                  backgroundColor: expired
+                                    ? "#3a202022"
+                                    : daysLeft <= 30
+                                      ? "#f59e0b18"
+                                      : "#2fae8a12",
+                                  border: `1px solid ${expired ? "#ef444433" : daysLeft <= 30 ? "#f59e0b44" : "#2fae8a44"}`,
+                                }}>
+                                <span style={{ fontSize: 12 }}>🛡</span>
+                                <span
+                                  style={{
+                                    fontSize: 12,
+                                    fontWeight: 600,
+                                    color: expired
+                                      ? "#ef4444"
+                                      : daysLeft <= 30
+                                        ? "#f59e0b"
+                                        : "#2fae8a",
+                                  }}>
+                                  {expired
+                                    ? "AS 기간 만료"
+                                    : `AS 보증 ${job.as_until} 까지${daysLeft <= 30 ? ` (${daysLeft}일 남음)` : ""}`}
+                                </span>
+                              </div>
+                            );
+                          })()}
                       </div>
                     </div>
                   );
