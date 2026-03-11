@@ -6,7 +6,7 @@ export default function HookIntro() {
       className="relative overflow-hidden"
       style={{ minHeight: "100svh" }}>
       <img
-        src="/images/staff-main3.png"
+        src="/images/staff-main4.png"
         alt="수리담 현장"
         className="absolute inset-0 z-0 h-full w-full object-cover"
       />
