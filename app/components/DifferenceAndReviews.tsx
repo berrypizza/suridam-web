@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import FadeIn from "@/app/components/FadeIn";
 
@@ -277,10 +277,36 @@ function CaseCard({ c }: { c: (typeof categories)[0]["cases"][0] }) {
   );
 }
 
-function AccordionItem({ cat }: { cat: (typeof categories)[0] }) {
+function AccordionItem({
+  cat,
+  autoOpen = false,
+}: {
+  cat: (typeof categories)[0];
+  autoOpen?: boolean;
+}) {
   const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!autoOpen) return;
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setOpen(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.25 },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [autoOpen]);
+
   return (
     <div
+      ref={ref}
       className="rounded-2xl overflow-hidden transition-all duration-200"
       style={{
         border: `1px solid ${open ? "#2fae8a55" : "#1e1e1e"}`,
@@ -315,33 +341,42 @@ function AccordionItem({ cat }: { cat: (typeof categories)[0] }) {
           </div>
         </div>
 
-        {/* 화살표 + pulse 링 */}
-        <div
-          className="relative flex-shrink-0 flex items-center justify-center"
-          style={{ width: 36, height: 36 }}>
-          {/* pulse 링 — 닫혀있을 때만 표시 */}
+        {/* 클릭 유도 */}
+        <div className="relative flex-shrink-0 flex flex-col items-center gap-1.5">
           {!open && (
-            <>
-              <span
-                className="absolute inset-0 rounded-xl animate-ping"
-                style={{ backgroundColor: "#2fae8a", opacity: 0.2 }}
-              />
-              <span
-                className="absolute inset-0 rounded-xl animate-pulse"
-                style={{ backgroundColor: "#2fae8a", opacity: 0.1 }}
-              />
-            </>
+            <span
+              className="text-xs font-black tracking-wider animate-bounce"
+              style={{ color: "#2fae8a", letterSpacing: "0.05em" }}>
+              클릭!
+            </span>
           )}
           <div
-            className="relative flex items-center justify-center w-8 h-8 rounded-xl transition-all duration-300"
-            style={{
-              backgroundColor: open ? "#2fae8a" : "#1a1a1a",
-              border: `1px solid ${open ? "#2fae8a" : "#2fae8a55"}`,
-              color: open ? "white" : "#2fae8a",
-              transform: open ? "rotate(180deg)" : "rotate(0deg)",
-              fontWeight: 900,
-            }}>
-            ↓
+            className="relative flex items-center justify-center"
+            style={{ width: 36, height: 36 }}>
+            {/* pulse 링 — 닫혀있을 때만 */}
+            {!open && (
+              <>
+                <span
+                  className="absolute inset-0 rounded-xl animate-ping"
+                  style={{ backgroundColor: "#2fae8a", opacity: 0.25 }}
+                />
+                <span
+                  className="absolute inset-0 rounded-xl animate-pulse"
+                  style={{ backgroundColor: "#2fae8a", opacity: 0.12 }}
+                />
+              </>
+            )}
+            <div
+              className="relative flex items-center justify-center w-8 h-8 rounded-xl transition-all duration-300"
+              style={{
+                backgroundColor: open ? "#2fae8a" : "#1a1a1a",
+                border: `1px solid ${open ? "#2fae8a" : "#2fae8a55"}`,
+                color: open ? "white" : "#2fae8a",
+                transform: open ? "rotate(180deg)" : "rotate(0deg)",
+                fontWeight: 900,
+              }}>
+              ↓
+            </div>
           </div>
         </div>
       </button>
@@ -552,7 +587,7 @@ export default function DifferenceAndReviews() {
           <div className="flex flex-col gap-3">
             {categories.map((cat, i) => (
               <FadeIn key={cat.id} delay={i * 60}>
-                <AccordionItem cat={cat} />
+                <AccordionItem cat={cat} autoOpen={i === 0} />
               </FadeIn>
             ))}
           </div>
