@@ -71,9 +71,14 @@ export default function Footer() {
           <p className="text-xs" style={{ color: "#444" }}>
             © {new Date().getFullYear()} 수리담. All rights reserved.
           </p>
-          <p className="text-xs" style={{ color: "#333" }}>
-            사업자등록번호 · 대표자 정보는 요청 시 안내드립니다
-          </p>
+          <div className="flex flex-col gap-1">
+            <p className="text-xs" style={{ color: "#444" }}>
+              상호 수리담출장가구수리 · 사업자등록번호 175-11-03137
+            </p>
+            <p className="text-xs" style={{ color: "#333" }}>
+              서울특별시 영등포구 선유서로21길 14, 2층 201-b484호
+            </p>
+          </div>
         </div>
       </div>
     </footer>
