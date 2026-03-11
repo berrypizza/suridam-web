@@ -1,4 +1,10 @@
+"use client";
+
+import { useState } from "react";
+
 export default function Footer() {
+  const [contactOpen, setContactOpen] = useState(false);
+
   return (
     <footer
       style={{ backgroundColor: "#111111", borderTop: "1px solid #2a2a2a" }}>
@@ -33,12 +39,6 @@ export default function Footer() {
             className="flex flex-col gap-2 text-sm"
             style={{ color: "#555" }}>
             <a
-              href="tel:01091273024"
-              className="flex items-center gap-2 hover:opacity-80 transition-opacity"
-              style={{ color: "#e5e5e5" }}>
-              📞 010-9127-3024
-            </a>
-            <a
               href="https://blog.naver.com/sofaresq"
               target="_blank"
               rel="noopener noreferrer"
@@ -63,21 +63,104 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* 구분선 */}
-        <div className="h-px mb-6" style={{ backgroundColor: "#222" }} />
+        {/* Contact Us 아코디언 */}
+        <div style={{ borderTop: "1px solid #1e1e1e", marginBottom: 24 }}>
+          <button
+            onClick={() => setContactOpen((v) => !v)}
+            className="flex items-center justify-between w-full py-4"
+            style={{
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              fontFamily: "inherit",
+            }}>
+            <span
+              style={{
+                fontSize: 11,
+                fontWeight: 500,
+                letterSpacing: "0.14em",
+                textTransform: "uppercase",
+                color: "#333",
+              }}>
+              Contact Us
+            </span>
+            <span
+              style={{
+                color: "#2a2a2a",
+                fontSize: 12,
+                display: "inline-block",
+                transform: contactOpen ? "rotate(180deg)" : "rotate(0deg)",
+                transition: "transform 0.3s ease",
+              }}>
+              ▾
+            </span>
+          </button>
 
-        {/* 하단 — 카피라이트 */}
+          <div
+            style={{
+              maxHeight: contactOpen ? 180 : 0,
+              overflow: "hidden",
+              transition: "max-height 0.35s ease",
+            }}>
+            <div
+              style={{
+                borderTop: "1px solid #1a1a1a",
+                paddingTop: 16,
+                paddingBottom: 20,
+                display: "flex",
+                flexDirection: "column",
+                gap: 10,
+              }}>
+              <a
+                href="tel:01091273024"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 10,
+                  textDecoration: "none",
+                }}>
+                <span style={{ fontSize: 12, color: "#2a2a2a" }}>📞</span>
+                <span style={{ fontSize: 13, color: "#444" }}>
+                  010-9127-3024
+                </span>
+              </a>
+              <a
+                href="sms:01091273024"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 10,
+                  textDecoration: "none",
+                }}>
+                <span style={{ fontSize: 12, color: "#2a2a2a" }}>✉️</span>
+                <span style={{ fontSize: 13, color: "#444" }}>
+                  문자로 사진 보내기
+                </span>
+              </a>
+              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                <span style={{ fontSize: 12, color: "#2a2a2a" }}>🕐</span>
+                <span style={{ fontSize: 13, color: "#333" }}>
+                  매일 09:00 — 21:00
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* 구분선 */}
+        <div className="h-px mb-6" style={{ backgroundColor: "#1a1a1a" }} />
+
+        {/* 하단 — 카피라이트 + 사업자 정보 */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-          <p className="text-xs" style={{ color: "#444" }}>
+          <p className="text-xs" style={{ color: "#2e2e2e" }}>
             © {new Date().getFullYear()} 수리담. All rights reserved.
           </p>
-          <div className="flex flex-col gap-1">
-            <p className="text-xs" style={{ color: "#444" }}>
-              대표자 고관호 / 상호
-              수리담출장가구수리의자수리쇼파소파수리리폼업체 / 사업자등록번호
+          <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+            <p className="text-xs" style={{ color: "#2e2e2e" }}>
+              상호 수리담출장가구수리 · 대표자 고관호 · 사업자등록번호
               175-11-03137
             </p>
-            <p className="text-xs" style={{ color: "#333" }}>
+            <p className="text-xs" style={{ color: "#252525" }}>
               서울특별시 영등포구 선유서로21길 14, 2층 201-b484호
             </p>
           </div>
