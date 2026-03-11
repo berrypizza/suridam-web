@@ -14,9 +14,9 @@ export default function Intro() {
   };
 
   const yesSet = [
-    '가구 고치려고 전화했더니 "일단 와봐야 알아요"',
-    "막상 오더니 견적이 처음 말과 달라졌고",
-    "그냥 새로 살걸, 후회하셨죠?",
+    "기사가 오더니 '이거 교체하는 게 낫겠어요'라고 했다",
+    "수리비가 끝나고 나서 처음 말보다 훨씬 많이 나왔다",
+    "나중에 알고 보니 고칠 수 있는 가구였다 — 맞죠?",
   ];
 
   const stats = [
@@ -90,7 +90,7 @@ export default function Intro() {
             <p
               className="mt-5 mx-auto max-w-lg text-lg md:text-xl leading-relaxed"
               style={{ color: "#888" }}>
-              대형 가구회사 출신, 생산·마감 라인,
+              대형 가구회사 생산·마감 라인 출신.
               <br />
               재질이 뭔지, 어떻게 조립됐는지 아는 사람이 고치는 것과
               <br />

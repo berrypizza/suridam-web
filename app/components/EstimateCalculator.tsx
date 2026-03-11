@@ -649,32 +649,15 @@ export default function EstimateCalculator() {
               backgroundColor: "#0d2318",
               border: "1px solid #2fae8a66",
             }}>
-            {/* 규칙 1 명언 인용 */}
-            <p
-              className="text-sm italic mb-4 leading-relaxed font-medium"
-              style={{
-                color: "#a8e8d0",
-                borderLeft: "3px solid #2fae8a",
-                paddingLeft: 14,
-              }}>
-              "싼 게 비지떡. 수리도 마찬가지다."
-              <br />
-              <span
-                className="not-italic font-bold"
-                style={{ color: "#2fae8a" }}>
-                — 가구업계 20년 현장 기사
-              </span>
-            </p>
-            {/* 규칙 4 라포르 + Yes-set */}
             <p
               className="font-bold leading-relaxed"
               style={{
                 fontSize: "clamp(1rem, 2.5vw, 1.15rem)",
                 color: "#aaa",
               }}>
-              "견적 받으러 갔다가 방문 후 더 비싸진 경험 있으세요?"
+              방문 전에 비용 범위를 먼저 알 수 있습니다.
               <br />
-              "전화만 해도 출장비 청구하는 곳을 만나셨나요?"
+              아래에서 항목을 선택하면 바로 확인됩니다.
             </p>
             {/* 규칙 5 위협 + 상식파괴 */}
             <p

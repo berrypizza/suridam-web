@@ -195,13 +195,6 @@ const previewReviews: Review[] = [
   },
 ];
 
-const yesSetItems = [
-  { q: "가구수리 업체, 여러 곳 검색해봤다 → 맞죠?", dim: false },
-  { q: '전화하면 전부 "와봐야 알아요" → 답답했죠?', dim: false },
-  { q: "막상 방문 후 견적이 처음보다 비쌌다 → 황당했죠?", dim: false },
-  { q: "저렴한 곳 골랐다가 퀄리티에 실망했다 → 결국 손해였죠?", dim: true },
-];
-
 function CaseCard({ c }: { c: (typeof categories)[0]["cases"][0] }) {
   return (
     <div
@@ -428,29 +421,13 @@ export default function DifferenceAndReviews() {
             </div>
           </FadeIn>
 
-          {/* 규칙 1 명언 인용 */}
+          {/* 후기 도입 — 간결하게 */}
           <FadeIn delay={60}>
-            <div
-              className="mb-10 rounded-2xl px-6 py-5"
-              style={{
-                backgroundColor: "#0d2318",
-                border: "1px solid #2fae8a66",
-              }}>
-              <p
-                className="text-base italic leading-relaxed font-medium"
-                style={{
-                  color: "#a8e8d0",
-                  borderLeft: "3px solid #2fae8a",
-                  paddingLeft: 16,
-                }}>
-                "사람들은 숫자보다 이야기를 믿는다."
-              </p>
-              <p
-                className="text-sm mt-3 font-bold"
-                style={{ color: "#2fae8a" }}>
-                — Seth Godin, 마케팅 전략가
-              </p>
-            </div>
+            <p
+              className="mb-8 text-base font-semibold"
+              style={{ color: "#888" }}>
+              광고 카피가 아닌, 실제 고객의 말입니다.
+            </p>
           </FadeIn>
 
           {/* 리뷰 카드 */}
@@ -518,55 +495,40 @@ export default function DifferenceAndReviews() {
       {/* ───── YES-SET + Before/After 아코디언 ───── */}
       <div className="px-6 py-20" style={{ backgroundColor: "#f5f5f5" }}>
         <div className="mx-auto max-w-5xl">
-          {/* YES-SET */}
-          <div className="mb-16 flex flex-col gap-4">
-            {yesSetItems.map((item, i) => (
-              <FadeIn key={i} delay={i * 80}>
-                <div
-                  className="rounded-2xl px-7 py-5"
-                  style={{
-                    backgroundColor: item.dim ? "#1e1e1e" : "white",
-                    border: `1px solid ${item.dim ? "#2fae8a33" : "#e5e5e5"}`,
-                  }}>
-                  <p
-                    className="font-bold"
-                    style={{
-                      fontSize: "clamp(1.1rem, 3vw, 1.4rem)",
-                      color: item.dim ? "#2fae8a" : "#1e1e1e",
-                    }}>
-                    {item.q}
-                  </p>
-                </div>
-              </FadeIn>
-            ))}
-            <FadeIn delay={320}>
-              <div
-                className="rounded-2xl px-7 py-6 mt-2"
+          {/* 섹션 브릿지 — 후기에서 사례로 자연스럽게 연결 */}
+          <FadeIn delay={0}>
+            <div
+              className="mb-14 rounded-2xl px-7 py-6"
+              style={{
+                backgroundColor: "#1e1e1e",
+                border: "1px solid #2fae8a55",
+              }}>
+              <p
+                className="text-base font-semibold mb-2"
+                style={{ color: "#2fae8a" }}>
+                ✦ 대형 가구회사 생산·마감·구조 전문 출신
+              </p>
+              <p
+                className="font-black leading-snug"
                 style={{
-                  backgroundColor: "#1e1e1e",
-                  border: "1px solid #2fae8a55",
+                  fontSize: "clamp(1.4rem, 3.5vw, 2rem)",
+                  color: "white",
                 }}>
-                <p
-                  className="text-base font-semibold mb-2"
-                  style={{ color: "#2fae8a" }}>
-                  ✦ 대형 가구회사 생산·마감·구조 전문 출신
-                </p>
-                <p
-                  className="font-black leading-snug"
+                고칠 수 있는 건 고치고,
+                <br />
+                <span style={{ color: "#2fae8a" }}>안 되면 먼저 말합니다.</span>
+                <br />
+                <span
                   style={{
-                    fontSize: "clamp(1.4rem, 3.5vw, 2rem)",
-                    color: "white",
+                    fontSize: "clamp(0.95rem, 2vw, 1.1rem)",
+                    fontWeight: 500,
+                    color: "#888",
                   }}>
-                  그래서 수리담은
-                  <br />
-                  사진 보고{" "}
-                  <span style={{ color: "#2fae8a" }}>
-                    안 된다고 먼저 말합니다.
-                  </span>
-                </p>
-              </div>
-            </FadeIn>
-          </div>
+                  아래는 실제 수리 전·후 사진입니다.
+                </span>
+              </p>
+            </div>
+          </FadeIn>
 
           {/* Before/After 헤더 + 명언 */}
           <FadeIn delay={0}>

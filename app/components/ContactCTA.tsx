@@ -64,10 +64,10 @@ export default function ContactCTA() {
                 borderLeft: "3px solid #ef4444",
                 paddingLeft: 16,
               }}>
-              "비용을 아끼려다 더 큰 비용을 치른다."
+              "작은 이상을 무시하다 통째로 교체한 사람을 많이 봤습니다."
             </p>
             <p className="text-sm mt-3 font-bold" style={{ color: "#ef4444" }}>
-              — 워렌 버핏
+              — 수리담 기사, 현장에서
             </p>
           </div>
         </FadeIn>

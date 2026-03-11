@@ -34,12 +34,12 @@ const diffs = [
   },
   {
     num: "04",
-    icon: "🤝",
-    theme: "마무리 기준",
-    problem: "수리 끝나면 기준 없이 가버림",
-    problemSub: "나중에 다시 문제가 생겨도 모르쇠",
-    solution: "수평·유격·열림감·소음 4가지 확인",
-    solutionSub: "기준으로 마무리, 이상 시 재방문",
+    icon: "🛡",
+    theme: "AS 보장",
+    problem: "수리 끝나면 연락이 안 된다",
+    problemSub: "재발해도 모른 척, 추가 비용 요구",
+    solution: "수리 완료일로부터 1년 무상 AS",
+    solutionSub: "같은 부위 재발 시 출장비·공임 없음",
   },
 ];
 
@@ -196,29 +196,17 @@ export default function WhySuridam() {
           </h2>
         </FadeIn>
 
-        {/* ── 명언 (규칙 1) ── */}
+        {/* ── 라포르 도입 ── */}
         <FadeIn delay={140}>
-          <blockquote
-            className="mb-8 rounded-2xl px-6 py-5"
-            style={{
-              backgroundColor: "#0d2318",
-              border: "1px solid #2fae8a66",
-            }}>
-            <p
-              className="text-base italic font-medium leading-relaxed"
-              style={{
-                color: "#a8e8d0",
-                borderLeft: "3px solid #2fae8a",
-                paddingLeft: 16,
-              }}>
-              "경험 없이는 아무것도 배울 수 없지만,
-              <br />
-              비싼 수업료를 반복해서 낼 필요도 없다."
-            </p>
-            <p className="text-sm mt-3 font-bold" style={{ color: "#2fae8a" }}>
-              — 빌 게이츠
-            </p>
-          </blockquote>
+          <p
+            className="mb-8 text-lg font-semibold leading-relaxed"
+            style={{ color: "#555" }}>
+            좋은 업체를 고르려다 오히려 손해 본 경험,
+            <br />
+            <span style={{ color: "rgba(255,255,255,0.6)" }}>
+              한 번쯤은 있으셨죠.
+            </span>
+          </p>
         </FadeIn>
 
         {/* ── YES-SET: 라포르 + 마인드리딩 ── */}
@@ -270,7 +258,7 @@ export default function WhySuridam() {
           <p
             className="text-base leading-relaxed mb-14"
             style={{ color: "#666" }}>
-            AS도 없고 마무리 기준도 없는 수리.
+            수리하고 연락 끊기는 업체, 한 번쯤 겪어보셨죠.
             <br />
             <strong style={{ color: "rgba(255,255,255,0.6)" }}>
               싼 게 비지떡이 아니라, 기준 없는 게 비지떡입니다.
