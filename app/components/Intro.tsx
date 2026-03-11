@@ -96,9 +96,13 @@ export default function Intro() {
               <br />
               그냥 고치는 건 — 결과가 다릅니다.
               <br />
-              <strong style={{ color: "rgba(255,255,255,0.7)" }}>
-                수리를 담다 — 수리담.
+              <strong style={{ color: "rgba(255,255,255,0.65)" }}>
+                수리를 담다, 수리담.
               </strong>
+              <br />
+              <span style={{ fontSize: "1.05rem", color: "#888" }}>
+                서울·수도권·인천·부천 전 지역 출장
+              </span>
             </p>
           </div>
         </FadeIn>

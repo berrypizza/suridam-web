@@ -362,7 +362,7 @@ function Calculator() {
             />
           ))}
         </div>
-        <div className="flex items-center justify-between text-xs font-bold uppercase tracking-widest">
+        <div className="flex items-center justify-between text-sm font-bold uppercase tracking-widest">
           <span style={{ color: step >= 1 ? "#2fae8a" : "#444" }}>
             가구 종류
           </span>
@@ -378,8 +378,8 @@ function Calculator() {
       {step === 1 && (
         <div>
           <p
-            className="text-xs font-black uppercase tracking-widest mb-2"
-            style={{ color: "#444" }}>
+            className="text-sm font-black uppercase tracking-widest mb-2"
+            style={{ color: "#777" }}>
             Step 1
           </p>
           <h3
@@ -418,13 +418,13 @@ function Calculator() {
         <div>
           <button
             onClick={() => setStep(1)}
-            className="inline-flex items-center gap-2 text-sm font-semibold mb-5"
-            style={{ color: "#555" }}>
+            className="inline-flex items-center gap-2 text-base font-semibold mb-5"
+            style={{ color: "#888" }}>
             ← 이전으로
           </button>
           <p
-            className="text-xs font-black uppercase tracking-widest mb-2"
-            style={{ color: "#444" }}>
+            className="text-sm font-black uppercase tracking-widest mb-2"
+            style={{ color: "#777" }}>
             Step 2
           </p>
           <h3
@@ -460,7 +460,7 @@ function Calculator() {
                       {c.label}
                     </span>
                   </div>
-                  <span style={{ color: "#444" }}>→</span>
+                  <span style={{ color: "#777" }}>→</span>
                 </button>
               ))}
           </div>
@@ -471,8 +471,8 @@ function Calculator() {
         <div>
           <button
             onClick={() => setStep(2)}
-            className="inline-flex items-center gap-2 text-sm font-semibold mb-5"
-            style={{ color: "#555" }}>
+            className="inline-flex items-center gap-2 text-base font-semibold mb-5"
+            style={{ color: "#888" }}>
             ← 이전으로
           </button>
           <div
@@ -481,8 +481,8 @@ function Calculator() {
             <span className="text-4xl">{cat.icon}</span>
             <div>
               <p
-                className="text-sm font-medium mb-0.5"
-                style={{ color: "#555" }}>
+                className="text-base font-medium mb-0.5"
+                style={{ color: "#888" }}>
                 {cat.group}
               </p>
               <h3 className="text-xl font-black" style={{ color: "white" }}>
@@ -549,7 +549,7 @@ function Calculator() {
                       style={{ color: "white" }}>
                       {count}
                     </div>
-                    <div className="mt-1 text-sm" style={{ color: "#555" }}>
+                    <div className="mt-1 text-sm" style={{ color: "#888" }}>
                       {cat.addUnit || "개"}
                     </div>
                   </div>
@@ -590,12 +590,12 @@ function Calculator() {
               {total > 0 && (
                 <span
                   className="pb-1 text-base font-medium"
-                  style={{ color: "#555" }}>
+                  style={{ color: "#888" }}>
                   내외
                 </span>
               )}
             </div>
-            <p className="text-sm leading-relaxed" style={{ color: "#666" }}>
+            <p className="text-base leading-relaxed" style={{ color: "#666" }}>
               {breakdown}
             </p>
             {cat.fixedNote && (
@@ -618,7 +618,7 @@ function Calculator() {
               className="w-full rounded-2xl py-4 text-sm font-bold"
               style={{
                 backgroundColor: "#141414",
-                color: "#555",
+                color: "#888",
                 border: "1px solid #1e1e1e",
               }}>
               처음부터 다시 계산하기
@@ -628,7 +628,7 @@ function Calculator() {
       )}
       <p
         className="mt-6 text-center text-sm leading-relaxed"
-        style={{ color: "#3a3a3a" }}>
+        style={{ color: "#888" }}>
         표준 단가 기준이며, 현장 상황에 따라 달라질 수 있습니다.
       </p>
     </div>
@@ -687,7 +687,7 @@ export default function EstimateCalculator() {
               <span className="text-3xl">🧮</span>
               <div>
                 <p
-                  className="text-xs font-black uppercase tracking-widest mb-1"
+                  className="text-sm font-black uppercase tracking-widest mb-1"
                   style={{ color: "#2fae8a" }}>
                   Estimate
                 </p>
@@ -700,7 +700,7 @@ export default function EstimateCalculator() {
                   }}>
                   내 가구, 얼마면 고칠 수 있을까?
                 </p>
-                <p className="text-sm mt-0.5" style={{ color: "#555" }}>
+                <p className="text-sm mt-0.5" style={{ color: "#888" }}>
                   항목 선택 → 즉시 예상 비용 확인
                 </p>
               </div>

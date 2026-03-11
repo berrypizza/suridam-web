@@ -88,7 +88,7 @@ function ScrollAccordionCard({ d }: { d: (typeof diffs)[0] }) {
         }}>
         <div className="flex items-center gap-3">
           <span
-            className="text-xs font-black tabular-nums"
+            className="text-sm font-black tabular-nums"
             style={{ color: "#2fae8a", letterSpacing: "0.1em" }}>
             {d.num}
           </span>
@@ -129,26 +129,26 @@ function ScrollAccordionCard({ d }: { d: (typeof diffs)[0] }) {
               borderRight: "1px solid #1a1a1a",
             }}>
             <span
-              className="inline-block text-xs font-black px-2 py-0.5 rounded-full mb-2"
+              className="inline-block text-sm font-black px-2 py-0.5 rounded-full mb-2"
               style={{ backgroundColor: "#ef444415", color: "#ef4444" }}>
               일반 업체
             </span>
             <p
               className="font-bold leading-snug mb-1 text-sm"
               style={{
-                color: "#555",
+                color: "#888",
                 textDecoration: "line-through",
                 textDecorationColor: "#ef444455",
               }}>
               {d.problem}
             </p>
-            <p className="text-xs" style={{ color: "#2d2d2d" }}>
+            <p className="text-sm" style={{ color: "#888" }}>
               {d.problemSub}
             </p>
           </div>
           <div className="px-4 py-4" style={{ backgroundColor: "#0d1410" }}>
             <span
-              className="inline-block text-xs font-black px-2 py-0.5 rounded-full mb-2"
+              className="inline-block text-sm font-black px-2 py-0.5 rounded-full mb-2"
               style={{ backgroundColor: "#2fae8a22", color: "#2fae8a" }}>
               수리담
             </span>
@@ -157,7 +157,7 @@ function ScrollAccordionCard({ d }: { d: (typeof diffs)[0] }) {
               style={{ color: "white" }}>
               {d.solution}
             </p>
-            <p className="text-xs" style={{ color: "#2fae8a88" }}>
+            <p className="text-sm" style={{ color: "#2fae8aaa" }}>
               {d.solutionSub}
             </p>
           </div>
@@ -175,7 +175,7 @@ export default function WhySuridam() {
         {/* ── 배지 ── */}
         <FadeIn delay={0}>
           <span
-            className="inline-block text-xs tracking-widest uppercase mb-6 px-3 py-1.5 rounded-full font-bold"
+            className="inline-block text-sm tracking-widest uppercase mb-6 px-3 py-1.5 rounded-full font-bold"
             style={{
               backgroundColor: "#2fae8a18",
               color: "#2fae8a",
@@ -200,7 +200,7 @@ export default function WhySuridam() {
         <FadeIn delay={140}>
           <p
             className="mb-8 text-lg font-semibold leading-relaxed"
-            style={{ color: "#555" }}>
+            style={{ color: "#888" }}>
             좋은 업체를 고르려다 오히려 손해 본 경험,
             <br />
             <span style={{ color: "rgba(255,255,255,0.6)" }}>
@@ -272,7 +272,7 @@ export default function WhySuridam() {
         <div className="mb-10 flex items-center gap-4">
           <div className="h-px flex-1" style={{ backgroundColor: "#1e1e1e" }} />
           <span
-            className="text-xs font-black uppercase tracking-widest"
+            className="text-sm font-black uppercase tracking-widest"
             style={{ color: "#2fae8a" }}>
             4가지 차이
           </span>
@@ -288,7 +288,7 @@ export default function WhySuridam() {
             <br />
             <span style={{ color: "#ef4444" }}>없는 것</span>이 4가지입니다.
           </h3>
-          <p className="text-sm mb-8" style={{ color: "#555" }}>
+          <p className="text-base mb-8" style={{ color: "#888" }}>
             없는 게 많은 곳이 더 좋은 수리입니다. 스크롤하면 펼쳐집니다.
           </p>
         </FadeIn>
@@ -312,7 +312,7 @@ export default function WhySuridam() {
                 background: "linear-gradient(135deg, #0a1a12 0%, #0d2018 100%)",
               }}>
               <p
-                className="text-xs font-black uppercase tracking-widest mb-3"
+                className="text-sm font-black uppercase tracking-widest mb-3"
                 style={{ color: "#2fae8a" }}>
                 수리담의 약속
               </p>
@@ -329,8 +329,8 @@ export default function WhySuridam() {
                 </span>
               </h3>
               <p
-                className="text-sm leading-relaxed"
-                style={{ color: "#2fae8a88" }}>
+                className="text-base leading-relaxed"
+                style={{ color: "#2fae8aaa" }}>
                 광고 카피가 아닙니다. 실제로 지키지 못한 날은 청구하지 않습니다.
               </p>
             </div>
@@ -343,7 +343,7 @@ export default function WhySuridam() {
                 borderTop: "1px solid #1e1e1e",
               }}>
               <p
-                className="text-sm font-semibold leading-relaxed mb-5"
+                className="text-base font-semibold leading-relaxed mb-5"
                 style={{ color: "rgba(255,255,255,0.5)" }}>
                 거절이 잦은 서비스가 왜 살아남았을까요?
                 <br />

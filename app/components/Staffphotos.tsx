@@ -34,10 +34,10 @@ export default function StaffPhotos() {
                   fontSize: "clamp(2rem, 5vw, 3.2rem)",
                   color: "#1e1e1e",
                 }}>
-                새 가구 사려다
+                140만원 견적서를
                 <br />
                 <span className="relative inline-block mt-1">
-                  <span className="relative z-10">멈춘 사람들이 있습니다.</span>
+                  <span className="relative z-10">8만원으로 찢었습니다.</span>
                   <span
                     className="absolute bottom-1 left-0 w-full h-3 rounded"
                     style={{
@@ -52,13 +52,13 @@ export default function StaffPhotos() {
               {/* 규칙 2 경험/결과 권위 */}
               <p
                 className="mt-5 text-lg md:text-xl leading-relaxed max-w-lg"
-                style={{ color: "#555" }}>
+                style={{ color: "#888" }}>
                 수리담이 방문한 현장의{" "}
                 <strong style={{ color: "#1e1e1e" }}>
                   80%는 교체 없이 수리로 끝났습니다.
                 </strong>
                 <br />
-                나머지 20%는 방문 전 사진으로 먼저 말씀드렸고요.
+                나머지 20%는 방문 전에 먼저 말씀드렸습니다. 출장비 없이.
               </p>
             </div>
             <div
@@ -73,7 +73,7 @@ export default function StaffPhotos() {
                 ✓
               </div>
               <div>
-                <p className="text-sm" style={{ color: "#555" }}>
+                <p className="text-sm" style={{ color: "#888" }}>
                   교체 견적 받기 전에
                 </p>
                 <p className="text-lg font-black" style={{ color: "#1e1e1e" }}>
@@ -108,7 +108,7 @@ export default function StaffPhotos() {
             {/* 스토리텔링 */}
             <p
               className="font-semibold leading-relaxed"
-              style={{ fontSize: "clamp(1rem, 2.5vw, 1.1rem)", color: "#444" }}>
+              style={{ fontSize: "clamp(1rem, 2.5vw, 1.1rem)", color: "#777" }}>
               인천 서구의 한 고객은 붙박이장 문짝이 탈선되자 가구점에 교체
               견적을 먼저 알아봤습니다.
               <br />
@@ -160,7 +160,7 @@ export default function StaffPhotos() {
             />
             <p
               className="text-base md:text-lg flex items-center gap-2 font-bold"
-              style={{ color: "#444" }}>
+              style={{ color: "#777" }}>
               <span style={{ color: "#2fae8a" }}>✦</span>
               말이 아닌 결과로 증명합니다
               <span style={{ color: "#2fae8a" }}>✦</span>

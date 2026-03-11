@@ -8,6 +8,7 @@ import Navbar from "@/app/components/Navbar";
 import Footer from "@/app/components/Footer";
 import EstimateCalculator from "./components/EstimateCalculator";
 import Intro from "./components/Intro";
+import HonestSection from "./components/Honestsection";
 
 export default function AdPage() {
   return (
@@ -15,9 +16,10 @@ export default function AdPage() {
       <main className="min-h-screen" style={{ backgroundColor: "#1e1e1e" }}>
         <HookIntro />
         <Intro />
-        <DifferenceAndReviews />
-        <WhySuridam />
         <Staffphotos />
+        <HonestSection />
+        <WhySuridam />
+        <DifferenceAndReviews />
         <EstimateCalculator />
         <ContactCTA />
       </main>

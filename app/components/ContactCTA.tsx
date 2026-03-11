@@ -4,7 +4,7 @@ import FadeIn from "@/app/components/FadeIn";
 const steps = [
   { num: "01", text: "가구 사진 1~3장 찍기" },
   { num: "02", text: "지역 + 증상 한 줄 남기기" },
-  { num: "03", text: "수리 가능 여부 + 비용 범위 먼저 안내" },
+  { num: "03", text: "가능하면 비용 범위, 불가능하면 이유 먼저 안내" },
 ];
 
 const badges = [
@@ -109,7 +109,8 @@ export default function ContactCTA() {
                   fontSize: "clamp(1.1rem, 2.8vw, 1.3rem)",
                   color: "#2fae8a",
                 }}>
-                비용이 얼마인지 먼저 알려드립니다. 부담 없이 보내보세요.
+                비용이 얼마인지, 가능한지 — 사진 한 장으로 30초 안에 알 수
+                있습니다.
               </p>
             </div>
           </div>
@@ -170,7 +171,7 @@ export default function ContactCTA() {
         <FadeIn delay={80}>
           <div
             className="flex flex-col sm:flex-row items-center justify-center gap-4"
-            style={{ color: "#444" }}>
+            style={{ color: "#777" }}>
             {badges.map((b, i) => (
               <React.Fragment key={b}>
                 <span className="flex items-center gap-2 text-base font-semibold">

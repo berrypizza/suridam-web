@@ -19,7 +19,7 @@ const categories = [
         after: "/images/upper-after.jpg",
         review: {
           who: "강서구 화곡동 / 김** 고객님",
-          body: "불안해서 요리를 못 했다. 사진 한 장 보냈더니 다음 날 고쳐졌다.",
+          body: "불안해서 요리를 제대로 못 했어요. 사진 한 장 보냈더니 다음 날 다 고쳐져 있었습니다. 이렇게 빠를 줄 몰랐어요.",
         },
       },
       {
@@ -28,7 +28,7 @@ const categories = [
         after: "/images/upper-after2.jpg",
         review: {
           who: "부천 작동 / 김** 고객님",
-          body: "위에서 쾅 소리가 났다. 식칼 옆에 떨어졌다. 그날 바로 연락했다.",
+          body: "위에서 쾅 소리가 나더니 식칼 바로 옆에 떨어졌습니다. 그날 바로 연락했고, 다음 날 처리됐어요. 진짜 다칠 뻔했는데 빠르게 와주셔서 감사합니다.",
         },
       },
       {
@@ -37,7 +37,7 @@ const categories = [
         after: "/images/upper-after3.jpg",
         review: {
           who: "서울 마포구 / 정** 고객님",
-          body: "2년째 조금씩 처지는 거 알면서 못 본 척했다. 더 미뤘으면 진짜 위험할 뻔했다.",
+          body: "2년째 조금씩 처지는 거 알면서도 '괜찮겠지' 했는데… 더 미뤘으면 진짜 큰일 날 뻔했네요. 진작 연락드릴 걸 그랬어요.",
         },
       },
     ],
@@ -54,7 +54,7 @@ const categories = [
         after: "/images/door-after.png",
         review: {
           who: "마포구 합정 / 최** 고객님",
-          body: "안 된다고 먼저 말하는 업체를 처음 봤다. 그래서 더 믿었다.",
+          body: "솔직히 사진 보내고 '이건 교체하셔야 해요' 나올 줄 알았어요. 근데 '수리 가능합니다'라고 먼저 말씀해주시더라고요. 그 한 마디에 믿음이 갔습니다.",
         },
       },
       {
@@ -63,7 +63,7 @@ const categories = [
         after: "/images/door-after2.jpg",
         review: {
           who: "강서구 화곡동 / 정** 고객님",
-          body: "업체 3곳 돌았는데 다 교체하래. 수리담은 7만원에 고쳤다.",
+          body: "업체 세 곳 돌았는데 전부 교체하라고 했습니다. 수리담은 7만원에 고쳐줬어요. 뭐가 맞는 건지는 결과가 말해주네요.",
         },
       },
     ],
@@ -80,7 +80,7 @@ const categories = [
         after: "/images/sofa-after.jpg",
         review: {
           who: "부천 상동 / 이** 고객님",
-          body: "새 소파 180만원 장바구니에 담아놨다가 지웠다. 여기서 24만원에 끝났다.",
+          body: "180만원짜리 새 소파 장바구니에 담아두고 결제 직전이었어요. 사진 보냈더니 고칠 수 있다고 하셔서 24만원에 끝냈습니다. 156만원 아꼈네요.",
         },
       },
       {
@@ -89,7 +89,7 @@ const categories = [
         after: "/images/sofa-after2.jpg",
         review: {
           who: "인천 송도 / 장** 고객님",
-          body: "퇴근 후 유일한 낙이 소파였는데 반쪽짜리였다. 이제 제대로 눕는다.",
+          body: "퇴근하고 소파에 눕는 게 하루 중 제일 기다려지는 시간인데, 한쪽이 꺼져서 반만 쓰고 있었어요. 이제 온전히 눕습니다. 별거 아닌 것 같아도 삶의 질이 달라지더라고요.",
         },
       },
     ],
@@ -106,7 +106,7 @@ const categories = [
         after: "/images/sliding-after.jpg",
         review: {
           who: "인천 서구 / 고** 고객님",
-          body: "가구점 가서 '새로 맞추면 얼마예요' 물어보고 왔다가 수리담 찾았다. 잘했다.",
+          body: "가구점 가서 새로 맞추면 얼마냐고 물어보고 왔다가, 지인 추천으로 수리담 찾았습니다. 결과적으로 잘한 선택이었어요.",
         },
       },
       {
@@ -115,7 +115,7 @@ const categories = [
         after: "/images/sliding-after2.jpg",
         review: {
           who: "부천 중동 / 임** 고객님",
-          body: "문짝이 레일에서 빠져서 한 달 동안 들어서 열었다. 이제 그냥 밀면 된다.",
+          body: "문짝이 레일에서 빠진 채로 한 달 동안 들어서 열고 있었어요. 고치면 얼마나 할지 몰라서 계속 미뤘는데, 와보시더니 생각보다 금방 되더라고요.",
         },
       },
     ],
@@ -132,7 +132,7 @@ const categories = [
         after: "/images/rail-after2.jpg",
         review: {
           who: "인천 남동구 / 한** 고객님",
-          body: "'이 정도면 얼마 나올까요' 물었더니 범위를 딱 말해줬다. 그 범위 안에서 끝났다.",
+          body: "비용이 얼마나 될지 몰라서 물어봤는데, 범위를 딱 잘라서 말씀해 주셨어요. 실제로 그 범위 안에서 끝났습니다. 예상치 못한 추가 비용 없이요.",
         },
       },
       {
@@ -141,7 +141,7 @@ const categories = [
         after: "/images/rail-after.jpg",
         review: {
           who: "서울 동작구 / 이** 고객님",
-          body: "서랍 3개가 다 뻑뻑했다. 하나씩 덜 쓰게 됐다. 전부 진작 고쳤어야 했는데.",
+          body: "서랍 세 개가 다 뻑뻑해서 하나씩 안 쓰게 됐는데 그게 당연한 줄 알았어요. 다 고쳐지더라고요. 진작 연락할걸 했습니다.",
         },
       },
     ],
@@ -158,7 +158,7 @@ const categories = [
         after: "/images/chair-after.jpg",
         review: {
           who: "인천 계산동 / 김** 고객님",
-          body: "버리려다 '혹시나' 하고 사진 보냈다. 3만원에 다시 앉게 됐다.",
+          body: "버리려다가 '혹시나' 하고 사진 보내봤어요. 3만원에 다시 앉게 됐습니다. 버릴 뻔했네요.",
         },
       },
       {
@@ -167,7 +167,7 @@ const categories = [
         after: "/images/chair-after2.jpg",
         review: {
           who: "서울 역삼동 / 김** 고객님",
-          body: "손님 올 때마다 가죽 찢어진 게 신경 쓰였다. 이제 안 신경 쓴다.",
+          body: "손님 오실 때마다 가죽 찢어진 게 눈에 밟혔는데 이제 신경 안 써도 됩니다. 깔끔하게 잘 해주셨어요.",
         },
       },
     ],
@@ -178,19 +178,19 @@ const previewReviews: Review[] = [
   {
     who: "강서구 화곡동 / 김** 고객님",
     title: "상부장 탈락",
-    body: "교체 견적 140만원 받았다가, 사진 보내고 8만원에 끝났다.",
+    body: "다른 데서 교체 견적 140만원 받아왔는데, 사진 보내드렸더니 8만원에 다 끝났습니다. 처음엔 믿기지 않았어요.",
     stars: 5,
   },
   {
     who: "부천 상동 / 이** 고객님",
     title: "소파 꺼짐",
-    body: "새 소파 장바구니에 담아놨다가 지웠다. 여기서 24만원에 끝났다.",
+    body: "새 소파 장바구니에 담아두고 결제 직전이었어요. 여기서 수리하고 나서 취소했습니다. 결과 보고 잘했다 싶었어요.",
     stars: 5,
   },
   {
     who: "인천 서구 / 고** 고객님",
     title: "슬라이딩 도어",
-    body: "다른 데서 '그냥 새로 사세요' 들었다. 여기서 고쳤다.",
+    body: "다른 업체에서 그냥 새로 사시는 게 낫겠다고 했는데, 수리담에서 고쳐주셨어요. 그 말이 맞는지 결과로 확인했습니다.",
     stars: 5,
   },
 ];
@@ -218,7 +218,7 @@ function CaseCard({ c }: { c: (typeof categories)[0]["cases"][0] }) {
                 "linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 100%)",
             }}>
             <span
-              className="text-xs font-black"
+              className="text-sm font-black"
               style={{ color: "#bbb", letterSpacing: "0.08em" }}>
               BEFORE
             </span>
@@ -241,7 +241,7 @@ function CaseCard({ c }: { c: (typeof categories)[0]["cases"][0] }) {
                 "linear-gradient(to top, rgba(15,50,35,0.85) 0%, transparent 100%)",
             }}>
             <span
-              className="text-xs font-black"
+              className="text-sm font-black"
               style={{ color: "#2fae8a", letterSpacing: "0.08em" }}>
               AFTER ✦
             </span>
@@ -250,7 +250,7 @@ function CaseCard({ c }: { c: (typeof categories)[0]["cases"][0] }) {
       </div>
       <div className="px-4 py-3" style={{ backgroundColor: "#161616" }}>
         <span
-          className="inline-block text-xs font-bold px-2.5 py-1 rounded-full mb-2"
+          className="inline-block text-sm font-bold px-2.5 py-1 rounded-full mb-2"
           style={{
             backgroundColor: "#1e1e1e",
             color: "#888",
@@ -262,12 +262,12 @@ function CaseCard({ c }: { c: (typeof categories)[0]["cases"][0] }) {
           <div
             className="rounded-xl px-3 py-2.5 mt-1"
             style={{ backgroundColor: "#1a1a1a", border: "1px solid #222" }}>
-            <p className="text-sm leading-relaxed" style={{ color: "#ddd" }}>
+            <p className="text-base leading-relaxed" style={{ color: "#ddd" }}>
               <span style={{ color: "#2fae8a", fontSize: 16 }}>"</span>
               {c.review.body}
               <span style={{ color: "#2fae8a", fontSize: 16 }}>"</span>
             </p>
-            <p className="text-xs mt-1.5" style={{ color: "#555" }}>
+            <p className="text-sm mt-1.5" style={{ color: "#888" }}>
               — {c.review.who}
             </p>
           </div>
@@ -300,7 +300,7 @@ function AccordionItem({ cat }: { cat: (typeof categories)[0] }) {
                 {cat.label}
               </span>
               <span
-                className="text-xs font-bold px-2 py-0.5 rounded-full"
+                className="text-sm font-bold px-2 py-0.5 rounded-full"
                 style={{
                   backgroundColor: open ? "#2fae8a22" : "#1e1e1e",
                   color: open ? "#2fae8a" : "#555",
@@ -309,7 +309,7 @@ function AccordionItem({ cat }: { cat: (typeof categories)[0] }) {
                 {cat.cases.length}건
               </span>
             </div>
-            <p className="text-xs mt-0.5" style={{ color: "#555" }}>
+            <p className="text-sm mt-0.5" style={{ color: "#999" }}>
               {cat.desc}
             </p>
           </div>
@@ -457,7 +457,7 @@ export default function DifferenceAndReviews() {
                     </span>
                   </div>
                   <p
-                    className="text-lg leading-relaxed flex-1"
+                    className="text-xl leading-relaxed flex-1"
                     style={{ color: "#e8e8e8" }}>
                     <span
                       style={{ color: "#2fae8a", fontSize: 24, lineHeight: 0 }}>
