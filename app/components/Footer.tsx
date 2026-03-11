@@ -143,6 +143,24 @@ export default function Footer() {
                   매일 09:00 — 21:00
                 </span>
               </div>
+              {/* 사업자 정보 */}
+              <div
+                style={{
+                  marginTop: 6,
+                  paddingTop: 12,
+                  borderTop: "1px solid #1a1a1a",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 3,
+                }}>
+                <p style={{ fontSize: 11, color: "#2e2e2e", margin: 0 }}>
+                  상호 수리담출장가구수리 · 대표자 고관호 · 사업자등록번호
+                  175-11-03137
+                </p>
+                <p style={{ fontSize: 11, color: "#252525", margin: 0 }}>
+                  서울특별시 영등포구 선유서로21길 14, 2층 201-b484호
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -150,20 +168,11 @@ export default function Footer() {
         {/* 구분선 */}
         <div className="h-px mb-6" style={{ backgroundColor: "#1a1a1a" }} />
 
-        {/* 하단 — 카피라이트 + 사업자 정보 */}
+        {/* 하단 — 카피라이트 */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
           <p className="text-xs" style={{ color: "#2e2e2e" }}>
             © {new Date().getFullYear()} 수리담. All rights reserved.
           </p>
-          <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-            <p className="text-xs" style={{ color: "#2e2e2e" }}>
-              상호 수리담출장가구수리 · 대표자 고관호 · 사업자등록번호
-              175-11-03137
-            </p>
-            <p className="text-xs" style={{ color: "#252525" }}>
-              서울특별시 영등포구 선유서로21길 14, 2층 201-b484호
-            </p>
-          </div>
         </div>
       </div>
     </footer>
