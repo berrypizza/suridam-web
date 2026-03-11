@@ -154,8 +154,8 @@ export default function Footer() {
                   gap: 3,
                 }}>
                 <p style={{ fontSize: 11, color: "#2e2e2e", margin: 0 }}>
-                  상호 수리담출장가구수리 · 대표자 고관호 · 사업자등록번호
-                  175-11-03137
+                  상호 수리담출장가구수리의자수리쇼파소파수리리폼업체 · 대표자
+                  고관호 · 사업자등록번호 175-11-03137
                 </p>
                 <p style={{ fontSize: 11, color: "#252525", margin: 0 }}>
                   서울특별시 영등포구 선유서로21길 14, 2층 201-b484호
