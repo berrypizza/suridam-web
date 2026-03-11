@@ -8,9 +8,9 @@ const steps = [
 ];
 
 const badges = [
-  "수리 불가 시 먼저 말합니다",
-  "방문 전 사진으로 1차 판단",
-  "비용 범위 먼저 공유",
+  "수리 불가 시 출장비 없음",
+  "AS 기간 1년 보장",
+  "숨은 비용 없음",
 ];
 
 export default function ContactCTA() {
@@ -76,9 +76,9 @@ export default function ContactCTA() {
         <FadeIn delay={80}>
           <div className="mb-10 flex flex-col gap-3">
             {[
-              "작은 소리나 흔들림이 생긴 지 꽤 됐다 → 맞죠?",
-              "바쁘다는 이유로 미루고 있었다 → 맞죠?",
-              "그러다 갑자기 탈락하거나 부러지는 경우를 봤다 → 맞죠?",
+              "'언제 한 번 봐야지' 하면서 몇 달째 미루고 있다 → 맞죠?",
+              "문이 잘 안 닫히거나 삐걱거리는 소리가 점점 커지고 있다 → 맞죠?",
+              "고치면 얼마나 할지 몰라서 연락을 못 하고 있다 → 맞죠?",
             ].map((q, i) => (
               <div
                 key={i}
@@ -109,7 +109,7 @@ export default function ContactCTA() {
                   fontSize: "clamp(1.1rem, 2.8vw, 1.3rem)",
                   color: "#2fae8a",
                 }}>
-                사진 한 장이면 충분합니다. 30초면 됩니다.
+                비용이 얼마인지 먼저 알려드립니다. 부담 없이 보내보세요.
               </p>
             </div>
           </div>

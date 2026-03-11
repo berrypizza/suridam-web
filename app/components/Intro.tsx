@@ -83,18 +83,18 @@ export default function Intro() {
             <p
               className="font-black leading-snug"
               style={{ fontSize: "clamp(1.8rem, 5vw, 3rem)", color: "white" }}>
-              그 불편을 직접 겪은 기사가
+              제조사 구조를 아는 기사가
               <br />
-              <span style={{ color: "#2fae8a" }}>고치러 나섭니다.</span>
+              <span style={{ color: "#2fae8a" }}>직접 고칩니다.</span>
             </p>
             <p
               className="mt-5 mx-auto max-w-lg text-lg md:text-xl leading-relaxed"
               style={{ color: "#888" }}>
-              대형 가구회사 생산·마감 라인 출신.
+              대형 가구회사 출신, 생산·마감 라인,
               <br />
-              구조를 알기 때문에 사진 한 장으로 판단하고,
+              재질이 뭔지, 어떻게 조립됐는지 아는 사람이 고치는 것과
               <br />
-              안 되는 건 방문 전에 먼저 말합니다.
+              그냥 고치는 건 — 결과가 다릅니다.
               <br />
               <strong style={{ color: "rgba(255,255,255,0.7)" }}>
                 수리를 담다 — 수리담.

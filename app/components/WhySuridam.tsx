@@ -226,17 +226,17 @@ export default function WhySuridam() {
           {[
             {
               check: "✓",
-              text: "전화했더니 '일단 와봐야 알아요'를 들었다",
+              text: "수리는 됐는데 며칠 뒤 또 문제가 생겼다",
               hi: false,
             },
             {
               check: "✓",
-              text: "막상 기사가 왔더니 처음 말한 비용이 달라졌다",
+              text: "기사가 가고 나서 마무리가 애매해서 다시 연락했는데 안 받았다",
               hi: false,
             },
             {
               check: "→",
-              text: "그냥 새로 살걸. 그렇게 후회하셨죠?",
+              text: "그 업체, 다시는 안 부르겠다고 생각했죠?",
               hi: true,
             },
           ].map((item, i) => (
@@ -270,13 +270,13 @@ export default function WhySuridam() {
           <p
             className="text-base leading-relaxed mb-14"
             style={{ color: "#666" }}>
-            이 경험은 당신 잘못이 아닙니다.
+            AS도 없고 마무리 기준도 없는 수리.
+            <br />
             <strong style={{ color: "rgba(255,255,255,0.6)" }}>
-              {" "}
-              업계 전체가 그렇게 돌아가기 때문입니다.
+              싼 게 비지떡이 아니라, 기준 없는 게 비지떡입니다.
             </strong>
             <br />
-            수리담을 만든 이유가 여기에 있습니다.
+            수리담이 4가지 기준을 만든 이유입니다.
           </p>
         </FadeIn>
 

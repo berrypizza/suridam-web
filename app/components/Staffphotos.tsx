@@ -74,10 +74,10 @@ export default function StaffPhotos() {
               </div>
               <div>
                 <p className="text-sm" style={{ color: "#555" }}>
-                  방문 전 사진으로 1차 판단
+                  교체 견적 받기 전에
                 </p>
                 <p className="text-lg font-black" style={{ color: "#1e1e1e" }}>
-                  가능할 때만 출장 갑니다
+                  한 번만 더 물어보세요
                 </p>
               </div>
             </div>
