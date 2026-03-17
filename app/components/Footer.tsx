@@ -55,7 +55,7 @@ export default function Footer() {
               ▶ 유튜브 채널
             </a>
             <a
-              href="/privacy"
+              href="/app/privacy"
               className="hover:opacity-80 transition-opacity"
               style={{ color: "#444" }}>
               개인정보처리방침
