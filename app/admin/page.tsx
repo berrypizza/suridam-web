@@ -875,6 +875,96 @@ function JobCard({
 }
 
 export default function AdminDashboard() {
+  const [authed, setAuthed] = useState(false);
+  const [pwInput, setPwInput] = useState("");
+  const [pwError, setPwError] = useState(false);
+  const [showPw, setShowPw] = useState(false);
+
+  // 세션 유지 (24시간)
+  useEffect(() => {
+    const expiry = localStorage.getItem("suridam_admin_expiry");
+    if (expiry && Date.now() < parseInt(expiry)) setAuthed(true);
+  }, []);
+
+  const handleLogin = () => {
+    const correct = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || "su3024";
+    if (pwInput === correct) {
+      const expiry = Date.now() + 24 * 60 * 60 * 1000; // 24시간
+      localStorage.setItem("suridam_admin_expiry", String(expiry));
+      setAuthed(true);
+      setPwError(false);
+    } else {
+      setPwError(true);
+      setPwInput("");
+    }
+  };
+
+  if (!authed) {
+    return (
+      <main
+        className="min-h-screen flex items-center justify-center px-6"
+        style={{ backgroundColor: "#111" }}>
+        <div className="w-full max-w-xs flex flex-col items-center gap-6">
+          {/* 로고 */}
+          <div className="text-center">
+            <p className="text-3xl mb-2">🛠</p>
+            <h1 className="text-xl font-black" style={{ color: "white" }}>
+              수리담 관리자
+            </h1>
+            <p className="text-sm mt-1" style={{ color: "#555" }}>
+              관리자만 접근할 수 있어요
+            </p>
+          </div>
+          {/* 비밀번호 입력 */}
+          <div className="w-full flex flex-col gap-3">
+            <div className="relative">
+              <input
+                type={showPw ? "text" : "password"}
+                value={pwInput}
+                onChange={(e) => {
+                  setPwInput(e.target.value);
+                  setPwError(false);
+                }}
+                onKeyDown={(e) => e.key === "Enter" && handleLogin()}
+                placeholder="비밀번호 입력"
+                autoFocus
+                className="w-full rounded-2xl px-4 py-3.5 text-base pr-12"
+                style={{
+                  backgroundColor: "#1c1c1c",
+                  border: `1px solid ${pwError ? "#ef4444" : "#2e2e2e"}`,
+                  color: "white",
+                  outline: "none",
+                  fontFamily: "inherit",
+                  boxSizing: "border-box",
+                }}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPw((v) => !v)}
+                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-base"
+                style={{ color: "#555" }}>
+                {showPw ? "🙈" : "👁"}
+              </button>
+            </div>
+            {pwError && (
+              <p
+                className="text-sm text-center font-medium"
+                style={{ color: "#ef4444" }}>
+                비밀번호가 틀렸습니다
+              </p>
+            )}
+            <button
+              onClick={handleLogin}
+              className="w-full rounded-2xl py-3.5 text-base font-bold text-white"
+              style={{ backgroundColor: "#2fae8a" }}>
+              입장
+            </button>
+          </div>
+        </div>
+      </main>
+    );
+  }
+
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState<"오늘" | "전체" | "달력" | "통계">("달력");
@@ -1079,6 +1169,19 @@ export default function AdminDashboard() {
                 border: "1px solid #2e2e2e",
               }}>
               ↻
+            </button>
+            <button
+              onClick={() => {
+                localStorage.removeItem("suridam_admin_expiry");
+                setAuthed(false);
+              }}
+              className="rounded-xl px-3 py-2.5 text-sm font-bold"
+              style={{
+                backgroundColor: "#1c1c1c",
+                color: "#666",
+                border: "1px solid #2e2e2e",
+              }}>
+              🔒
             </button>
             <button
               onClick={() => {
