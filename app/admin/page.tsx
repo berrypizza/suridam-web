@@ -115,7 +115,7 @@ function addOneYear(dateStr: string) {
 
 const emptyForm = () => ({
   visit_date: today(),
-  visit_time: "00:00",
+  visit_time: "",
   name: "",
   phone: "",
   region: "",
@@ -409,9 +409,9 @@ function JobCard({
   };
 
   const handleToggleComplete = () => {
-    // 실측 완료 토글 (완료 ↔ 대기)
     if (job.status === "완료") {
-      onUpdate(job.id, { status: "대기" });
+      // 실측 완료 취소 → 시공완료도 같이 초기화
+      onUpdate(job.id, { status: "대기", install_completed: false });
     } else {
       const asUntil = addOneYear(nowKST().toISOString().slice(0, 10));
       onUpdate(job.id, { status: "완료", as_until: asUntil });
@@ -1139,19 +1139,33 @@ export default function AdminDashboard() {
     if (!form.name.trim() || !form.region.trim() || !form.symptom.trim())
       return;
     setSaving(true);
-    if (editId) {
-      await getSupabase().from("jobs").update(form).eq("id", editId);
-    } else {
-      await getSupabase().from("jobs").insert(form);
+    try {
+      if (editId) {
+        const { error } = await getSupabase()
+          .from("jobs")
+          .update(form)
+          .eq("id", editId);
+        if (error) throw error;
+      } else {
+        const { error } = await getSupabase().from("jobs").insert(form);
+        if (error) throw error;
+      }
+      setShowForm(false);
+      setEditId(null);
+      setForm(emptyForm());
+    } catch (err: any) {
+      alert("저장 실패: " + (err?.message || "알 수 없는 오류"));
+    } finally {
+      setSaving(false);
     }
-    setSaving(false);
-    setShowForm(false);
-    setEditId(null);
-    setForm(emptyForm());
   };
 
   const update = async (id: string, patch: Partial<Job>) => {
-    await getSupabase().from("jobs").update(patch).eq("id", id);
+    const { error } = await getSupabase()
+      .from("jobs")
+      .update(patch)
+      .eq("id", id);
+    if (error) alert("수정 실패: " + error.message);
   };
 
   const remove = async (id: string) => {
@@ -1674,6 +1688,8 @@ export default function AdminDashboard() {
                     onClick={() => {
                       setForm({ ...emptyForm(), visit_date: selectedDay });
                       setEditId(null);
+                      setDateOpen(true);
+                      setInstallOpen(false);
                       setShowForm(true);
                     }}
                     className="text-xs px-3 py-1.5 rounded-lg font-bold"
@@ -2029,6 +2045,8 @@ export default function AdminDashboard() {
                   onClick={() => {
                     setForm({ ...emptyForm(), visit_date: dateFilter });
                     setEditId(null);
+                    setDateOpen(true);
+                    setInstallOpen(false);
                     setShowForm(true);
                   }}
                   className="text-xs px-3 py-1.5 rounded-lg font-bold"
@@ -2250,133 +2268,127 @@ export default function AdminDashboard() {
               </label>
             ))}
             {/* 날짜/시간 아코디언 */}
-            {(() => {
-              const hasDate = form.visit_date || form.visit_time;
-              const label = form.visit_date
-                ? `${form.visit_date}${form.visit_time ? " " + formatTime(form.visit_time) : ""}`
-                : "날짜 · 시간 설정";
-              return (
-                <div
-                  className="rounded-xl overflow-hidden"
-                  style={{ border: "1px solid #383838" }}>
-                  <button
-                    type="button"
-                    onClick={() => setDateOpen((v) => !v)}
-                    className="w-full flex items-center justify-between px-4 py-3"
-                    style={{ backgroundColor: "#1a1a1a" }}>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm">📅</span>
-                      <span
-                        className="text-sm font-semibold"
-                        style={{ color: hasDate ? "white" : "#666" }}>
-                        {label}
-                      </span>
-                    </div>
-                    <span
-                      className="text-xs"
-                      style={{
-                        color: "#555",
-                        transform: dateOpen ? "rotate(180deg)" : "none",
-                        display: "inline-block",
-                        transition: "transform 0.2s",
-                      }}>
-                      ▾
-                    </span>
-                  </button>
-                  {dateOpen && (
-                    <div
-                      className="px-4 pb-4 flex flex-col gap-3"
-                      style={{
-                        borderTop: "1px solid #2a2a2a",
-                        paddingTop: 14,
-                        backgroundColor: "#161616",
-                      }}>
-                      <div className="grid grid-cols-2 gap-3">
-                        <label className="flex flex-col gap-1.5">
-                          <span
-                            className="text-xs font-semibold"
-                            style={{ color: "#888" }}>
-                            방문일
-                          </span>
-                          <input
-                            type="date"
-                            value={form.visit_date}
-                            onChange={(e) =>
-                              setForm((p) => ({
-                                ...p,
-                                visit_date: e.target.value,
-                              }))
-                            }
-                            style={inputStyle}
-                          />
-                        </label>
-                        <label className="flex flex-col gap-1.5">
-                          <span
-                            className="text-xs font-semibold"
-                            style={{ color: "#888" }}>
-                            방문 시간
-                          </span>
-                          <div className="flex items-center gap-1">
-                            <input
-                              type="time"
-                              value={form.visit_time}
-                              onChange={(e) =>
-                                setForm((p) => ({
-                                  ...p,
-                                  visit_time: e.target.value,
-                                }))
-                              }
-                              style={{ ...inputStyle, flex: 1 }}
-                            />
-                            <button
-                              type="button"
-                              onClick={() => {
-                                const [h, m] = (form.visit_time || "00:00")
-                                  .split(":")
-                                  .map(Number);
-                                const safe =
-                                  (((h * 60 + m - 30) % 1440) + 1440) % 1440;
-                                setForm((p) => ({
-                                  ...p,
-                                  visit_time: `${String(Math.floor(safe / 60)).padStart(2, "0")}:${String(safe % 60).padStart(2, "0")}`,
-                                }));
-                              }}
-                              className="rounded-xl px-2 py-2 text-sm font-bold"
-                              style={{
-                                backgroundColor: "#252525",
-                                color: "#aaa",
-                                border: "1px solid #383838",
-                              }}>
-                              －
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => {
-                                const [h, m] = (form.visit_time || "00:00")
-                                  .split(":")
-                                  .map(Number);
-                                const safe = (h * 60 + m + 30) % 1440;
-                                setForm((p) => ({
-                                  ...p,
-                                  visit_time: `${String(Math.floor(safe / 60)).padStart(2, "0")}:${String(safe % 60).padStart(2, "0")}`,
-                                }));
-                              }}
-                              className="rounded-xl px-2 py-2 text-sm font-bold"
-                              style={{
-                                backgroundColor: "#252525",
-                                color: "#aaa",
-                                border: "1px solid #383838",
-                              }}>
-                              ＋
-                            </button>
-                          </div>
-                        </label>
-                      </div>
-                    </div>
-                  )}
+            <div
+              className="rounded-xl overflow-hidden"
+              style={{ border: "1px solid #383838" }}>
+              <button
+                type="button"
+                onClick={() => setDateOpen((v) => !v)}
+                className="w-full flex items-center justify-between px-4 py-3"
+                style={{ backgroundColor: "#1a1a1a" }}>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm">📅</span>
+                  <span
+                    className="text-sm font-semibold"
+                    style={{
+                      color:
+                        form.visit_date || form.visit_time ? "white" : "#666",
+                    }}>
+                    {form.visit_date
+                      ? `${form.visit_date}${form.visit_time ? " " + formatTime(form.visit_time) : ""}`
+                      : "날짜 · 시간 설정"}
+                  </span>
                 </div>
-              );
-            })()}
+                <span
+                  style={{
+                    color: "#555",
+                    fontSize: 12,
+                    display: "inline-block",
+                    transition: "transform 0.2s",
+                    transform: dateOpen ? "rotate(180deg)" : "none",
+                  }}>
+                  ▾
+                </span>
+              </button>
+              {dateOpen && (
+                <div
+                  className="px-4 pb-4 flex flex-col gap-3"
+                  style={{
+                    borderTop: "1px solid #2a2a2a",
+                    paddingTop: 14,
+                    backgroundColor: "#161616",
+                  }}>
+                  <div className="grid grid-cols-2 gap-3">
+                    <label className="flex flex-col gap-1.5">
+                      <span
+                        className="text-xs font-semibold"
+                        style={{ color: "#888" }}>
+                        방문일
+                      </span>
+                      <input
+                        type="date"
+                        value={form.visit_date}
+                        onChange={(e) =>
+                          setForm((p) => ({ ...p, visit_date: e.target.value }))
+                        }
+                        style={inputStyle}
+                      />
+                    </label>
+                    <label className="flex flex-col gap-1.5">
+                      <span
+                        className="text-xs font-semibold"
+                        style={{ color: "#888" }}>
+                        방문 시간
+                      </span>
+                      <div className="flex items-center gap-1">
+                        <input
+                          type="time"
+                          value={form.visit_time}
+                          onChange={(e) =>
+                            setForm((p) => ({
+                              ...p,
+                              visit_time: e.target.value,
+                            }))
+                          }
+                          style={{ ...inputStyle, flex: 1 }}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const [h, m] = (form.visit_time || "00:00")
+                              .split(":")
+                              .map(Number);
+                            const safe =
+                              (((h * 60 + m - 30) % 1440) + 1440) % 1440;
+                            setForm((p) => ({
+                              ...p,
+                              visit_time: `${String(Math.floor(safe / 60)).padStart(2, "0")}:${String(safe % 60).padStart(2, "0")}`,
+                            }));
+                          }}
+                          className="rounded-xl px-2 py-2 text-sm font-bold"
+                          style={{
+                            backgroundColor: "#252525",
+                            color: "#aaa",
+                            border: "1px solid #383838",
+                          }}>
+                          －
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const [h, m] = (form.visit_time || "00:00")
+                              .split(":")
+                              .map(Number);
+                            const safe = (h * 60 + m + 30) % 1440;
+                            setForm((p) => ({
+                              ...p,
+                              visit_time: `${String(Math.floor(safe / 60)).padStart(2, "0")}:${String(safe % 60).padStart(2, "0")}`,
+                            }));
+                          }}
+                          className="rounded-xl px-2 py-2 text-sm font-bold"
+                          style={{
+                            backgroundColor: "#252525",
+                            color: "#aaa",
+                            border: "1px solid #383838",
+                          }}>
+                          ＋
+                        </button>
+                      </div>
+                    </label>
+                  </div>
+                </div>
+              )}
+            </div>
             <label className="flex flex-col gap-1.5">
               <span className="text-xs font-semibold" style={{ color: "#888" }}>
                 금액 (원)
