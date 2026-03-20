@@ -373,6 +373,7 @@ function JobCard({
   const [showPhoto, setShowPhoto] = useState(false);
   const [prevStatus, setPrevStatus] = useState<Status>(job.status);
   const [photoTab, setPhotoTab] = useState<"접수" | "완료">("접수");
+  const [lightboxUrl, setLightboxUrl] = useState<string | null>(null);
 
   const getPhotos = (): string[] => {
     if (!job.completion_photo) return [];
@@ -415,6 +416,82 @@ function JobCard({
 
   return (
     <>
+      {/* 라이트박스 */}
+      {lightboxUrl &&
+        (() => {
+          const currentList = photoTab === "접수" ? getIntakePhotos() : photos;
+          const currentIdx = currentList.indexOf(lightboxUrl);
+          return (
+            <div
+              className="fixed inset-0 z-[70] flex items-center justify-center"
+              style={{ backgroundColor: "rgba(0,0,0,0.97)" }}
+              onClick={() => setLightboxUrl(null)}>
+              {currentIdx > 0 && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setLightboxUrl(currentList[currentIdx - 1]);
+                  }}
+                  className="absolute left-3 flex items-center justify-center w-10 h-10 rounded-full"
+                  style={{
+                    backgroundColor: "rgba(255,255,255,0.15)",
+                    color: "white",
+                    fontSize: 22,
+                  }}>
+                  ‹
+                </button>
+              )}
+              <img
+                src={lightboxUrl}
+                alt="사진 크게 보기"
+                className="rounded-2xl"
+                style={{
+                  maxWidth: "92vw",
+                  maxHeight: "88vh",
+                  objectFit: "contain",
+                }}
+                onClick={(e) => e.stopPropagation()}
+              />
+              {currentIdx < currentList.length - 1 && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setLightboxUrl(currentList[currentIdx + 1]);
+                  }}
+                  className="absolute right-3 flex items-center justify-center w-10 h-10 rounded-full"
+                  style={{
+                    backgroundColor: "rgba(255,255,255,0.15)",
+                    color: "white",
+                    fontSize: 22,
+                  }}>
+                  ›
+                </button>
+              )}
+              <div className="absolute top-4 right-4 flex items-center gap-2">
+                {currentList.length > 1 && (
+                  <span
+                    className="text-xs font-bold px-2.5 py-1 rounded-full"
+                    style={{
+                      backgroundColor: "rgba(0,0,0,0.6)",
+                      color: "#bbb",
+                    }}>
+                    {currentIdx + 1} / {currentList.length}
+                  </span>
+                )}
+                <button
+                  onClick={() => setLightboxUrl(null)}
+                  className="w-8 h-8 flex items-center justify-center rounded-full"
+                  style={{
+                    backgroundColor: "rgba(255,255,255,0.15)",
+                    color: "white",
+                    fontSize: 16,
+                  }}>
+                  ✕
+                </button>
+              </div>
+            </div>
+          );
+        })()}
       {showPhoto && (
         <PhotoCapture
           jobId={job.id}
@@ -653,10 +730,7 @@ function JobCard({
                           <img
                             src={url}
                             alt={`${photoTab} ${idx + 1}`}
-                            onClick={() => {
-                              setPrevStatus(job.status);
-                              setShowPhoto(true);
-                            }}
+                            onClick={() => setLightboxUrl(url)}
                             className="rounded-xl cursor-pointer"
                             style={{
                               height: 64,
