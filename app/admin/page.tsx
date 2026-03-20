@@ -1516,7 +1516,7 @@ export default function AdminDashboard() {
                   outline: "none",
                 }}>
                 <option value="전체">기사 선택</option>
-                <option value="기사1">기사1</option>
+                <option value="기사1">남도일</option>
                 <option value="기사2">기사2</option>
               </select>
             </div>
