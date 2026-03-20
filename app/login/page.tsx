@@ -7,7 +7,6 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [checking, setChecking] = useState(true);
 
-  // 이미 로그인된 경우 메인으로
   useEffect(() => {
     getSupabase()
       .auth.getSession()
@@ -135,7 +134,7 @@ export default function LoginPage() {
             backgroundColor: "#141414",
             borderRadius: 16,
             padding: "16px",
-            marginBottom: 28,
+            marginBottom: 16,
             display: "flex",
             flexDirection: "column",
             gap: 10,
@@ -152,6 +151,61 @@ export default function LoginPage() {
               <span style={{ fontSize: 13, color: "#888" }}>{item.text}</span>
             </div>
           ))}
+        </div>
+
+        {/* 개인정보 수집 항목 — 카카오 심사 필수 */}
+        <div
+          style={{
+            backgroundColor: "#141414",
+            borderRadius: 16,
+            padding: "14px 16px",
+            marginBottom: 28,
+            border: "1px solid #1e1e1e",
+          }}>
+          <p
+            style={{
+              fontSize: 12,
+              color: "#555",
+              fontWeight: 700,
+              marginBottom: 10,
+            }}>
+            수집하는 개인정보 항목
+          </p>
+          {[
+            { label: "필수", items: "닉네임, 전화번호" },
+            { label: "선택", items: "프로필 사진" },
+          ].map((row) => (
+            <div
+              key={row.label}
+              style={{
+                display: "flex",
+                gap: 8,
+                marginBottom: 6,
+                fontSize: 13,
+              }}>
+              <span
+                style={{
+                  color: "#2fae8a",
+                  fontWeight: 700,
+                  width: 30,
+                  flexShrink: 0,
+                }}>
+                {row.label}
+              </span>
+              <span style={{ color: "#777" }}>{row.items}</span>
+            </div>
+          ))}
+          <a
+            href="/privacy"
+            style={{
+              fontSize: 11,
+              color: "#444",
+              marginTop: 10,
+              display: "block",
+              textDecoration: "none",
+            }}>
+            개인정보처리방침 보기 →
+          </a>
         </div>
 
         {/* 카카오 로그인 버튼 */}

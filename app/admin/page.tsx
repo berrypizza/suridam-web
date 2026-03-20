@@ -480,16 +480,31 @@ function JobCard({
                 {job.name || "?"}
               </span>
               {job.phone && (
-                <a
-                  href={`tel:${job.phone}`}
-                  className="text-xs font-medium px-2 py-0.5 rounded-full"
-                  style={{
-                    backgroundColor: "#ef444418",
-                    color: "#ef9494",
-                    border: "1px solid #ef444430",
-                  }}>
-                  {job.phone}
-                </a>
+                <div className="flex items-center gap-1.5">
+                  <span
+                    className="text-xs font-medium px-2 py-0.5 rounded-full"
+                    style={{
+                      backgroundColor: "#ef444418",
+                      color: "#ef9494",
+                      border: "1px solid #ef444430",
+                    }}>
+                    {job.phone}
+                  </span>
+                  <a
+                    href={`tel:${job.phone}`}
+                    className="flex items-center justify-center rounded-xl font-bold"
+                    style={{
+                      width: 36,
+                      height: 36,
+                      backgroundColor: "#ef4444",
+                      color: "white",
+                      fontSize: 18,
+                      textDecoration: "none",
+                      flexShrink: 0,
+                    }}>
+                    📞
+                  </a>
+                </div>
               )}
             </div>
 
@@ -872,16 +887,28 @@ export default function AdminDashboard() {
               실시간 동기화 · 기사 2명 공유
             </p>
           </div>
-          <button
-            onClick={() => {
-              setForm(emptyForm());
-              setEditId(null);
-              setShowForm(true);
-            }}
-            className="rounded-xl px-5 py-2.5 text-sm font-bold text-white"
-            style={{ backgroundColor: "#2fae8a" }}>
-            + 접수
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => load()}
+              className="rounded-xl px-3 py-2.5 text-sm font-bold"
+              style={{
+                backgroundColor: "#1c1c1c",
+                color: "#888",
+                border: "1px solid #2e2e2e",
+              }}>
+              ↻
+            </button>
+            <button
+              onClick={() => {
+                setForm(emptyForm());
+                setEditId(null);
+                setShowForm(true);
+              }}
+              className="rounded-xl px-5 py-2.5 text-sm font-bold text-white"
+              style={{ backgroundColor: "#2fae8a" }}>
+              + 접수
+            </button>
+          </div>
         </div>
 
         {/* 탭 */}
