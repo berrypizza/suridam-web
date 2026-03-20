@@ -31,6 +31,7 @@ interface Job {
   review_requested: boolean;
   completion_photo?: string;
   as_until?: string;
+  intake_photos?: string; // JSON array of URLs
 }
 
 const TECHS: Tech[] = ["기사1", "기사2"];
@@ -120,6 +121,7 @@ const emptyForm = () => ({
   tech: "" as Tech,
   memo: "",
   as_until: addOneYear(today()),
+  intake_photos: "" as string,
 });
 
 function getCalendarDays(year: number, month: number) {
@@ -370,6 +372,7 @@ function JobCard({
   const techColor = TECH_COLOR[job.tech || ""];
   const [showPhoto, setShowPhoto] = useState(false);
   const [prevStatus, setPrevStatus] = useState<Status>(job.status);
+  const [photoTab, setPhotoTab] = useState<"접수" | "완료">("접수");
 
   const getPhotos = (): string[] => {
     if (!job.completion_photo) return [];
@@ -377,6 +380,15 @@ function JobCard({
       return JSON.parse(job.completion_photo);
     } catch {
       return [job.completion_photo];
+    }
+  };
+
+  const getIntakePhotos = (): string[] => {
+    if (!job.intake_photos) return [];
+    try {
+      return JSON.parse(job.intake_photos);
+    } catch {
+      return [job.intake_photos];
     }
   };
 
@@ -597,39 +609,77 @@ function JobCard({
                 );
               })()}
 
-            {/* 완료 사진 썸네일 */}
-            {photos.length > 0 && (
-              <div className="flex gap-1.5 mt-2.5 flex-wrap">
-                {photos.slice(0, 4).map((url, idx) => (
-                  <div key={url} className="relative">
-                    <img
-                      src={url}
-                      alt={`완료 ${idx + 1}`}
-                      onClick={() => {
-                        setPrevStatus(job.status);
-                        setShowPhoto(true);
-                      }}
-                      className="rounded-xl cursor-pointer"
-                      style={{
-                        height: 64,
-                        width: 64,
-                        objectFit: "cover",
-                        border: "1px solid #2fae8a44",
-                      }}
-                    />
-                    {idx === 3 && photos.length > 4 && (
-                      <div
-                        className="absolute inset-0 rounded-xl flex items-center justify-center"
-                        style={{ backgroundColor: "rgba(0,0,0,0.6)" }}>
-                        <span
-                          className="text-xs font-bold"
-                          style={{ color: "white" }}>
-                          +{photos.length - 4}
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                ))}
+            {/* 사진 탭 */}
+            {(getIntakePhotos().length > 0 || photos.length > 0) && (
+              <div className="mt-2.5">
+                <div className="flex gap-1 mb-2">
+                  {(["접수", "완료"] as const).map((t) => {
+                    const cnt =
+                      t === "접수" ? getIntakePhotos().length : photos.length;
+                    if (cnt === 0) return null;
+                    return (
+                      <button
+                        key={t}
+                        onClick={() => setPhotoTab(t)}
+                        className="rounded-full px-2.5 py-1 text-xs font-bold"
+                        style={{
+                          backgroundColor:
+                            photoTab === t
+                              ? t === "접수"
+                                ? "#f59e0b22"
+                                : "#2fae8a22"
+                              : "#1a1a1a",
+                          color:
+                            photoTab === t
+                              ? t === "접수"
+                                ? "#f59e0b"
+                                : "#2fae8a"
+                              : "#555",
+                          border: `1px solid ${photoTab === t ? (t === "접수" ? "#f59e0b44" : "#2fae8a44") : "#2a2a2a"}`,
+                        }}>
+                        {t === "접수" ? "📷 접수사진" : "✓ 완료사진"} {cnt}
+                      </button>
+                    );
+                  })}
+                </div>
+                <div className="flex gap-1.5 flex-wrap">
+                  {(photoTab === "접수" ? getIntakePhotos() : photos)
+                    .slice(0, 4)
+                    .map((url, idx) => {
+                      const list =
+                        photoTab === "접수" ? getIntakePhotos() : photos;
+                      return (
+                        <div key={url} className="relative">
+                          <img
+                            src={url}
+                            alt={`${photoTab} ${idx + 1}`}
+                            onClick={() => {
+                              setPrevStatus(job.status);
+                              setShowPhoto(true);
+                            }}
+                            className="rounded-xl cursor-pointer"
+                            style={{
+                              height: 64,
+                              width: 64,
+                              objectFit: "cover",
+                              border: `1px solid ${photoTab === "접수" ? "#f59e0b44" : "#2fae8a44"}`,
+                            }}
+                          />
+                          {idx === 3 && list.length > 4 && (
+                            <div
+                              className="absolute inset-0 rounded-xl flex items-center justify-center"
+                              style={{ backgroundColor: "rgba(0,0,0,0.6)" }}>
+                              <span
+                                className="text-xs font-bold"
+                                style={{ color: "white" }}>
+                                +{list.length - 4}
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                </div>
               </div>
             )}
           </div>
@@ -777,6 +827,7 @@ export default function AdminDashboard() {
       tech: job.tech,
       memo: job.memo,
       as_until: job.as_until || addOneYear(job.visit_date || today()),
+      intake_photos: job.intake_photos || "",
     });
     setEditId(job.id);
     setShowForm(true);
@@ -1978,6 +2029,124 @@ export default function AdminDashboard() {
                   }}>
                   1년
                 </button>
+              </div>
+            </label>
+
+            <label className="flex flex-col gap-1.5">
+              <span
+                className="text-xs font-semibold"
+                style={{ color: "#f59e0b" }}>
+                📷 접수 사진{" "}
+                <span className="font-normal" style={{ color: "#555" }}>
+                  (고장 상태)
+                </span>
+              </span>
+              <div className="flex flex-col gap-2">
+                {(() => {
+                  const intakeList: string[] = form.intake_photos
+                    ? (() => {
+                        try {
+                          return JSON.parse(form.intake_photos);
+                        } catch {
+                          return [];
+                        }
+                      })()
+                    : [];
+                  return intakeList.length > 0 ? (
+                    <div className="flex gap-2 flex-wrap">
+                      {intakeList.map((url, idx) => (
+                        <div key={url} className="relative">
+                          <img
+                            src={url}
+                            alt={`접수 ${idx + 1}`}
+                            className="rounded-xl"
+                            style={{
+                              height: 72,
+                              width: 72,
+                              objectFit: "cover",
+                              border: "1px solid #f59e0b44",
+                            }}
+                          />
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const next = intakeList.filter(
+                                (_, i) => i !== idx,
+                              );
+                              setForm((p) => ({
+                                ...p,
+                                intake_photos: next.length
+                                  ? JSON.stringify(next)
+                                  : "",
+                              }));
+                            }}
+                            className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold"
+                            style={{
+                              backgroundColor: "#ef4444",
+                              color: "white",
+                            }}>
+                            ✕
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  ) : null;
+                })()}
+                <label
+                  className="flex items-center gap-2 rounded-xl px-3 py-2.5 cursor-pointer"
+                  style={{
+                    backgroundColor: "#1a1a1a",
+                    border: "1px dashed #f59e0b55",
+                    color: "#f59e0b",
+                  }}>
+                  <span className="text-sm">📷</span>
+                  <span className="text-xs font-semibold">
+                    사진 추가 (갤러리 / 카메라)
+                  </span>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    className="hidden"
+                    onChange={async (e) => {
+                      const files = Array.from(e.target.files || []);
+                      if (!files.length) return;
+                      const existing: string[] = form.intake_photos
+                        ? (() => {
+                            try {
+                              return JSON.parse(form.intake_photos);
+                            } catch {
+                              return [];
+                            }
+                          })()
+                        : [];
+                      const newUrls: string[] = [];
+                      for (const file of files) {
+                        const compressed = await compressImage(file);
+                        const path = `intake-${Date.now()}-${Math.random().toString(36).slice(2)}.jpg`;
+                        const { error } = await getSupabase()
+                          .storage.from("completion-photos")
+                          .upload(path, compressed, {
+                            upsert: true,
+                            contentType: "image/jpeg",
+                          });
+                        if (error) {
+                          alert("업로드 실패: " + error.message);
+                          continue;
+                        }
+                        const { data } = getSupabase()
+                          .storage.from("completion-photos")
+                          .getPublicUrl(path);
+                        newUrls.push(data.publicUrl);
+                      }
+                      const all = [...existing, ...newUrls];
+                      setForm((p) => ({
+                        ...p,
+                        intake_photos: all.length ? JSON.stringify(all) : "",
+                      }));
+                    }}
+                  />
+                </label>
               </div>
             </label>
 
