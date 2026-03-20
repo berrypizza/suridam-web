@@ -31,7 +31,12 @@ interface Job {
   review_requested: boolean;
   completion_photo?: string;
   as_until?: string;
-  intake_photos?: string; // JSON array of URLs
+  intake_photos?: string;
+  // ── 실측 관련 ──
+  is_measurement?: boolean; // 실측 방문 여부
+  install_date?: string | null; // 시공 날짜
+  install_time?: string | null; // 시공 시간
+  install_completed?: boolean; // 시공 완료 여부 (이때 매출 반영)
 }
 
 const TECHS: Tech[] = ["기사1", "기사2"];
@@ -55,8 +60,7 @@ const STATUS_STYLE: Record<
 
 function nowKST() {
   const now = new Date();
-  const kst = new Date(now.getTime() + 9 * 60 * 60 * 1000);
-  return kst;
+  return new Date(now.getTime() + 9 * 60 * 60 * 1000);
 }
 function today() {
   return nowKST().toISOString().slice(0, 10);
@@ -97,16 +101,18 @@ function reviewSms(job: Job) {
     `안녕하세요 ${job.name}님, 수리담입니다 😊\n지난번 가구 수리 잘 쓰고 계신가요?\n\n네이버 지도에 후기 남겨주시면 정말 큰 힘이 됩니다.\nhttps://naver.me/XXXXXXXX\n\n감사합니다 🙏`,
   );
 }
-
-// ── 지도 링크 생성 ─────────────────────────────────────────
 function naverMapUrl(region: string) {
   return `https://map.naver.com/v5/search/${encodeURIComponent(region)}`;
 }
-
 function addOneYear(dateStr: string) {
   const d = new Date(dateStr);
   d.setFullYear(d.getFullYear() + 1);
   return d.toISOString().slice(0, 10);
+}
+function adjTime(t: string, delta: number) {
+  const [h, m] = (t || "00:00").split(":").map(Number);
+  const safe = (((h * 60 + m + delta) % 1440) + 1440) % 1440;
+  return `${String(Math.floor(safe / 60)).padStart(2, "0")}:${String(safe % 60).padStart(2, "0")}`;
 }
 
 const emptyForm = () => ({
@@ -122,6 +128,10 @@ const emptyForm = () => ({
   memo: "",
   as_until: addOneYear(today()),
   intake_photos: "" as string,
+  is_measurement: false,
+  install_date: null as string | null,
+  install_time: null as string | null,
+  install_completed: false,
 });
 
 function getCalendarDays(year: number, month: number) {
@@ -154,8 +164,7 @@ function compressImage(
       const canvas = document.createElement("canvas");
       canvas.width = width;
       canvas.height = height;
-      const ctx = canvas.getContext("2d")!;
-      ctx.drawImage(img, 0, 0, width, height);
+      canvas.getContext("2d")!.drawImage(img, 0, 0, width, height);
       canvas.toBlob((blob) => resolve(blob!), "image/jpeg", quality);
     };
     img.src = url;
@@ -206,19 +215,6 @@ function PhotoCapture({
     setList((prev) => [...prev, ...newUrls]);
     setUploading(false);
     setUploadProgress("");
-  };
-
-  const handleDelete = (url: string) => {
-    if (!confirm("이 사진을 삭제할까요?")) return;
-    setList((prev) => prev.filter((u) => u !== url));
-  };
-
-  const handleDownload = (url: string, idx: number) => {
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `suridam-${jobId}-${idx + 1}.jpg`;
-    a.target = "_blank";
-    a.click();
   };
 
   return (
@@ -279,13 +275,22 @@ function PhotoCapture({
                       className="absolute bottom-0 left-0 right-0 flex gap-1 p-1"
                       style={{ backgroundColor: "rgba(0,0,0,0.6)" }}>
                       <button
-                        onClick={() => handleDownload(url, idx)}
+                        onClick={() => {
+                          const a = document.createElement("a");
+                          a.href = url;
+                          a.download = `suridam-${jobId}-${idx + 1}.jpg`;
+                          a.target = "_blank";
+                          a.click();
+                        }}
                         className="flex-1 rounded-lg py-1 text-xs"
                         style={{ backgroundColor: "#ffffff18", color: "#ddd" }}>
                         ⬇
                       </button>
                       <button
-                        onClick={() => handleDelete(url)}
+                        onClick={() => {
+                          if (!confirm("이 사진을 삭제할까요?")) return;
+                          setList((prev) => prev.filter((u) => u !== url));
+                        }}
                         className="flex-1 rounded-lg py-1 text-xs"
                         style={{
                           backgroundColor: "#ef444430",
@@ -383,7 +388,6 @@ function JobCard({
       return [job.completion_photo];
     }
   };
-
   const getIntakePhotos = (): string[] => {
     if (!job.intake_photos) return [];
     try {
@@ -393,12 +397,27 @@ function JobCard({
     }
   };
 
+  // 일반 완료 처리 (사진 팝업 포함)
   const handleComplete = () => {
     setPrevStatus(job.status);
-    // 완료 처리 시 오늘 기준 1년 AS 자동 설정
-    const asUntil = addOneYear(nowKST().toISOString().slice(0, 10));
-    onUpdate(job.id, { status: "완료", as_until: asUntil });
+    onUpdate(job.id, {
+      status: "완료",
+      as_until: addOneYear(nowKST().toISOString().slice(0, 10)),
+    });
     setShowPhoto(true);
+  };
+
+  // 실측 완료 토글 (사진 팝업 없음)
+  const handleToggleMeasurement = () => {
+    if (job.status === "완료") {
+      // 실측완료 취소 → 시공완료도 초기화
+      onUpdate(job.id, { status: "대기", install_completed: false });
+    } else {
+      onUpdate(job.id, {
+        status: "완료",
+        as_until: addOneYear(nowKST().toISOString().slice(0, 10)),
+      });
+    }
   };
 
   const handlePhotoDone = (urls: string[]) => {
@@ -427,22 +446,19 @@ function JobCard({
               style={{ backgroundColor: "rgba(0,0,0,0.97)" }}
               onClick={() => setLightboxUrl(null)}
               onTouchStart={(e) => {
-                const touch = e.touches[0];
-                (e.currentTarget as any)._touchStartX = touch.clientX;
+                (e.currentTarget as any)._touchStartX = e.touches[0].clientX;
               }}
               onTouchEnd={(e) => {
-                const startX = (e.currentTarget as any)._touchStartX ?? 0;
-                const endX = e.changedTouches[0].clientX;
-                const diff = startX - endX;
+                const diff =
+                  ((e.currentTarget as any)._touchStartX ?? 0) -
+                  e.changedTouches[0].clientX;
                 if (Math.abs(diff) > 50) {
-                  if (diff > 0 && currentIdx < currentList.length - 1) {
+                  if (diff > 0 && currentIdx < currentList.length - 1)
                     setLightboxUrl(currentList[currentIdx + 1]);
-                  } else if (diff < 0 && currentIdx > 0) {
+                  else if (diff < 0 && currentIdx > 0)
                     setLightboxUrl(currentList[currentIdx - 1]);
-                  }
                 }
               }}>
-              {/* 상단 */}
               <div
                 className="flex items-center justify-between px-4 py-3 flex-shrink-0"
                 onClick={(e) => e.stopPropagation()}>
@@ -464,7 +480,6 @@ function JobCard({
                   ✕
                 </button>
               </div>
-              {/* 이미지 */}
               <div
                 className="flex-1 flex items-center justify-center px-10 relative"
                 onClick={(e) => e.stopPropagation()}>
@@ -501,7 +516,6 @@ function JobCard({
                   </button>
                 )}
               </div>
-              {/* 하단 닷 인디케이터 */}
               {currentList.length > 1 && (
                 <div
                   className="flex justify-center gap-1.5 py-4 flex-shrink-0"
@@ -523,6 +537,7 @@ function JobCard({
             </div>
           );
         })()}
+
       {showPhoto && (
         <PhotoCapture
           jobId={job.id}
@@ -536,6 +551,7 @@ function JobCard({
           revertStatus={prevStatus !== "완료" ? prevStatus : undefined}
         />
       )}
+
       <div
         className="rounded-2xl overflow-hidden"
         style={{
@@ -543,7 +559,7 @@ function JobCard({
           border: "1px solid #2e2e2e",
           borderLeft: `4px solid ${techColor}`,
         }}>
-        {/* 상단 행: 상태 · 날짜 · 시간 · 기사 */}
+        {/* 상단 행 */}
         <div
           className="flex items-center gap-2 px-3 pt-3 pb-2 flex-wrap"
           style={{ borderBottom: "1px solid #252525" }}>
@@ -572,6 +588,55 @@ function JobCard({
             </span>
           )}
 
+          {/* 실측 배지 */}
+          {job.is_measurement && (
+            <span
+              className="text-xs font-bold px-2 py-0.5 rounded-full"
+              style={{
+                backgroundColor: "#a855f722",
+                color: "#a855f7",
+                border: "1px solid #a855f744",
+              }}>
+              📐 실측
+            </span>
+          )}
+          {job.is_measurement && job.install_completed && (
+            <span
+              className="text-xs font-bold px-2 py-0.5 rounded-full"
+              style={{
+                backgroundColor: "#2fae8a22",
+                color: "#2fae8a",
+                border: "1px solid #2fae8a44",
+              }}>
+              🔨 시공완료
+            </span>
+          )}
+          {job.is_measurement && !job.install_completed && job.install_date && (
+            <span
+              className="text-xs px-2 py-0.5 rounded-full"
+              style={{
+                backgroundColor: "#f59e0b18",
+                color: "#f59e0b",
+                border: "1px solid #f59e0b33",
+              }}>
+              🔨 시공 {formatDate(job.install_date)}
+              {job.install_time ? " " + formatTime(job.install_time) : ""}
+            </span>
+          )}
+          {job.is_measurement &&
+            !job.install_completed &&
+            !job.install_date && (
+              <span
+                className="text-xs px-2 py-0.5 rounded-full"
+                style={{
+                  backgroundColor: "#f59e0b18",
+                  color: "#f59e0b",
+                  border: "1px solid #f59e0b33",
+                }}>
+                시공일 미정
+              </span>
+            )}
+
           <select
             value={job.tech}
             onChange={(e) => onUpdate(job.id, { tech: e.target.value as Tech })}
@@ -594,7 +659,6 @@ function JobCard({
         {/* 메인 정보 */}
         <div className="flex items-start gap-3 px-3 py-3">
           <div className="flex-1 min-w-0">
-            {/* 이름 + 연락처 */}
             <div className="flex flex-wrap items-center gap-2 mb-1">
               <span className="text-base font-bold" style={{ color: "white" }}>
                 {job.name || "?"}
@@ -628,7 +692,6 @@ function JobCard({
               )}
             </div>
 
-            {/* 지역 (클릭 → 네이버 지도) + 증상 */}
             <div className="flex flex-wrap items-center gap-2 mb-2">
               {job.region && (
                 <a
@@ -653,7 +716,6 @@ function JobCard({
               )}
             </div>
 
-            {/* 금액 + 메모 */}
             <div className="flex flex-wrap items-center gap-3">
               {job.price > 0 && (
                 <span
@@ -680,11 +742,10 @@ function JobCard({
             {job.status === "완료" &&
               job.as_until &&
               (() => {
-                const today = nowKST().toISOString().slice(0, 10);
-                const expired = job.as_until < today;
+                const t = nowKST().toISOString().slice(0, 10);
+                const expired = job.as_until < t;
                 const daysLeft = Math.ceil(
-                  (new Date(job.as_until).getTime() -
-                    new Date(today).getTime()) /
+                  (new Date(job.as_until).getTime() - new Date(t).getTime()) /
                     (1000 * 60 * 60 * 24),
                 );
                 return (
@@ -717,7 +778,7 @@ function JobCard({
                 );
               })()}
 
-            {/* 사진 — 접수/완료 항상 바로 표시 */}
+            {/* 사진 */}
             {(getIntakePhotos().length > 0 || photos.length > 0) && (
               <div className="mt-2.5 flex flex-col gap-2.5">
                 {getIntakePhotos().length > 0 && (
@@ -776,38 +837,36 @@ function JobCard({
                       ✓ 완료사진
                     </span>
                     <div className="flex gap-1.5 flex-wrap">
-                      {photos.slice(0, 4).map((url, idx) => {
-                        return (
-                          <div key={url} className="relative">
-                            <img
-                              src={url}
-                              alt={`완료 ${idx + 1}`}
-                              onClick={() => {
-                                setLightboxList(photos);
-                                setLightboxUrl(url);
-                              }}
-                              className="rounded-xl cursor-pointer"
-                              style={{
-                                height: 64,
-                                width: 64,
-                                objectFit: "cover",
-                                border: "1px solid #2fae8a44",
-                              }}
-                            />
-                            {idx === 3 && photos.length > 4 && (
-                              <div
-                                className="absolute inset-0 rounded-xl flex items-center justify-center"
-                                style={{ backgroundColor: "rgba(0,0,0,0.6)" }}>
-                                <span
-                                  className="text-xs font-bold"
-                                  style={{ color: "white" }}>
-                                  +{photos.length - 4}
-                                </span>
-                              </div>
-                            )}
-                          </div>
-                        );
-                      })}
+                      {photos.slice(0, 4).map((url, idx) => (
+                        <div key={url} className="relative">
+                          <img
+                            src={url}
+                            alt={`완료 ${idx + 1}`}
+                            onClick={() => {
+                              setLightboxList(photos);
+                              setLightboxUrl(url);
+                            }}
+                            className="rounded-xl cursor-pointer"
+                            style={{
+                              height: 64,
+                              width: 64,
+                              objectFit: "cover",
+                              border: "1px solid #2fae8a44",
+                            }}
+                          />
+                          {idx === 3 && photos.length > 4 && (
+                            <div
+                              className="absolute inset-0 rounded-xl flex items-center justify-center"
+                              style={{ backgroundColor: "rgba(0,0,0,0.6)" }}>
+                              <span
+                                className="text-xs font-bold"
+                                style={{ color: "white" }}>
+                                +{photos.length - 4}
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                      ))}
                     </div>
                   </div>
                 )}
@@ -815,7 +874,6 @@ function JobCard({
             )}
           </div>
 
-          {/* 액션 버튼 */}
           <div className="flex flex-col gap-1.5 flex-shrink-0">
             <button
               onClick={() => onEdit(job)}
@@ -840,11 +898,58 @@ function JobCard({
           </div>
         </div>
 
-        {/* 하단: 완료 버튼 */}
+        {/* 하단 버튼 */}
         <div
           className="flex gap-2 px-3 pb-3"
           style={{ borderTop: "1px solid #252525", paddingTop: 10 }}>
-          {job.status !== "완료" ? (
+          {job.is_measurement ? (
+            // 실측 모드
+            <div className="flex gap-2 flex-1">
+              {/* 실측 완료 토글 */}
+              <button
+                onClick={handleToggleMeasurement}
+                className="flex-1 rounded-xl py-2.5 text-sm font-bold"
+                style={{
+                  backgroundColor:
+                    job.status === "완료" ? "#a855f722" : "#a855f7",
+                  color: job.status === "완료" ? "#a855f7" : "white",
+                  border:
+                    job.status === "완료" ? "1px solid #a855f744" : "none",
+                }}>
+                {job.status === "완료" ? "📐 실측완료 ✓" : "📐 실측 완료"}
+              </button>
+              {/* 시공 완료 — 실측 완료 후에만 표시 */}
+              {job.status === "완료" && !job.install_completed && (
+                <button
+                  onClick={() => {
+                    if (!confirm("시공 완료 처리할까요? 매출에 반영됩니다."))
+                      return;
+                    onUpdate(job.id, {
+                      install_completed: true,
+                      install_date:
+                        job.install_date || nowKST().toISOString().slice(0, 10),
+                      as_until: addOneYear(nowKST().toISOString().slice(0, 10)),
+                    });
+                  }}
+                  className="flex-1 rounded-xl py-2.5 text-sm font-bold text-white"
+                  style={{ backgroundColor: "#2fae8a" }}>
+                  🔨 시공 완료
+                </button>
+              )}
+              {job.install_completed && (
+                <span
+                  className="rounded-xl px-3 py-2.5 text-xs font-bold flex items-center flex-shrink-0"
+                  style={{
+                    backgroundColor: "#2fae8a18",
+                    color: "#2fae8a",
+                    border: "1px solid #2fae8a33",
+                  }}>
+                  ✓ 시공완료
+                </span>
+              )}
+            </div>
+          ) : job.status !== "완료" ? (
+            // 일반 완료 전
             <button
               onClick={handleComplete}
               className="flex-1 rounded-xl py-2.5 text-sm font-bold text-white"
@@ -852,6 +957,7 @@ function JobCard({
               ✓ 완료 처리
             </button>
           ) : (
+            // 일반 완료 후 사진 관리
             <button
               onClick={() => {
                 setPrevStatus("완료");
@@ -875,13 +981,11 @@ function JobCard({
 }
 
 export default function AdminDashboard() {
-  // ── 인증 훅 ──
   const [authed, setAuthed] = useState(false);
   const [pwInput, setPwInput] = useState("");
   const [pwError, setPwError] = useState(false);
   const [showPw, setShowPw] = useState(false);
 
-  // ── 대시보드 훅 (모든 훅은 조건부 return 전에 선언) ──
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState<"오늘" | "전체" | "달력" | "통계">("달력");
@@ -899,7 +1003,6 @@ export default function AdminDashboard() {
   const [selectedDay, setSelectedDay] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
 
-  // 세션 유지 (24시간)
   useEffect(() => {
     try {
       const expiry = localStorage.getItem("suridam_admin_expiry");
@@ -942,8 +1045,10 @@ export default function AdminDashboard() {
     const correct = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || "su3024";
     if (pwInput === correct) {
       try {
-        const expiry = Date.now() + 24 * 60 * 60 * 1000;
-        localStorage.setItem("suridam_admin_expiry", String(expiry));
+        localStorage.setItem(
+          "suridam_admin_expiry",
+          String(Date.now() + 24 * 60 * 60 * 1000),
+        );
       } catch {}
       setAuthed(true);
       setPwError(false);
@@ -953,7 +1058,6 @@ export default function AdminDashboard() {
     }
   };
 
-  // ── 인증 안된 경우 로그인 화면 (훅 선언 이후에 위치) ──
   if (!authed) {
     return (
       <main
@@ -1022,24 +1126,45 @@ export default function AdminDashboard() {
     if (!form.name.trim() || !form.region.trim() || !form.symptom.trim())
       return;
     setSaving(true);
-    if (editId) {
-      await getSupabase().from("jobs").update(form).eq("id", editId);
-    } else {
-      await getSupabase().from("jobs").insert(form);
+    // null 처리: 빈 문자열인 date/time 필드를 null로 변환
+    const payload = {
+      ...form,
+      install_date: form.install_date || null,
+      install_time: form.install_time || null,
+    };
+    try {
+      if (editId) {
+        const { error } = await getSupabase()
+          .from("jobs")
+          .update(payload)
+          .eq("id", editId);
+        if (error) throw error;
+      } else {
+        const { error } = await getSupabase().from("jobs").insert(payload);
+        if (error) throw error;
+      }
+      setShowForm(false);
+      setEditId(null);
+      setForm(emptyForm());
+    } catch (err: any) {
+      alert("저장 실패: " + (err?.message || "알 수 없는 오류"));
+    } finally {
+      setSaving(false);
     }
-    setSaving(false);
-    setShowForm(false);
-    setEditId(null);
-    setForm(emptyForm());
   };
 
   const update = async (id: string, patch: Partial<Job>) => {
-    await getSupabase().from("jobs").update(patch).eq("id", id);
+    const { error } = await getSupabase()
+      .from("jobs")
+      .update(patch)
+      .eq("id", id);
+    if (error) alert("수정 실패: " + error.message);
   };
 
   const remove = async (id: string) => {
     if (!confirm("삭제할까요?")) return;
-    await getSupabase().from("jobs").delete().eq("id", id);
+    const { error } = await getSupabase().from("jobs").delete().eq("id", id);
+    if (error) alert("삭제 실패: " + error.message);
   };
 
   const startEdit = (job: Job) => {
@@ -1056,18 +1181,22 @@ export default function AdminDashboard() {
       memo: job.memo,
       as_until: job.as_until || addOneYear(job.visit_date || today()),
       intake_photos: job.intake_photos || "",
+      is_measurement: job.is_measurement ?? false,
+      install_date: job.install_date || null,
+      install_time: job.install_time || null,
+      install_completed: job.install_completed ?? false,
     });
     setEditId(job.id);
     setShowForm(true);
   };
 
-  // 검색어 필터 (이름 or 전화번호)
   const matchSearch = (j: Job) => {
     if (!searchQuery.trim()) return true;
     const q = searchQuery.replace(/-/g, "").toLowerCase();
-    const name = (j.name ?? "").toLowerCase();
-    const phone = (j.phone ?? "").replace(/-/g, "");
-    return name.includes(q) || phone.includes(q);
+    return (
+      (j.name ?? "").toLowerCase().includes(q) ||
+      (j.phone ?? "").replace(/-/g, "").includes(q)
+    );
   };
 
   const filtered = jobs.filter((j) => {
@@ -1080,7 +1209,10 @@ export default function AdminDashboard() {
   });
 
   const monthJobs = jobs.filter((j) => j.visit_date?.startsWith(monthFilter));
-  const doneMonth = monthJobs.filter((j) => j.status === "완료");
+  // 실측은 install_completed일 때만 매출 반영
+  const doneMonth = monthJobs.filter(
+    (j) => j.status === "완료" && (!j.is_measurement || j.install_completed),
+  );
   const revenue = doneMonth.reduce((s, j) => s + (j.price || 0), 0);
   const reviewPending = jobs.filter(
     (j) => j.status === "완료" && !j.review_requested && j.phone,
@@ -1102,6 +1234,12 @@ export default function AdminDashboard() {
   jobs.forEach((j) => {
     if (!jobsByDate[j.visit_date]) jobsByDate[j.visit_date] = [];
     jobsByDate[j.visit_date].push(j);
+    // 시공 날짜가 다르면 그 날에도 표시
+    if (j.install_date && j.install_date !== j.visit_date) {
+      if (!jobsByDate[j.install_date]) jobsByDate[j.install_date] = [];
+      if (!jobsByDate[j.install_date].find((x) => x.id === j.id))
+        jobsByDate[j.install_date].push(j);
+    }
   });
 
   const selectedJobs = selectedDay
@@ -1266,7 +1404,7 @@ export default function AdminDashboard() {
           )}
         </div>
 
-        {/* 검색 결과 모드 */}
+        {/* 검색 결과 */}
         {searchQuery && (
           <div className="mb-4">
             <div className="flex items-center gap-2 mb-3">
@@ -1382,8 +1520,6 @@ export default function AdminDashboard() {
                 <option value="기사2">기사2</option>
               </select>
             </div>
-
-            {/* 기사 레전드 */}
             <div className="flex items-center gap-4 mb-3 px-1">
               {TECHS.filter(Boolean).map((t) => (
                 <div key={t} className="flex items-center gap-1.5">
@@ -1408,8 +1544,6 @@ export default function AdminDashboard() {
                 </span>
               </div>
             </div>
-
-            {/* 요일 헤더 */}
             <div className="grid grid-cols-7 mb-1">
               {["일", "월", "화", "수", "목", "금", "토"].map((d, i) => (
                 <div
@@ -1422,8 +1556,6 @@ export default function AdminDashboard() {
                 </div>
               ))}
             </div>
-
-            {/* 날짜 그리드 */}
             <div className="grid grid-cols-7 gap-0.5">
               {calDays.map((day, i) => {
                 if (!day) return <div key={`e-${i}`} />;
@@ -1501,7 +1633,6 @@ export default function AdminDashboard() {
               })}
             </div>
 
-            {/* 선택 날짜 상세 */}
             {selectedDay && (
               <div
                 className="mt-4 rounded-2xl overflow-hidden"
@@ -1545,7 +1676,6 @@ export default function AdminDashboard() {
                     + 추가
                   </button>
                 </div>
-
                 {selectedJobs.length === 0 ? (
                   <div
                     className="text-center py-10"
@@ -1880,7 +2010,11 @@ export default function AdminDashboard() {
                     ·{" "}
                     {formatPrice(
                       filtered
-                        .filter((j) => j.status === "완료")
+                        .filter(
+                          (j) =>
+                            j.status === "완료" &&
+                            (!j.is_measurement || j.install_completed),
+                        )
                         .reduce((s, j) => s + (j.price || 0), 0),
                     )}
                   </span>
@@ -2020,7 +2154,11 @@ export default function AdminDashboard() {
               <span>
                 {formatPrice(
                   filtered
-                    .filter((j) => j.status === "완료")
+                    .filter(
+                      (j) =>
+                        j.status === "완료" &&
+                        (!j.is_measurement || j.install_completed),
+                    )
                     .reduce((s, j) => s + (j.price || 0), 0),
                 )}
               </span>
@@ -2073,6 +2211,7 @@ export default function AdminDashboard() {
                 ✕
               </button>
             </div>
+
             {(
               [
                 { label: "이름 *", key: "name", placeholder: "홍길동" },
@@ -2105,6 +2244,7 @@ export default function AdminDashboard() {
                 />
               </label>
             ))}
+
             <div className="grid grid-cols-2 gap-3">
               <label className="flex flex-col gap-1.5">
                 <span
@@ -2138,17 +2278,12 @@ export default function AdminDashboard() {
                   />
                   <button
                     type="button"
-                    onClick={() => {
-                      const [h, m] = (form.visit_time || "00:00")
-                        .split(":")
-                        .map(Number);
-                      const total = h * 60 + m - 30;
-                      const safe = ((total % 1440) + 1440) % 1440;
+                    onClick={() =>
                       setForm((p) => ({
                         ...p,
-                        visit_time: `${String(Math.floor(safe / 60)).padStart(2, "0")}:${String(safe % 60).padStart(2, "0")}`,
-                      }));
-                    }}
+                        visit_time: adjTime(p.visit_time, -30),
+                      }))
+                    }
                     className="rounded-xl px-2 py-2 text-sm font-bold flex-shrink-0"
                     style={{
                       backgroundColor: "#252525",
@@ -2159,17 +2294,12 @@ export default function AdminDashboard() {
                   </button>
                   <button
                     type="button"
-                    onClick={() => {
-                      const [h, m] = (form.visit_time || "00:00")
-                        .split(":")
-                        .map(Number);
-                      const total = h * 60 + m + 30;
-                      const safe = total % 1440;
+                    onClick={() =>
                       setForm((p) => ({
                         ...p,
-                        visit_time: `${String(Math.floor(safe / 60)).padStart(2, "0")}:${String(safe % 60).padStart(2, "0")}`,
-                      }));
-                    }}
+                        visit_time: adjTime(p.visit_time, 30),
+                      }))
+                    }
                     className="rounded-xl px-2 py-2 text-sm font-bold flex-shrink-0"
                     style={{
                       backgroundColor: "#252525",
@@ -2181,6 +2311,7 @@ export default function AdminDashboard() {
                 </div>
               </label>
             </div>
+
             <label className="flex flex-col gap-1.5">
               <span className="text-xs font-semibold" style={{ color: "#888" }}>
                 금액 (원)
@@ -2198,6 +2329,7 @@ export default function AdminDashboard() {
                 style={inputStyle}
               />
             </label>
+
             <div className="grid grid-cols-2 gap-3">
               <label className="flex flex-col gap-1.5">
                 <span
@@ -2239,7 +2371,7 @@ export default function AdminDashboard() {
                 </select>
               </label>
             </div>
-            {/* AS 기간 - 방문일 바꾸면 자동 재계산, 수동 변경도 가능 */}
+
             <label className="flex flex-col gap-1.5">
               <span className="text-xs font-semibold" style={{ color: "#888" }}>
                 🛡 AS 만료일
@@ -2275,6 +2407,174 @@ export default function AdminDashboard() {
               </div>
             </label>
 
+            {/* 실측 방문 토글 */}
+            <button
+              type="button"
+              onClick={() =>
+                setForm((p) => ({
+                  ...p,
+                  is_measurement: !p.is_measurement,
+                  install_date: null,
+                  install_time: null,
+                  install_completed: false,
+                }))
+              }
+              className="flex items-center justify-between rounded-xl px-4 py-3"
+              style={{
+                backgroundColor: form.is_measurement ? "#a855f718" : "#1a1a1a",
+                border: `1px solid ${form.is_measurement ? "#a855f755" : "#383838"}`,
+              }}>
+              <div className="flex items-center gap-2.5">
+                <span className="text-base">📐</span>
+                <div className="text-left">
+                  <p
+                    className="text-sm font-bold"
+                    style={{ color: form.is_measurement ? "#a855f7" : "#ccc" }}>
+                    실측 방문
+                  </p>
+                  <p className="text-xs mt-0.5" style={{ color: "#555" }}>
+                    체크 시 완료해도 매출에 포함 안 됨
+                  </p>
+                </div>
+              </div>
+              <div
+                className="rounded-full flex-shrink-0"
+                style={{
+                  width: 44,
+                  height: 24,
+                  backgroundColor: form.is_measurement ? "#a855f7" : "#333",
+                  position: "relative",
+                }}>
+                <div
+                  style={{
+                    position: "absolute",
+                    top: 3,
+                    left: form.is_measurement ? 23 : 3,
+                    width: 18,
+                    height: 18,
+                    borderRadius: "50%",
+                    backgroundColor: "white",
+                    transition: "left 0.2s",
+                  }}
+                />
+              </div>
+            </button>
+
+            {/* 시공 날짜/시간 — 실측일 때만 */}
+            {form.is_measurement && (
+              <div
+                className="rounded-xl p-4 flex flex-col gap-3"
+                style={{
+                  backgroundColor: "#0d2018",
+                  border: "1px solid #2fae8a44",
+                }}>
+                <p className="text-xs font-bold" style={{ color: "#2fae8a" }}>
+                  🔨 시공 날짜 · 시간{" "}
+                  <span className="font-normal" style={{ color: "#555" }}>
+                    (미정이면 비워두세요)
+                  </span>
+                </p>
+                <div className="grid grid-cols-2 gap-3">
+                  <label className="flex flex-col gap-1.5">
+                    <span
+                      className="text-xs font-semibold"
+                      style={{ color: "#2fae8a88" }}>
+                      시공 날짜
+                    </span>
+                    <input
+                      type="date"
+                      value={form.install_date || ""}
+                      onChange={(e) =>
+                        setForm((p) => ({
+                          ...p,
+                          install_date: e.target.value || null,
+                        }))
+                      }
+                      style={inputStyle}
+                    />
+                  </label>
+                  <label className="flex flex-col gap-1.5">
+                    <span
+                      className="text-xs font-semibold"
+                      style={{ color: "#2fae8a88" }}>
+                      시공 시간
+                    </span>
+                    <div className="flex items-center gap-1">
+                      <input
+                        type="time"
+                        value={form.install_time || ""}
+                        onChange={(e) =>
+                          setForm((p) => ({
+                            ...p,
+                            install_time: e.target.value || null,
+                          }))
+                        }
+                        style={{ ...inputStyle, flex: 1 }}
+                      />
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setForm((p) => ({
+                            ...p,
+                            install_time: adjTime(
+                              p.install_time || "00:00",
+                              -30,
+                            ),
+                          }))
+                        }
+                        className="rounded-xl px-2 py-2 text-sm font-bold flex-shrink-0"
+                        style={{
+                          backgroundColor: "#252525",
+                          color: "#aaa",
+                          border: "1px solid #383838",
+                        }}>
+                        －
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setForm((p) => ({
+                            ...p,
+                            install_time: adjTime(
+                              p.install_time || "00:00",
+                              30,
+                            ),
+                          }))
+                        }
+                        className="rounded-xl px-2 py-2 text-sm font-bold flex-shrink-0"
+                        style={{
+                          backgroundColor: "#252525",
+                          color: "#aaa",
+                          border: "1px solid #383838",
+                        }}>
+                        ＋
+                      </button>
+                    </div>
+                  </label>
+                </div>
+                {form.install_date && (
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setForm((p) => ({
+                        ...p,
+                        install_date: null,
+                        install_time: null,
+                      }))
+                    }
+                    className="text-xs font-bold py-2 rounded-xl"
+                    style={{
+                      backgroundColor: "#ef444418",
+                      color: "#ef4444",
+                      border: "1px solid #ef444430",
+                    }}>
+                    시공 날짜 초기화
+                  </button>
+                )}
+              </div>
+            )}
+
+            {/* 접수 사진 */}
             <label className="flex flex-col gap-1.5">
               <span
                 className="text-xs font-semibold"
@@ -2407,6 +2707,7 @@ export default function AdminDashboard() {
                 style={{ ...inputStyle, resize: "none" }}
               />
             </label>
+
             <button
               onClick={save}
               disabled={saving}
