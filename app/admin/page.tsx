@@ -34,7 +34,8 @@ interface Job {
   intake_photos?: string; // JSON array of URLs
   is_measurement?: boolean;
   install_date?: string;
-  install_completed?: boolean; // 시공 완료 = 매출 반영
+  install_time?: string;
+  install_completed?: boolean;
 }
 
 const TECHS: Tech[] = ["기사1", "기사2"];
@@ -127,6 +128,7 @@ const emptyForm = () => ({
   intake_photos: "" as string,
   is_measurement: false,
   install_date: "",
+  install_time: "",
   install_completed: false,
 });
 
@@ -401,10 +403,19 @@ function JobCard({
 
   const handleComplete = () => {
     setPrevStatus(job.status);
-    // 완료 처리 시 오늘 기준 1년 AS 자동 설정
     const asUntil = addOneYear(nowKST().toISOString().slice(0, 10));
     onUpdate(job.id, { status: "완료", as_until: asUntil });
-    setShowPhoto(true);
+    if (!job.is_measurement) setShowPhoto(true); // 일반 완료만 사진 팝업
+  };
+
+  const handleToggleComplete = () => {
+    // 실측 완료 토글 (완료 ↔ 대기)
+    if (job.status === "완료") {
+      onUpdate(job.id, { status: "대기" });
+    } else {
+      const asUntil = addOneYear(nowKST().toISOString().slice(0, 10));
+      onUpdate(job.id, { status: "완료", as_until: asUntil });
+    }
   };
 
   const handlePhotoDone = (urls: string[]) => {
@@ -601,6 +612,7 @@ function JobCard({
                 border: "1px solid #f59e0b33",
               }}>
               🔨 시공 {formatDate(job.install_date)}
+              {job.install_time ? " " + formatTime(job.install_time) : ""}
             </span>
           )}
           {job.is_measurement &&
@@ -896,75 +908,46 @@ function JobCard({
         <div
           className="flex gap-2 px-3 pb-3"
           style={{ borderTop: "1px solid #252525", paddingTop: 10 }}>
-          {job.status !== "완료" ? (
-            // 아직 완료 전
-            <button
-              onClick={handleComplete}
-              className="flex-1 rounded-xl py-2.5 text-sm font-bold text-white"
-              style={{
-                backgroundColor: job.is_measurement ? "#a855f7" : "#2fae8a",
-              }}>
-              {job.is_measurement ? "📐 실측 완료" : "✓ 완료 처리"}
-            </button>
-          ) : job.is_measurement && !job.install_completed ? (
-            // 실측 완료됐는데 아직 시공 안 됨
+          {job.is_measurement ? (
+            // 실측 — 토글 + 시공 완료
             <div className="flex gap-2 flex-1">
+              {/* 실측 완료 토글 */}
               <button
-                onClick={() => {
-                  setPrevStatus("완료");
-                  setShowPhoto(true);
-                }}
-                className="rounded-xl py-2.5 text-sm font-bold"
-                style={{
-                  flex: photos.length > 0 ? "0 0 auto" : 1,
-                  paddingLeft: 12,
-                  paddingRight: 12,
-                  backgroundColor: photos.length > 0 ? "#2fae8a22" : "#252525",
-                  color: photos.length > 0 ? "#2fae8a" : "#aaa",
-                  border: `1px solid ${photos.length > 0 ? "#2fae8a44" : "#333"}`,
-                }}>
-                {photos.length > 0 ? `📷 ${photos.length}장` : "📷"}
-              </button>
-              <button
-                onClick={() => {
-                  if (!confirm("시공 완료 처리할까요? 매출에 반영됩니다."))
-                    return;
-                  const asUntil = addOneYear(
-                    nowKST().toISOString().slice(0, 10),
-                  );
-                  onUpdate(job.id, {
-                    install_completed: true,
-                    install_date:
-                      job.install_date || nowKST().toISOString().slice(0, 10),
-                    as_until: asUntil,
-                  });
-                }}
-                className="flex-1 rounded-xl py-2.5 text-sm font-bold text-white"
-                style={{ backgroundColor: "#2fae8a" }}>
-                🔨 시공 완료
-              </button>
-            </div>
-          ) : (
-            // 일반 완료 or 시공까지 완료
-            <div className="flex gap-2 flex-1">
-              <button
-                onClick={() => {
-                  setPrevStatus("완료");
-                  setShowPhoto(true);
-                }}
+                onClick={handleToggleComplete}
                 className="flex-1 rounded-xl py-2.5 text-sm font-bold"
                 style={{
-                  backgroundColor: photos.length > 0 ? "#2fae8a22" : "#252525",
-                  color: photos.length > 0 ? "#2fae8a" : "#aaa",
-                  border: `1px solid ${photos.length > 0 ? "#2fae8a44" : "#333"}`,
+                  backgroundColor:
+                    job.status === "완료" ? "#a855f722" : "#a855f7",
+                  color: job.status === "완료" ? "#a855f7" : "white",
+                  border:
+                    job.status === "완료" ? "1px solid #a855f744" : "none",
                 }}>
-                {photos.length > 0
-                  ? `📷 사진 관리 (${photos.length}장)`
-                  : "📷 사진 추가"}
+                {job.status === "완료" ? "📐 실측완료 ✓" : "📐 실측 완료"}
               </button>
-              {job.is_measurement && job.install_completed && (
+              {/* 시공 완료 — 실측 완료된 후에만 표시 */}
+              {job.status === "완료" && !job.install_completed && (
+                <button
+                  onClick={() => {
+                    if (!confirm("시공 완료 처리할까요? 매출에 반영됩니다."))
+                      return;
+                    const asUntil = addOneYear(
+                      nowKST().toISOString().slice(0, 10),
+                    );
+                    onUpdate(job.id, {
+                      install_completed: true,
+                      install_date:
+                        job.install_date || nowKST().toISOString().slice(0, 10),
+                      as_until: asUntil,
+                    });
+                  }}
+                  className="flex-1 rounded-xl py-2.5 text-sm font-bold text-white"
+                  style={{ backgroundColor: "#2fae8a" }}>
+                  🔨 시공 완료
+                </button>
+              )}
+              {job.install_completed && (
                 <span
-                  className="rounded-xl px-3 py-2.5 text-xs font-bold flex items-center"
+                  className="rounded-xl px-3 py-2.5 text-xs font-bold flex items-center flex-shrink-0"
                   style={{
                     backgroundColor: "#2fae8a18",
                     color: "#2fae8a",
@@ -974,6 +957,31 @@ function JobCard({
                 </span>
               )}
             </div>
+          ) : job.status !== "완료" ? (
+            // 일반 — 완료 전
+            <button
+              onClick={handleComplete}
+              className="flex-1 rounded-xl py-2.5 text-sm font-bold text-white"
+              style={{ backgroundColor: "#2fae8a" }}>
+              ✓ 완료 처리
+            </button>
+          ) : (
+            // 일반 — 완료 후 사진 관리
+            <button
+              onClick={() => {
+                setPrevStatus("완료");
+                setShowPhoto(true);
+              }}
+              className="flex-1 rounded-xl py-2.5 text-sm font-bold"
+              style={{
+                backgroundColor: photos.length > 0 ? "#2fae8a22" : "#252525",
+                color: photos.length > 0 ? "#2fae8a" : "#aaa",
+                border: `1px solid ${photos.length > 0 ? "#2fae8a44" : "#333"}`,
+              }}>
+              {photos.length > 0
+                ? `📷 사진 관리 (${photos.length}장)`
+                : "📷 사진 추가"}
+            </button>
           )}
         </div>
       </div>
@@ -1146,7 +1154,8 @@ export default function AdminDashboard() {
 
   const remove = async (id: string) => {
     if (!confirm("삭제할까요?")) return;
-    await getSupabase().from("jobs").delete().eq("id", id);
+    const { error } = await getSupabase().from("jobs").delete().eq("id", id);
+    if (error) alert("삭제 실패: " + error.message);
   };
 
   const startEdit = (job: Job) => {
@@ -1165,6 +1174,7 @@ export default function AdminDashboard() {
       intake_photos: job.intake_photos || "",
       is_measurement: job.is_measurement ?? false,
       install_date: job.install_date || "",
+      install_time: job.install_time || "",
       install_completed: job.install_completed ?? false,
     });
     setEditId(job.id);
@@ -2233,82 +2243,141 @@ export default function AdminDashboard() {
                 />
               </label>
             ))}
-            <div className="grid grid-cols-2 gap-3">
-              <label className="flex flex-col gap-1.5">
-                <span
-                  className="text-xs font-semibold"
-                  style={{ color: "#888" }}>
-                  방문일
-                </span>
-                <input
-                  type="date"
-                  value={form.visit_date}
-                  onChange={(e) =>
-                    setForm((p) => ({ ...p, visit_date: e.target.value }))
-                  }
-                  style={inputStyle}
-                />
-              </label>
-              <label className="flex flex-col gap-1.5">
-                <span
-                  className="text-xs font-semibold"
-                  style={{ color: "#888" }}>
-                  도착 시간
-                </span>
-                <div className="flex items-center gap-1">
-                  <input
-                    type="time"
-                    value={form.visit_time}
-                    onChange={(e) =>
-                      setForm((p) => ({ ...p, visit_time: e.target.value }))
+            {/* 날짜/시간 아코디언 */}
+            {(() => {
+              const hasDate = form.visit_date || form.visit_time;
+              const label = form.visit_date
+                ? `${form.visit_date}${form.visit_time ? " " + formatTime(form.visit_time) : ""}`
+                : "날짜 · 시간 설정";
+              return (
+                <div
+                  className="rounded-xl overflow-hidden"
+                  style={{ border: "1px solid #383838" }}>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setForm(
+                        (p) =>
+                          ({ ...p, _dateOpen: !(p as any)._dateOpen }) as any,
+                      )
                     }
-                    style={{ ...inputStyle, flex: 1 }}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => {
-                      const [h, m] = (form.visit_time || "00:00")
-                        .split(":")
-                        .map(Number);
-                      const total = h * 60 + m - 30;
-                      const safe = ((total % 1440) + 1440) % 1440;
-                      setForm((p) => ({
-                        ...p,
-                        visit_time: `${String(Math.floor(safe / 60)).padStart(2, "0")}:${String(safe % 60).padStart(2, "0")}`,
-                      }));
-                    }}
-                    className="rounded-xl px-2 py-2 text-sm font-bold flex-shrink-0"
-                    style={{
-                      backgroundColor: "#252525",
-                      color: "#aaa",
-                      border: "1px solid #383838",
-                    }}>
-                    －
+                    className="w-full flex items-center justify-between px-4 py-3"
+                    style={{ backgroundColor: "#1a1a1a" }}>
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm">📅</span>
+                      <span
+                        className="text-sm font-semibold"
+                        style={{ color: hasDate ? "white" : "#666" }}>
+                        {label}
+                      </span>
+                    </div>
+                    <span
+                      className="text-xs"
+                      style={{
+                        color: "#555",
+                        transform: (form as any)._dateOpen
+                          ? "rotate(180deg)"
+                          : "none",
+                        display: "inline-block",
+                        transition: "transform 0.2s",
+                      }}>
+                      ▾
+                    </span>
                   </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      const [h, m] = (form.visit_time || "00:00")
-                        .split(":")
-                        .map(Number);
-                      const total = h * 60 + m + 30;
-                      const safe = total % 1440;
-                      setForm((p) => ({
-                        ...p,
-                        visit_time: `${String(Math.floor(safe / 60)).padStart(2, "0")}:${String(safe % 60).padStart(2, "0")}`,
-                      }));
-                    }}
-                    className="rounded-xl px-2 py-2 text-sm font-bold flex-shrink-0"
-                    style={{
-                      backgroundColor: "#252525",
-                      color: "#aaa",
-                      border: "1px solid #383838",
-                    }}>
-                    ＋
-                  </button>
+                  {(form as any)._dateOpen && (
+                    <div
+                      className="px-4 pb-4 flex flex-col gap-3"
+                      style={{
+                        borderTop: "1px solid #2a2a2a",
+                        paddingTop: 14,
+                        backgroundColor: "#161616",
+                      }}>
+                      <div className="grid grid-cols-2 gap-3">
+                        <label className="flex flex-col gap-1.5">
+                          <span
+                            className="text-xs font-semibold"
+                            style={{ color: "#888" }}>
+                            방문일
+                          </span>
+                          <input
+                            type="date"
+                            value={form.visit_date}
+                            onChange={(e) =>
+                              setForm((p) => ({
+                                ...p,
+                                visit_date: e.target.value,
+                              }))
+                            }
+                            style={inputStyle}
+                          />
+                        </label>
+                        <label className="flex flex-col gap-1.5">
+                          <span
+                            className="text-xs font-semibold"
+                            style={{ color: "#888" }}>
+                            방문 시간
+                          </span>
+                          <div className="flex items-center gap-1">
+                            <input
+                              type="time"
+                              value={form.visit_time}
+                              onChange={(e) =>
+                                setForm((p) => ({
+                                  ...p,
+                                  visit_time: e.target.value,
+                                }))
+                              }
+                              style={{ ...inputStyle, flex: 1 }}
+                            />
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const [h, m] = (form.visit_time || "00:00")
+                                  .split(":")
+                                  .map(Number);
+                                const safe =
+                                  (((h * 60 + m - 30) % 1440) + 1440) % 1440;
+                                setForm((p) => ({
+                                  ...p,
+                                  visit_time: `${String(Math.floor(safe / 60)).padStart(2, "0")}:${String(safe % 60).padStart(2, "0")}`,
+                                }));
+                              }}
+                              className="rounded-xl px-2 py-2 text-sm font-bold"
+                              style={{
+                                backgroundColor: "#252525",
+                                color: "#aaa",
+                                border: "1px solid #383838",
+                              }}>
+                              －
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const [h, m] = (form.visit_time || "00:00")
+                                  .split(":")
+                                  .map(Number);
+                                const safe = (h * 60 + m + 30) % 1440;
+                                setForm((p) => ({
+                                  ...p,
+                                  visit_time: `${String(Math.floor(safe / 60)).padStart(2, "0")}:${String(safe % 60).padStart(2, "0")}`,
+                                }));
+                              }}
+                              className="rounded-xl px-2 py-2 text-sm font-bold"
+                              style={{
+                                backgroundColor: "#252525",
+                                color: "#aaa",
+                                border: "1px solid #383838",
+                              }}>
+                              ＋
+                            </button>
+                          </div>
+                        </label>
+                      </div>
+                    </div>
+                  )}
                 </div>
-              </label>
-            </div>
+              );
+            })()}
             <label className="flex flex-col gap-1.5">
               <span className="text-xs font-semibold" style={{ color: "#888" }}>
                 금액 (원)
@@ -2450,43 +2519,169 @@ export default function AdminDashboard() {
               </div>
             </button>
 
-            {/* 시공 날짜 — 실측일 때만 표시 */}
+            {/* 시공 날짜/시간 아코디언 — 실측일 때만 */}
             {form.is_measurement && (
-              <label className="flex flex-col gap-1.5">
-                <span
-                  className="text-xs font-semibold"
-                  style={{ color: "#2fae8a" }}>
-                  🔨 시공 날짜
-                  <span className="ml-1 font-normal" style={{ color: "#555" }}>
-                    (미정이면 비워두세요)
+              <div
+                className="rounded-xl overflow-hidden"
+                style={{ border: "1px solid #2fae8a44" }}>
+                <button
+                  type="button"
+                  onClick={() =>
+                    setForm(
+                      (p) =>
+                        ({
+                          ...p,
+                          _installOpen: !(p as any)._installOpen,
+                        }) as any,
+                    )
+                  }
+                  className="w-full flex items-center justify-between px-4 py-3"
+                  style={{ backgroundColor: "#0d2018" }}>
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm">🔨</span>
+                    <span
+                      className="text-sm font-semibold"
+                      style={{ color: form.install_date ? "#2fae8a" : "#555" }}>
+                      {form.install_date
+                        ? `시공 ${form.install_date}${form.install_time ? " " + formatTime(form.install_time) : ""}`
+                        : "시공 날짜 · 시간 설정"}
+                    </span>
+                    {!form.install_date && (
+                      <span
+                        className="text-xs px-2 py-0.5 rounded-full"
+                        style={{
+                          backgroundColor: "#f59e0b18",
+                          color: "#f59e0b",
+                          border: "1px solid #f59e0b33",
+                        }}>
+                        미정
+                      </span>
+                    )}
+                  </div>
+                  <span
+                    className="text-xs"
+                    style={{
+                      color: "#2fae8a55",
+                      transform: (form as any)._installOpen
+                        ? "rotate(180deg)"
+                        : "none",
+                      display: "inline-block",
+                      transition: "transform 0.2s",
+                    }}>
+                    ▾
                   </span>
-                </span>
-                <div className="flex gap-2 items-center">
-                  <input
-                    type="date"
-                    value={form.install_date || ""}
-                    onChange={(e) =>
-                      setForm((p) => ({ ...p, install_date: e.target.value }))
-                    }
-                    style={{ ...inputStyle, flex: 1 }}
-                  />
-                  {form.install_date && (
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setForm((p) => ({ ...p, install_date: "" }))
-                      }
-                      className="rounded-xl px-3 py-2 text-xs font-bold flex-shrink-0"
-                      style={{
-                        backgroundColor: "#252525",
-                        color: "#888",
-                        border: "1px solid #383838",
-                      }}>
-                      초기화
-                    </button>
-                  )}
-                </div>
-              </label>
+                </button>
+                {(form as any)._installOpen && (
+                  <div
+                    className="px-4 pb-4 flex flex-col gap-3"
+                    style={{
+                      borderTop: "1px solid #1a3a2a",
+                      paddingTop: 14,
+                      backgroundColor: "#0a1a12",
+                    }}>
+                    <div className="grid grid-cols-2 gap-3">
+                      <label className="flex flex-col gap-1.5">
+                        <span
+                          className="text-xs font-semibold"
+                          style={{ color: "#2fae8a" }}>
+                          시공 날짜
+                        </span>
+                        <input
+                          type="date"
+                          value={form.install_date || ""}
+                          onChange={(e) =>
+                            setForm((p) => ({
+                              ...p,
+                              install_date: e.target.value,
+                            }))
+                          }
+                          style={inputStyle}
+                        />
+                      </label>
+                      <label className="flex flex-col gap-1.5">
+                        <span
+                          className="text-xs font-semibold"
+                          style={{ color: "#2fae8a" }}>
+                          시공 시간
+                        </span>
+                        <div className="flex items-center gap-1">
+                          <input
+                            type="time"
+                            value={form.install_time || ""}
+                            onChange={(e) =>
+                              setForm((p) => ({
+                                ...p,
+                                install_time: e.target.value,
+                              }))
+                            }
+                            style={{ ...inputStyle, flex: 1 }}
+                          />
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const [h, m] = (form.install_time || "00:00")
+                                .split(":")
+                                .map(Number);
+                              const safe =
+                                (((h * 60 + m - 30) % 1440) + 1440) % 1440;
+                              setForm((p) => ({
+                                ...p,
+                                install_time: `${String(Math.floor(safe / 60)).padStart(2, "0")}:${String(safe % 60).padStart(2, "0")}`,
+                              }));
+                            }}
+                            className="rounded-xl px-2 py-2 text-sm font-bold"
+                            style={{
+                              backgroundColor: "#252525",
+                              color: "#aaa",
+                              border: "1px solid #383838",
+                            }}>
+                            －
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const [h, m] = (form.install_time || "00:00")
+                                .split(":")
+                                .map(Number);
+                              const safe = (h * 60 + m + 30) % 1440;
+                              setForm((p) => ({
+                                ...p,
+                                install_time: `${String(Math.floor(safe / 60)).padStart(2, "0")}:${String(safe % 60).padStart(2, "0")}`,
+                              }));
+                            }}
+                            className="rounded-xl px-2 py-2 text-sm font-bold"
+                            style={{
+                              backgroundColor: "#252525",
+                              color: "#aaa",
+                              border: "1px solid #383838",
+                            }}>
+                            ＋
+                          </button>
+                        </div>
+                      </label>
+                    </div>
+                    {form.install_date && (
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setForm((p) => ({
+                            ...p,
+                            install_date: "",
+                            install_time: "",
+                          }))
+                        }
+                        className="text-xs font-bold py-2 rounded-xl"
+                        style={{
+                          backgroundColor: "#ef444418",
+                          color: "#ef4444",
+                          border: "1px solid #ef444430",
+                        }}>
+                        시공 날짜 초기화
+                      </button>
+                    )}
+                  </div>
+                )}
+              </div>
             )}
 
             <label className="flex flex-col gap-1.5">
