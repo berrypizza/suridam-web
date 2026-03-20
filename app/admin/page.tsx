@@ -1007,6 +1007,8 @@ export default function AdminDashboard() {
   const [monthFilter, setMonthFilter] = useState(thisYearMonth());
   const [showForm, setShowForm] = useState(false);
   const [editId, setEditId] = useState<string | null>(null);
+  const [dateOpen, setDateOpen] = useState(true); // 기본 열림
+  const [installOpen, setInstallOpen] = useState(false);
   const [form, setForm] = useState(emptyForm());
   const [saving, setSaving] = useState(false);
   const [calYear, setCalYear] = useState(nowKST().getFullYear());
@@ -1178,6 +1180,8 @@ export default function AdminDashboard() {
       install_completed: job.install_completed ?? false,
     });
     setEditId(job.id);
+    setDateOpen(true);
+    setInstallOpen(!!job.install_date);
     setShowForm(true);
   };
 
@@ -1326,6 +1330,8 @@ export default function AdminDashboard() {
               onClick={() => {
                 setForm(emptyForm());
                 setEditId(null);
+                setDateOpen(true);
+                setInstallOpen(false);
                 setShowForm(true);
               }}
               className="rounded-xl px-5 py-2.5 text-sm font-bold text-white"
@@ -2255,12 +2261,7 @@ export default function AdminDashboard() {
                   style={{ border: "1px solid #383838" }}>
                   <button
                     type="button"
-                    onClick={() =>
-                      setForm(
-                        (p) =>
-                          ({ ...p, _dateOpen: !(p as any)._dateOpen }) as any,
-                      )
-                    }
+                    onClick={() => setDateOpen((v) => !v)}
                     className="w-full flex items-center justify-between px-4 py-3"
                     style={{ backgroundColor: "#1a1a1a" }}>
                     <div className="flex items-center gap-2">
@@ -2275,16 +2276,14 @@ export default function AdminDashboard() {
                       className="text-xs"
                       style={{
                         color: "#555",
-                        transform: (form as any)._dateOpen
-                          ? "rotate(180deg)"
-                          : "none",
+                        transform: dateOpen ? "rotate(180deg)" : "none",
                         display: "inline-block",
                         transition: "transform 0.2s",
                       }}>
                       ▾
                     </span>
                   </button>
-                  {(form as any)._dateOpen && (
+                  {dateOpen && (
                     <div
                       className="px-4 pb-4 flex flex-col gap-3"
                       style={{
@@ -2475,9 +2474,11 @@ export default function AdminDashboard() {
             {/* 실측 방문 토글 */}
             <button
               type="button"
-              onClick={() =>
-                setForm((p) => ({ ...p, is_measurement: !p.is_measurement }))
-              }
+              onClick={() => {
+                const next = !form.is_measurement;
+                setForm((p) => ({ ...p, is_measurement: next }));
+                if (next) setInstallOpen(true);
+              }}
               className="flex items-center justify-between rounded-xl px-4 py-3"
               style={{
                 backgroundColor: form.is_measurement ? "#a855f718" : "#1a1a1a",
@@ -2526,15 +2527,7 @@ export default function AdminDashboard() {
                 style={{ border: "1px solid #2fae8a44" }}>
                 <button
                   type="button"
-                  onClick={() =>
-                    setForm(
-                      (p) =>
-                        ({
-                          ...p,
-                          _installOpen: !(p as any)._installOpen,
-                        }) as any,
-                    )
-                  }
+                  onClick={() => setInstallOpen((v) => !v)}
                   className="w-full flex items-center justify-between px-4 py-3"
                   style={{ backgroundColor: "#0d2018" }}>
                   <div className="flex items-center gap-2">
@@ -2562,16 +2555,14 @@ export default function AdminDashboard() {
                     className="text-xs"
                     style={{
                       color: "#2fae8a55",
-                      transform: (form as any)._installOpen
-                        ? "rotate(180deg)"
-                        : "none",
+                      transform: installOpen ? "rotate(180deg)" : "none",
                       display: "inline-block",
                       transition: "transform 0.2s",
                     }}>
                     ▾
                   </span>
                 </button>
-                {(form as any)._installOpen && (
+                {installOpen && (
                   <div
                     className="px-4 pb-4 flex flex-col gap-3"
                     style={{
