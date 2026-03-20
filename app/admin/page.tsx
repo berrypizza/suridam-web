@@ -372,8 +372,8 @@ function JobCard({
   const techColor = TECH_COLOR[job.tech || ""];
   const [showPhoto, setShowPhoto] = useState(false);
   const [prevStatus, setPrevStatus] = useState<Status>(job.status);
-  const [photoTab, setPhotoTab] = useState<"접수" | "완료">("접수");
   const [lightboxUrl, setLightboxUrl] = useState<string | null>(null);
+  const [lightboxList, setLightboxList] = useState<string[]>([]);
 
   const getPhotos = (): string[] => {
     if (!job.completion_photo) return [];
@@ -419,76 +419,107 @@ function JobCard({
       {/* 라이트박스 */}
       {lightboxUrl &&
         (() => {
-          const currentList = photoTab === "접수" ? getIntakePhotos() : photos;
+          const currentList = lightboxList;
           const currentIdx = currentList.indexOf(lightboxUrl);
           return (
             <div
-              className="fixed inset-0 z-[70] flex items-center justify-center"
+              className="fixed inset-0 z-[70] flex flex-col select-none"
               style={{ backgroundColor: "rgba(0,0,0,0.97)" }}
-              onClick={() => setLightboxUrl(null)}>
-              {currentIdx > 0 && (
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setLightboxUrl(currentList[currentIdx - 1]);
-                  }}
-                  className="absolute left-3 flex items-center justify-center w-10 h-10 rounded-full"
-                  style={{
-                    backgroundColor: "rgba(255,255,255,0.15)",
-                    color: "white",
-                    fontSize: 22,
-                  }}>
-                  ‹
-                </button>
-              )}
-              <img
-                src={lightboxUrl}
-                alt="사진 크게 보기"
-                className="rounded-2xl"
-                style={{
-                  maxWidth: "92vw",
-                  maxHeight: "88vh",
-                  objectFit: "contain",
-                }}
-                onClick={(e) => e.stopPropagation()}
-              />
-              {currentIdx < currentList.length - 1 && (
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
+              onClick={() => setLightboxUrl(null)}
+              onTouchStart={(e) => {
+                const touch = e.touches[0];
+                (e.currentTarget as any)._touchStartX = touch.clientX;
+              }}
+              onTouchEnd={(e) => {
+                const startX = (e.currentTarget as any)._touchStartX ?? 0;
+                const endX = e.changedTouches[0].clientX;
+                const diff = startX - endX;
+                if (Math.abs(diff) > 50) {
+                  if (diff > 0 && currentIdx < currentList.length - 1) {
                     setLightboxUrl(currentList[currentIdx + 1]);
-                  }}
-                  className="absolute right-3 flex items-center justify-center w-10 h-10 rounded-full"
+                  } else if (diff < 0 && currentIdx > 0) {
+                    setLightboxUrl(currentList[currentIdx - 1]);
+                  }
+                }
+              }}>
+              {/* 상단 */}
+              <div
+                className="flex items-center justify-between px-4 py-3 flex-shrink-0"
+                onClick={(e) => e.stopPropagation()}>
+                <span
+                  className="text-sm font-bold px-2.5 py-1 rounded-full"
                   style={{
-                    backgroundColor: "rgba(255,255,255,0.15)",
-                    color: "white",
-                    fontSize: 22,
+                    backgroundColor: "rgba(255,255,255,0.1)",
+                    color: "#bbb",
                   }}>
-                  ›
-                </button>
-              )}
-              <div className="absolute top-4 right-4 flex items-center gap-2">
-                {currentList.length > 1 && (
-                  <span
-                    className="text-xs font-bold px-2.5 py-1 rounded-full"
-                    style={{
-                      backgroundColor: "rgba(0,0,0,0.6)",
-                      color: "#bbb",
-                    }}>
-                    {currentIdx + 1} / {currentList.length}
-                  </span>
-                )}
+                  {currentIdx + 1} / {currentList.length}
+                </span>
                 <button
                   onClick={() => setLightboxUrl(null)}
-                  className="w-8 h-8 flex items-center justify-center rounded-full"
+                  className="w-9 h-9 flex items-center justify-center rounded-full text-base font-bold"
                   style={{
-                    backgroundColor: "rgba(255,255,255,0.15)",
+                    backgroundColor: "rgba(255,255,255,0.12)",
                     color: "white",
-                    fontSize: 16,
                   }}>
                   ✕
                 </button>
               </div>
+              {/* 이미지 */}
+              <div
+                className="flex-1 flex items-center justify-center px-10 relative"
+                onClick={(e) => e.stopPropagation()}>
+                {currentIdx > 0 && (
+                  <button
+                    onClick={() => setLightboxUrl(currentList[currentIdx - 1])}
+                    className="absolute left-2 w-10 h-10 flex items-center justify-center rounded-full text-xl font-bold"
+                    style={{
+                      backgroundColor: "rgba(255,255,255,0.12)",
+                      color: "white",
+                    }}>
+                    ‹
+                  </button>
+                )}
+                <img
+                  src={lightboxUrl}
+                  alt="사진 크게 보기"
+                  className="rounded-2xl"
+                  style={{
+                    maxWidth: "100%",
+                    maxHeight: "76vh",
+                    objectFit: "contain",
+                  }}
+                />
+                {currentIdx < currentList.length - 1 && (
+                  <button
+                    onClick={() => setLightboxUrl(currentList[currentIdx + 1])}
+                    className="absolute right-2 w-10 h-10 flex items-center justify-center rounded-full text-xl font-bold"
+                    style={{
+                      backgroundColor: "rgba(255,255,255,0.12)",
+                      color: "white",
+                    }}>
+                    ›
+                  </button>
+                )}
+              </div>
+              {/* 하단 닷 인디케이터 */}
+              {currentList.length > 1 && (
+                <div
+                  className="flex justify-center gap-1.5 py-4 flex-shrink-0"
+                  onClick={(e) => e.stopPropagation()}>
+                  {currentList.map((_, i) => (
+                    <button
+                      key={i}
+                      onClick={() => setLightboxUrl(currentList[i])}
+                      className="rounded-full transition-all"
+                      style={{
+                        width: i === currentIdx ? 20 : 6,
+                        height: 6,
+                        backgroundColor: i === currentIdx ? "#2fae8a" : "#444",
+                      }}
+                    />
+                  ))}
+                </div>
+              )}
             </div>
           );
         })()}
@@ -686,74 +717,100 @@ function JobCard({
                 );
               })()}
 
-            {/* 사진 탭 */}
+            {/* 사진 — 접수/완료 항상 바로 표시 */}
             {(getIntakePhotos().length > 0 || photos.length > 0) && (
-              <div className="mt-2.5">
-                <div className="flex gap-1 mb-2">
-                  {(["접수", "완료"] as const).map((t) => {
-                    const cnt =
-                      t === "접수" ? getIntakePhotos().length : photos.length;
-                    if (cnt === 0) return null;
-                    return (
-                      <button
-                        key={t}
-                        onClick={() => setPhotoTab(t)}
-                        className="rounded-full px-2.5 py-1 text-xs font-bold"
-                        style={{
-                          backgroundColor:
-                            photoTab === t
-                              ? t === "접수"
-                                ? "#f59e0b22"
-                                : "#2fae8a22"
-                              : "#1a1a1a",
-                          color:
-                            photoTab === t
-                              ? t === "접수"
-                                ? "#f59e0b"
-                                : "#2fae8a"
-                              : "#555",
-                          border: `1px solid ${photoTab === t ? (t === "접수" ? "#f59e0b44" : "#2fae8a44") : "#2a2a2a"}`,
-                        }}>
-                        {t === "접수" ? "📷 접수사진" : "✓ 완료사진"} {cnt}
-                      </button>
-                    );
-                  })}
-                </div>
-                <div className="flex gap-1.5 flex-wrap">
-                  {(photoTab === "접수" ? getIntakePhotos() : photos)
-                    .slice(0, 4)
-                    .map((url, idx) => {
-                      const list =
-                        photoTab === "접수" ? getIntakePhotos() : photos;
-                      return (
-                        <div key={url} className="relative">
-                          <img
-                            src={url}
-                            alt={`${photoTab} ${idx + 1}`}
-                            onClick={() => setLightboxUrl(url)}
-                            className="rounded-xl cursor-pointer"
-                            style={{
-                              height: 64,
-                              width: 64,
-                              objectFit: "cover",
-                              border: `1px solid ${photoTab === "접수" ? "#f59e0b44" : "#2fae8a44"}`,
-                            }}
-                          />
-                          {idx === 3 && list.length > 4 && (
-                            <div
-                              className="absolute inset-0 rounded-xl flex items-center justify-center"
-                              style={{ backgroundColor: "rgba(0,0,0,0.6)" }}>
-                              <span
-                                className="text-xs font-bold"
-                                style={{ color: "white" }}>
-                                +{list.length - 4}
-                              </span>
+              <div className="mt-2.5 flex flex-col gap-2.5">
+                {getIntakePhotos().length > 0 && (
+                  <div>
+                    <span
+                      className="text-xs font-bold mb-1.5 inline-block"
+                      style={{ color: "#f59e0b" }}>
+                      📷 접수사진
+                    </span>
+                    <div className="flex gap-1.5 flex-wrap">
+                      {getIntakePhotos()
+                        .slice(0, 4)
+                        .map((url, idx) => {
+                          const list = getIntakePhotos();
+                          return (
+                            <div key={url} className="relative">
+                              <img
+                                src={url}
+                                alt={`접수 ${idx + 1}`}
+                                onClick={() => {
+                                  setLightboxList(list);
+                                  setLightboxUrl(url);
+                                }}
+                                className="rounded-xl cursor-pointer"
+                                style={{
+                                  height: 64,
+                                  width: 64,
+                                  objectFit: "cover",
+                                  border: "1px solid #f59e0b44",
+                                }}
+                              />
+                              {idx === 3 && list.length > 4 && (
+                                <div
+                                  className="absolute inset-0 rounded-xl flex items-center justify-center"
+                                  style={{
+                                    backgroundColor: "rgba(0,0,0,0.6)",
+                                  }}>
+                                  <span
+                                    className="text-xs font-bold"
+                                    style={{ color: "white" }}>
+                                    +{list.length - 4}
+                                  </span>
+                                </div>
+                              )}
                             </div>
-                          )}
-                        </div>
-                      );
-                    })}
-                </div>
+                          );
+                        })}
+                    </div>
+                  </div>
+                )}
+                {photos.length > 0 && (
+                  <div>
+                    <span
+                      className="text-xs font-bold mb-1.5 inline-block"
+                      style={{ color: "#2fae8a" }}>
+                      ✓ 완료사진
+                    </span>
+                    <div className="flex gap-1.5 flex-wrap">
+                      {photos.slice(0, 4).map((url, idx) => {
+                        return (
+                          <div key={url} className="relative">
+                            <img
+                              src={url}
+                              alt={`완료 ${idx + 1}`}
+                              onClick={() => {
+                                setLightboxList(photos);
+                                setLightboxUrl(url);
+                              }}
+                              className="rounded-xl cursor-pointer"
+                              style={{
+                                height: 64,
+                                width: 64,
+                                objectFit: "cover",
+                                border: "1px solid #2fae8a44",
+                              }}
+                            />
+                            {idx === 3 && photos.length > 4 && (
+                              <div
+                                className="absolute inset-0 rounded-xl flex items-center justify-center"
+                                style={{ backgroundColor: "rgba(0,0,0,0.6)" }}>
+                                <span
+                                  className="text-xs font-bold"
+                                  style={{ color: "white" }}>
+                                  +{photos.length - 4}
+                                </span>
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </div>
