@@ -1007,8 +1007,6 @@ export default function AdminDashboard() {
   const [monthFilter, setMonthFilter] = useState(thisYearMonth());
   const [showForm, setShowForm] = useState(false);
   const [editId, setEditId] = useState<string | null>(null);
-  const [dateOpen, setDateOpen] = useState(true); // 기본 열림
-  const [installOpen, setInstallOpen] = useState(false);
   const [form, setForm] = useState(emptyForm());
   const [saving, setSaving] = useState(false);
   const [calYear, setCalYear] = useState(nowKST().getFullYear());
@@ -1194,8 +1192,6 @@ export default function AdminDashboard() {
       install_completed: job.install_completed ?? false,
     });
     setEditId(job.id);
-    setDateOpen(true);
-    setInstallOpen(!!job.install_date);
     setShowForm(true);
   };
 
@@ -1341,13 +1337,6 @@ export default function AdminDashboard() {
               🔒
             </button>
             <button
-              onClick={() => {
-                setForm(emptyForm());
-                setEditId(null);
-                setDateOpen(true);
-                setInstallOpen(false);
-                setShowForm(true);
-              }}
               className="rounded-xl px-5 py-2.5 text-sm font-bold text-white"
               style={{ backgroundColor: "#2fae8a" }}>
               + 접수
@@ -1688,8 +1677,6 @@ export default function AdminDashboard() {
                     onClick={() => {
                       setForm({ ...emptyForm(), visit_date: selectedDay });
                       setEditId(null);
-                      setDateOpen(true);
-                      setInstallOpen(false);
                       setShowForm(true);
                     }}
                     className="text-xs px-3 py-1.5 rounded-lg font-bold"
@@ -2045,8 +2032,6 @@ export default function AdminDashboard() {
                   onClick={() => {
                     setForm({ ...emptyForm(), visit_date: dateFilter });
                     setEditId(null);
-                    setDateOpen(true);
-                    setInstallOpen(false);
                     setShowForm(true);
                   }}
                   className="text-xs px-3 py-1.5 rounded-lg font-bold"
@@ -2267,127 +2252,80 @@ export default function AdminDashboard() {
                 />
               </label>
             ))}
-            {/* 날짜/시간 아코디언 */}
-            <div
-              className="rounded-xl overflow-hidden"
-              style={{ border: "1px solid #383838" }}>
-              <button
-                type="button"
-                onClick={() => setDateOpen((v) => !v)}
-                className="w-full flex items-center justify-between px-4 py-3"
-                style={{ backgroundColor: "#1a1a1a" }}>
-                <div className="flex items-center gap-2">
-                  <span className="text-sm">📅</span>
-                  <span
-                    className="text-sm font-semibold"
-                    style={{
-                      color:
-                        form.visit_date || form.visit_time ? "white" : "#666",
-                    }}>
-                    {form.visit_date
-                      ? `${form.visit_date}${form.visit_time ? " " + formatTime(form.visit_time) : ""}`
-                      : "날짜 · 시간 설정"}
-                  </span>
-                </div>
+            {/* 날짜/시간 */}
+            <div className="grid grid-cols-2 gap-3">
+              <label className="flex flex-col gap-1.5">
                 <span
-                  style={{
-                    color: "#555",
-                    fontSize: 12,
-                    display: "inline-block",
-                    transition: "transform 0.2s",
-                    transform: dateOpen ? "rotate(180deg)" : "none",
-                  }}>
-                  ▾
+                  className="text-xs font-semibold"
+                  style={{ color: "#888" }}>
+                  방문일
                 </span>
-              </button>
-              {dateOpen && (
-                <div
-                  className="px-4 pb-4 flex flex-col gap-3"
-                  style={{
-                    borderTop: "1px solid #2a2a2a",
-                    paddingTop: 14,
-                    backgroundColor: "#161616",
-                  }}>
-                  <div className="grid grid-cols-2 gap-3">
-                    <label className="flex flex-col gap-1.5">
-                      <span
-                        className="text-xs font-semibold"
-                        style={{ color: "#888" }}>
-                        방문일
-                      </span>
-                      <input
-                        type="date"
-                        value={form.visit_date}
-                        onChange={(e) =>
-                          setForm((p) => ({ ...p, visit_date: e.target.value }))
-                        }
-                        style={inputStyle}
-                      />
-                    </label>
-                    <label className="flex flex-col gap-1.5">
-                      <span
-                        className="text-xs font-semibold"
-                        style={{ color: "#888" }}>
-                        방문 시간
-                      </span>
-                      <div className="flex items-center gap-1">
-                        <input
-                          type="time"
-                          value={form.visit_time}
-                          onChange={(e) =>
-                            setForm((p) => ({
-                              ...p,
-                              visit_time: e.target.value,
-                            }))
-                          }
-                          style={{ ...inputStyle, flex: 1 }}
-                        />
-                        <button
-                          type="button"
-                          onClick={() => {
-                            const [h, m] = (form.visit_time || "00:00")
-                              .split(":")
-                              .map(Number);
-                            const safe =
-                              (((h * 60 + m - 30) % 1440) + 1440) % 1440;
-                            setForm((p) => ({
-                              ...p,
-                              visit_time: `${String(Math.floor(safe / 60)).padStart(2, "0")}:${String(safe % 60).padStart(2, "0")}`,
-                            }));
-                          }}
-                          className="rounded-xl px-2 py-2 text-sm font-bold"
-                          style={{
-                            backgroundColor: "#252525",
-                            color: "#aaa",
-                            border: "1px solid #383838",
-                          }}>
-                          －
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            const [h, m] = (form.visit_time || "00:00")
-                              .split(":")
-                              .map(Number);
-                            const safe = (h * 60 + m + 30) % 1440;
-                            setForm((p) => ({
-                              ...p,
-                              visit_time: `${String(Math.floor(safe / 60)).padStart(2, "0")}:${String(safe % 60).padStart(2, "0")}`,
-                            }));
-                          }}
-                          className="rounded-xl px-2 py-2 text-sm font-bold"
-                          style={{
-                            backgroundColor: "#252525",
-                            color: "#aaa",
-                            border: "1px solid #383838",
-                          }}>
-                          ＋
-                        </button>
-                      </div>
-                    </label>
-                  </div>
+                <input
+                  type="date"
+                  value={form.visit_date}
+                  onChange={(e) =>
+                    setForm((p) => ({ ...p, visit_date: e.target.value }))
+                  }
+                  style={inputStyle}
+                />
+              </label>
+              <label className="flex flex-col gap-1.5">
+                <span
+                  className="text-xs font-semibold"
+                  style={{ color: "#888" }}>
+                  방문 시간
+                </span>
+                <div className="flex items-center gap-1">
+                  <input
+                    type="time"
+                    value={form.visit_time}
+                    onChange={(e) =>
+                      setForm((p) => ({ ...p, visit_time: e.target.value }))
+                    }
+                    style={{ ...inputStyle, flex: 1 }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const [h, m] = (form.visit_time || "00:00")
+                        .split(":")
+                        .map(Number);
+                      const safe = (((h * 60 + m - 30) % 1440) + 1440) % 1440;
+                      setForm((p) => ({
+                        ...p,
+                        visit_time: `${String(Math.floor(safe / 60)).padStart(2, "0")}:${String(safe % 60).padStart(2, "0")}`,
+                      }));
+                    }}
+                    className="rounded-xl px-2 py-2 text-sm font-bold flex-shrink-0"
+                    style={{
+                      backgroundColor: "#252525",
+                      color: "#aaa",
+                      border: "1px solid #383838",
+                    }}>
+                    －
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const [h, m] = (form.visit_time || "00:00")
+                        .split(":")
+                        .map(Number);
+                      const safe = (h * 60 + m + 30) % 1440;
+                      setForm((p) => ({
+                        ...p,
+                        visit_time: `${String(Math.floor(safe / 60)).padStart(2, "0")}:${String(safe % 60).padStart(2, "0")}`,
+                      }));
+                    }}
+                    className="rounded-xl px-2 py-2 text-sm font-bold flex-shrink-0"
+                    style={{
+                      backgroundColor: "#252525",
+                      color: "#aaa",
+                      border: "1px solid #383838",
+                    }}>
+                    ＋
+                  </button>
                 </div>
-              )}
+              </label>
             </div>
             <label className="flex flex-col gap-1.5">
               <span className="text-xs font-semibold" style={{ color: "#888" }}>
@@ -2489,7 +2427,6 @@ export default function AdminDashboard() {
               onClick={() => {
                 const next = !form.is_measurement;
                 setForm((p) => ({ ...p, is_measurement: next }));
-                if (next) setInstallOpen(true);
               }}
               className="flex items-center justify-between rounded-xl px-4 py-3"
               style={{
@@ -2532,157 +2469,113 @@ export default function AdminDashboard() {
               </div>
             </button>
 
-            {/* 시공 날짜/시간 아코디언 — 실측일 때만 */}
+            {/* 시공 날짜/시간 — 실측일 때만 */}
             {form.is_measurement && (
               <div
-                className="rounded-xl overflow-hidden"
-                style={{ border: "1px solid #2fae8a44" }}>
-                <button
-                  type="button"
-                  onClick={() => setInstallOpen((v) => !v)}
-                  className="w-full flex items-center justify-between px-4 py-3"
-                  style={{ backgroundColor: "#0d2018" }}>
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm">🔨</span>
+                className="rounded-xl p-4 flex flex-col gap-3"
+                style={{
+                  backgroundColor: "#0d2018",
+                  border: "1px solid #2fae8a44",
+                }}>
+                <p className="text-xs font-bold" style={{ color: "#2fae8a" }}>
+                  🔨 시공 날짜 · 시간
+                </p>
+                <div className="grid grid-cols-2 gap-3">
+                  <label className="flex flex-col gap-1.5">
                     <span
-                      className="text-sm font-semibold"
-                      style={{ color: form.install_date ? "#2fae8a" : "#555" }}>
-                      {form.install_date
-                        ? `시공 ${form.install_date}${form.install_time ? " " + formatTime(form.install_time) : ""}`
-                        : "시공 날짜 · 시간 설정"}
+                      className="text-xs font-semibold"
+                      style={{ color: "#2fae8a88" }}>
+                      시공 날짜
                     </span>
-                    {!form.install_date && (
-                      <span
-                        className="text-xs px-2 py-0.5 rounded-full"
-                        style={{
-                          backgroundColor: "#f59e0b18",
-                          color: "#f59e0b",
-                          border: "1px solid #f59e0b33",
-                        }}>
-                        미정
-                      </span>
-                    )}
-                  </div>
-                  <span
-                    className="text-xs"
-                    style={{
-                      color: "#2fae8a55",
-                      transform: installOpen ? "rotate(180deg)" : "none",
-                      display: "inline-block",
-                      transition: "transform 0.2s",
-                    }}>
-                    ▾
-                  </span>
-                </button>
-                {installOpen && (
-                  <div
-                    className="px-4 pb-4 flex flex-col gap-3"
-                    style={{
-                      borderTop: "1px solid #1a3a2a",
-                      paddingTop: 14,
-                      backgroundColor: "#0a1a12",
-                    }}>
-                    <div className="grid grid-cols-2 gap-3">
-                      <label className="flex flex-col gap-1.5">
-                        <span
-                          className="text-xs font-semibold"
-                          style={{ color: "#2fae8a" }}>
-                          시공 날짜
-                        </span>
-                        <input
-                          type="date"
-                          value={form.install_date || ""}
-                          onChange={(e) =>
-                            setForm((p) => ({
-                              ...p,
-                              install_date: e.target.value,
-                            }))
-                          }
-                          style={inputStyle}
-                        />
-                      </label>
-                      <label className="flex flex-col gap-1.5">
-                        <span
-                          className="text-xs font-semibold"
-                          style={{ color: "#2fae8a" }}>
-                          시공 시간
-                        </span>
-                        <div className="flex items-center gap-1">
-                          <input
-                            type="time"
-                            value={form.install_time || ""}
-                            onChange={(e) =>
-                              setForm((p) => ({
-                                ...p,
-                                install_time: e.target.value,
-                              }))
-                            }
-                            style={{ ...inputStyle, flex: 1 }}
-                          />
-                          <button
-                            type="button"
-                            onClick={() => {
-                              const [h, m] = (form.install_time || "00:00")
-                                .split(":")
-                                .map(Number);
-                              const safe =
-                                (((h * 60 + m - 30) % 1440) + 1440) % 1440;
-                              setForm((p) => ({
-                                ...p,
-                                install_time: `${String(Math.floor(safe / 60)).padStart(2, "0")}:${String(safe % 60).padStart(2, "0")}`,
-                              }));
-                            }}
-                            className="rounded-xl px-2 py-2 text-sm font-bold"
-                            style={{
-                              backgroundColor: "#252525",
-                              color: "#aaa",
-                              border: "1px solid #383838",
-                            }}>
-                            －
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => {
-                              const [h, m] = (form.install_time || "00:00")
-                                .split(":")
-                                .map(Number);
-                              const safe = (h * 60 + m + 30) % 1440;
-                              setForm((p) => ({
-                                ...p,
-                                install_time: `${String(Math.floor(safe / 60)).padStart(2, "0")}:${String(safe % 60).padStart(2, "0")}`,
-                              }));
-                            }}
-                            className="rounded-xl px-2 py-2 text-sm font-bold"
-                            style={{
-                              backgroundColor: "#252525",
-                              color: "#aaa",
-                              border: "1px solid #383838",
-                            }}>
-                            ＋
-                          </button>
-                        </div>
-                      </label>
-                    </div>
-                    {form.install_date && (
-                      <button
-                        type="button"
-                        onClick={() =>
+                    <input
+                      type="date"
+                      value={form.install_date || ""}
+                      onChange={(e) =>
+                        setForm((p) => ({ ...p, install_date: e.target.value }))
+                      }
+                      style={inputStyle}
+                    />
+                  </label>
+                  <label className="flex flex-col gap-1.5">
+                    <span
+                      className="text-xs font-semibold"
+                      style={{ color: "#2fae8a88" }}>
+                      시공 시간
+                    </span>
+                    <div className="flex items-center gap-1">
+                      <input
+                        type="time"
+                        value={form.install_time || ""}
+                        onChange={(e) =>
                           setForm((p) => ({
                             ...p,
-                            install_date: "",
-                            install_time: "",
+                            install_time: e.target.value,
                           }))
                         }
-                        className="text-xs font-bold py-2 rounded-xl"
+                        style={{ ...inputStyle, flex: 1 }}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const [h, m] = (form.install_time || "00:00")
+                            .split(":")
+                            .map(Number);
+                          const safe =
+                            (((h * 60 + m - 30) % 1440) + 1440) % 1440;
+                          setForm((p) => ({
+                            ...p,
+                            install_time: `${String(Math.floor(safe / 60)).padStart(2, "0")}:${String(safe % 60).padStart(2, "0")}`,
+                          }));
+                        }}
+                        className="rounded-xl px-2 py-2 text-sm font-bold flex-shrink-0"
                         style={{
-                          backgroundColor: "#ef444418",
-                          color: "#ef4444",
-                          border: "1px solid #ef444430",
+                          backgroundColor: "#252525",
+                          color: "#aaa",
+                          border: "1px solid #383838",
                         }}>
-                        시공 날짜 초기화
+                        －
                       </button>
-                    )}
-                  </div>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const [h, m] = (form.install_time || "00:00")
+                            .split(":")
+                            .map(Number);
+                          const safe = (h * 60 + m + 30) % 1440;
+                          setForm((p) => ({
+                            ...p,
+                            install_time: `${String(Math.floor(safe / 60)).padStart(2, "0")}:${String(safe % 60).padStart(2, "0")}`,
+                          }));
+                        }}
+                        className="rounded-xl px-2 py-2 text-sm font-bold flex-shrink-0"
+                        style={{
+                          backgroundColor: "#252525",
+                          color: "#aaa",
+                          border: "1px solid #383838",
+                        }}>
+                        ＋
+                      </button>
+                    </div>
+                  </label>
+                </div>
+                {form.install_date && (
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setForm((p) => ({
+                        ...p,
+                        install_date: "",
+                        install_time: "",
+                      }))
+                    }
+                    className="text-xs font-bold py-2 rounded-xl"
+                    style={{
+                      backgroundColor: "#ef444418",
+                      color: "#ef4444",
+                      border: "1px solid #ef444430",
+                    }}>
+                    시공 날짜 초기화
+                  </button>
                 )}
               </div>
             )}
