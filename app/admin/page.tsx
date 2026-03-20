@@ -32,6 +32,7 @@ interface Job {
   completion_photo?: string;
   as_until?: string;
   intake_photos?: string; // JSON array of URLs
+  is_measurement?: boolean; // 실측 방문 = 매출 제외
 }
 
 const TECHS: Tech[] = ["기사1", "기사2"];
@@ -122,6 +123,7 @@ const emptyForm = () => ({
   memo: "",
   as_until: addOneYear(today()),
   intake_photos: "" as string,
+  is_measurement: false,
 });
 
 function getCalendarDays(year: number, month: number) {
@@ -287,7 +289,10 @@ function PhotoCapture({
                       <button
                         onClick={() => handleDelete(url)}
                         className="flex-1 rounded-lg py-1 text-xs"
-                        style={{ backgroundColor: "#ef444430", color: "#ef4444" }}>
+                        style={{
+                          backgroundColor: "#ef444430",
+                          color: "#ef4444",
+                        }}>
                         🗑
                       </button>
                     </div>
@@ -328,7 +333,10 @@ function PhotoCapture({
               onClick={() => onDone(list)}
               disabled={uploading}
               className="flex-1 rounded-xl py-2.5 text-xs font-bold text-white"
-              style={{ backgroundColor: "#2fae8a", opacity: uploading ? 0.7 : 1 }}>
+              style={{
+                backgroundColor: "#2fae8a",
+                opacity: uploading ? 0.7 : 1,
+              }}>
               {uploading ? uploadProgress || "저장중..." : "확인 ✓"}
             </button>
           </div>
@@ -371,12 +379,20 @@ function JobCard({
 
   const getPhotos = (): string[] => {
     if (!job.completion_photo) return [];
-    try { return JSON.parse(job.completion_photo); } catch { return [job.completion_photo]; }
+    try {
+      return JSON.parse(job.completion_photo);
+    } catch {
+      return [job.completion_photo];
+    }
   };
 
   const getIntakePhotos = (): string[] => {
     if (!job.intake_photos) return [];
-    try { return JSON.parse(job.intake_photos); } catch { return [job.intake_photos]; }
+    try {
+      return JSON.parse(job.intake_photos);
+    } catch {
+      return [job.intake_photos];
+    }
   };
 
   const handleComplete = () => {
@@ -403,72 +419,112 @@ function JobCard({
   return (
     <>
       {/* 라이트박스 */}
-      {lightboxUrl && (() => {
-        const currentList = lightboxList;
-        const currentIdx = currentList.indexOf(lightboxUrl);
-        return (
-          <div
-            className="fixed inset-0 z-[70] flex flex-col select-none"
-            style={{ backgroundColor: "rgba(0,0,0,0.97)" }}
-            onClick={() => setLightboxUrl(null)}
-            onTouchStart={(e) => {
-              const touch = e.touches[0];
-              (e.currentTarget as any)._touchStartX = touch.clientX;
-            }}
-            onTouchEnd={(e) => {
-              const startX = (e.currentTarget as any)._touchStartX ?? 0;
-              const endX = e.changedTouches[0].clientX;
-              const diff = startX - endX;
-              if (Math.abs(diff) > 50) {
-                if (diff > 0 && currentIdx < currentList.length - 1) {
-                  setLightboxUrl(currentList[currentIdx + 1]);
-                } else if (diff < 0 && currentIdx > 0) {
-                  setLightboxUrl(currentList[currentIdx - 1]);
+      {lightboxUrl &&
+        (() => {
+          const currentList = lightboxList;
+          const currentIdx = currentList.indexOf(lightboxUrl);
+          return (
+            <div
+              className="fixed inset-0 z-[70] flex flex-col select-none"
+              style={{ backgroundColor: "rgba(0,0,0,0.97)" }}
+              onClick={() => setLightboxUrl(null)}
+              onTouchStart={(e) => {
+                const touch = e.touches[0];
+                (e.currentTarget as any)._touchStartX = touch.clientX;
+              }}
+              onTouchEnd={(e) => {
+                const startX = (e.currentTarget as any)._touchStartX ?? 0;
+                const endX = e.changedTouches[0].clientX;
+                const diff = startX - endX;
+                if (Math.abs(diff) > 50) {
+                  if (diff > 0 && currentIdx < currentList.length - 1) {
+                    setLightboxUrl(currentList[currentIdx + 1]);
+                  } else if (diff < 0 && currentIdx > 0) {
+                    setLightboxUrl(currentList[currentIdx - 1]);
+                  }
                 }
-              }
-            }}>
-            {/* 상단 */}
-            <div className="flex items-center justify-between px-4 py-3 flex-shrink-0"
-              onClick={e => e.stopPropagation()}>
-              <span className="text-sm font-bold px-2.5 py-1 rounded-full"
-                style={{ backgroundColor: "rgba(255,255,255,0.1)", color: "#bbb" }}>
-                {currentIdx + 1} / {currentList.length}
-              </span>
-              <button onClick={() => setLightboxUrl(null)}
-                className="w-9 h-9 flex items-center justify-center rounded-full text-base font-bold"
-                style={{ backgroundColor: "rgba(255,255,255,0.12)", color: "white" }}>✕</button>
-            </div>
-            {/* 이미지 */}
-            <div className="flex-1 flex items-center justify-center px-10 relative"
-              onClick={e => e.stopPropagation()}>
-              {currentIdx > 0 && (
-                <button onClick={() => setLightboxUrl(currentList[currentIdx - 1])}
-                  className="absolute left-2 w-10 h-10 flex items-center justify-center rounded-full text-xl font-bold"
-                  style={{ backgroundColor: "rgba(255,255,255,0.12)", color: "white" }}>‹</button>
-              )}
-              <img src={lightboxUrl} alt="사진 크게 보기" className="rounded-2xl"
-                style={{ maxWidth: "100%", maxHeight: "76vh", objectFit: "contain" }} />
-              {currentIdx < currentList.length - 1 && (
-                <button onClick={() => setLightboxUrl(currentList[currentIdx + 1])}
-                  className="absolute right-2 w-10 h-10 flex items-center justify-center rounded-full text-xl font-bold"
-                  style={{ backgroundColor: "rgba(255,255,255,0.12)", color: "white" }}>›</button>
-              )}
-            </div>
-            {/* 하단 닷 인디케이터 */}
-            {currentList.length > 1 && (
-              <div className="flex justify-center gap-1.5 py-4 flex-shrink-0"
-                onClick={e => e.stopPropagation()}>
-                {currentList.map((_, i) => (
-                  <button key={i} onClick={() => setLightboxUrl(currentList[i])}
-                    className="rounded-full transition-all"
-                    style={{ width: i === currentIdx ? 20 : 6, height: 6,
-                      backgroundColor: i === currentIdx ? "#2fae8a" : "#444" }} />
-                ))}
+              }}>
+              {/* 상단 */}
+              <div
+                className="flex items-center justify-between px-4 py-3 flex-shrink-0"
+                onClick={(e) => e.stopPropagation()}>
+                <span
+                  className="text-sm font-bold px-2.5 py-1 rounded-full"
+                  style={{
+                    backgroundColor: "rgba(255,255,255,0.1)",
+                    color: "#bbb",
+                  }}>
+                  {currentIdx + 1} / {currentList.length}
+                </span>
+                <button
+                  onClick={() => setLightboxUrl(null)}
+                  className="w-9 h-9 flex items-center justify-center rounded-full text-base font-bold"
+                  style={{
+                    backgroundColor: "rgba(255,255,255,0.12)",
+                    color: "white",
+                  }}>
+                  ✕
+                </button>
               </div>
-            )}
-          </div>
-        );
-      })()}
+              {/* 이미지 */}
+              <div
+                className="flex-1 flex items-center justify-center px-10 relative"
+                onClick={(e) => e.stopPropagation()}>
+                {currentIdx > 0 && (
+                  <button
+                    onClick={() => setLightboxUrl(currentList[currentIdx - 1])}
+                    className="absolute left-2 w-10 h-10 flex items-center justify-center rounded-full text-xl font-bold"
+                    style={{
+                      backgroundColor: "rgba(255,255,255,0.12)",
+                      color: "white",
+                    }}>
+                    ‹
+                  </button>
+                )}
+                <img
+                  src={lightboxUrl}
+                  alt="사진 크게 보기"
+                  className="rounded-2xl"
+                  style={{
+                    maxWidth: "100%",
+                    maxHeight: "76vh",
+                    objectFit: "contain",
+                  }}
+                />
+                {currentIdx < currentList.length - 1 && (
+                  <button
+                    onClick={() => setLightboxUrl(currentList[currentIdx + 1])}
+                    className="absolute right-2 w-10 h-10 flex items-center justify-center rounded-full text-xl font-bold"
+                    style={{
+                      backgroundColor: "rgba(255,255,255,0.12)",
+                      color: "white",
+                    }}>
+                    ›
+                  </button>
+                )}
+              </div>
+              {/* 하단 닷 인디케이터 */}
+              {currentList.length > 1 && (
+                <div
+                  className="flex justify-center gap-1.5 py-4 flex-shrink-0"
+                  onClick={(e) => e.stopPropagation()}>
+                  {currentList.map((_, i) => (
+                    <button
+                      key={i}
+                      onClick={() => setLightboxUrl(currentList[i])}
+                      className="rounded-full transition-all"
+                      style={{
+                        width: i === currentIdx ? 20 : 6,
+                        height: 6,
+                        backgroundColor: i === currentIdx ? "#2fae8a" : "#444",
+                      }}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+          );
+        })()}
       {showPhoto && (
         <PhotoCapture
           jobId={job.id}
@@ -510,6 +566,17 @@ function JobCard({
           <span className="text-xs font-medium" style={{ color: "#bbb" }}>
             {formatFullDate(job.visit_date)}
           </span>
+          {job.is_measurement && (
+            <span
+              className="text-xs font-bold px-2 py-0.5 rounded-full"
+              style={{
+                backgroundColor: "#a855f722",
+                color: "#a855f7",
+                border: "1px solid #a855f744",
+              }}>
+              📐 실측
+            </span>
+          )}
           {job.visit_time && (
             <span
               className="text-xs font-bold px-2 py-0.5 rounded-full"
@@ -520,9 +587,7 @@ function JobCard({
 
           <select
             value={job.tech}
-            onChange={(e) =>
-              onUpdate(job.id, { tech: e.target.value as Tech })
-            }
+            onChange={(e) => onUpdate(job.id, { tech: e.target.value as Tech })}
             className="text-xs rounded-full px-3 py-1 border cursor-pointer font-bold ml-auto"
             style={{
               backgroundColor: techColor + "18",
@@ -544,9 +609,7 @@ function JobCard({
           <div className="flex-1 min-w-0">
             {/* 이름 + 연락처 */}
             <div className="flex flex-wrap items-center gap-2 mb-1">
-              <span
-                className="text-base font-bold"
-                style={{ color: "white" }}>
+              <span className="text-base font-bold" style={{ color: "white" }}>
                 {job.name || "?"}
               </span>
               {job.phone && (
@@ -597,9 +660,7 @@ function JobCard({
                 </a>
               )}
               {job.symptom && (
-                <span
-                  className="text-xs"
-                  style={{ color: "#aaa" }}>
+                <span className="text-xs" style={{ color: "#aaa" }}>
                   {job.symptom}
                 </span>
               )}
@@ -629,18 +690,25 @@ function JobCard({
             </div>
 
             {/* AS 기간 */}
-            {job.status === "완료" && job.as_until && (
+            {job.status === "완료" &&
+              job.as_until &&
               (() => {
                 const today = nowKST().toISOString().slice(0, 10);
                 const expired = job.as_until < today;
                 const daysLeft = Math.ceil(
-                  (new Date(job.as_until).getTime() - new Date(today).getTime()) / (1000 * 60 * 60 * 24)
+                  (new Date(job.as_until).getTime() -
+                    new Date(today).getTime()) /
+                    (1000 * 60 * 60 * 24),
                 );
                 return (
                   <div
                     className="flex items-center gap-1.5 mt-1 px-2 py-1 rounded-lg"
                     style={{
-                      backgroundColor: expired ? "#3a202022" : daysLeft <= 30 ? "#f59e0b18" : "#2fae8a12",
+                      backgroundColor: expired
+                        ? "#3a202022"
+                        : daysLeft <= 30
+                          ? "#f59e0b18"
+                          : "#2fae8a12",
                       border: `1px solid ${expired ? "#ef444433" : daysLeft <= 30 ? "#f59e0b33" : "#2fae8a33"}`,
                       display: "inline-flex",
                       width: "fit-content",
@@ -648,59 +716,106 @@ function JobCard({
                     <span style={{ fontSize: 11 }}>🛡</span>
                     <span
                       className="text-xs font-medium"
-                      style={{ color: expired ? "#ef4444" : daysLeft <= 30 ? "#f59e0b" : "#2fae8a" }}>
+                      style={{
+                        color: expired
+                          ? "#ef4444"
+                          : daysLeft <= 30
+                            ? "#f59e0b"
+                            : "#2fae8a",
+                      }}>
                       AS {expired ? "만료" : `${job.as_until} 까지`}
                       {!expired && daysLeft <= 30 && ` (${daysLeft}일 남음)`}
                     </span>
                   </div>
                 );
-              })()
-            )}
+              })()}
 
             {/* 사진 — 접수/완료 항상 바로 표시 */}
             {(getIntakePhotos().length > 0 || photos.length > 0) && (
               <div className="mt-2.5 flex flex-col gap-2.5">
                 {getIntakePhotos().length > 0 && (
                   <div>
-                    <span className="text-xs font-bold mb-1.5 inline-block"
-                      style={{ color: "#f59e0b" }}>📷 접수사진</span>
+                    <span
+                      className="text-xs font-bold mb-1.5 inline-block"
+                      style={{ color: "#f59e0b" }}>
+                      📷 접수사진
+                    </span>
                     <div className="flex gap-1.5 flex-wrap">
-                      {getIntakePhotos().slice(0, 4).map((url, idx) => {
-                        const list = getIntakePhotos();
-                        return (
-                          <div key={url} className="relative">
-                            <img src={url} alt={`접수 ${idx + 1}`}
-                              onClick={() => { setLightboxList(list); setLightboxUrl(url); }}
-                              className="rounded-xl cursor-pointer"
-                              style={{ height: 64, width: 64, objectFit: "cover", border: "1px solid #f59e0b44" }} />
-                            {idx === 3 && list.length > 4 && (
-                              <div className="absolute inset-0 rounded-xl flex items-center justify-center"
-                                style={{ backgroundColor: "rgba(0,0,0,0.6)" }}>
-                                <span className="text-xs font-bold" style={{ color: "white" }}>+{list.length - 4}</span>
-                              </div>
-                            )}
-                          </div>
-                        );
-                      })}
+                      {getIntakePhotos()
+                        .slice(0, 4)
+                        .map((url, idx) => {
+                          const list = getIntakePhotos();
+                          return (
+                            <div key={url} className="relative">
+                              <img
+                                src={url}
+                                alt={`접수 ${idx + 1}`}
+                                onClick={() => {
+                                  setLightboxList(list);
+                                  setLightboxUrl(url);
+                                }}
+                                className="rounded-xl cursor-pointer"
+                                style={{
+                                  height: 64,
+                                  width: 64,
+                                  objectFit: "cover",
+                                  border: "1px solid #f59e0b44",
+                                }}
+                              />
+                              {idx === 3 && list.length > 4 && (
+                                <div
+                                  className="absolute inset-0 rounded-xl flex items-center justify-center"
+                                  style={{
+                                    backgroundColor: "rgba(0,0,0,0.6)",
+                                  }}>
+                                  <span
+                                    className="text-xs font-bold"
+                                    style={{ color: "white" }}>
+                                    +{list.length - 4}
+                                  </span>
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })}
                     </div>
                   </div>
                 )}
                 {photos.length > 0 && (
                   <div>
-                    <span className="text-xs font-bold mb-1.5 inline-block"
-                      style={{ color: "#2fae8a" }}>✓ 완료사진</span>
+                    <span
+                      className="text-xs font-bold mb-1.5 inline-block"
+                      style={{ color: "#2fae8a" }}>
+                      ✓ 완료사진
+                    </span>
                     <div className="flex gap-1.5 flex-wrap">
                       {photos.slice(0, 4).map((url, idx) => {
                         return (
                           <div key={url} className="relative">
-                            <img src={url} alt={`완료 ${idx + 1}`}
-                              onClick={() => { setLightboxList(photos); setLightboxUrl(url); }}
+                            <img
+                              src={url}
+                              alt={`완료 ${idx + 1}`}
+                              onClick={() => {
+                                setLightboxList(photos);
+                                setLightboxUrl(url);
+                              }}
                               className="rounded-xl cursor-pointer"
-                              style={{ height: 64, width: 64, objectFit: "cover", border: "1px solid #2fae8a44" }} />
+                              style={{
+                                height: 64,
+                                width: 64,
+                                objectFit: "cover",
+                                border: "1px solid #2fae8a44",
+                              }}
+                            />
                             {idx === 3 && photos.length > 4 && (
-                              <div className="absolute inset-0 rounded-xl flex items-center justify-center"
+                              <div
+                                className="absolute inset-0 rounded-xl flex items-center justify-center"
                                 style={{ backgroundColor: "rgba(0,0,0,0.6)" }}>
-                                <span className="text-xs font-bold" style={{ color: "white" }}>+{photos.length - 4}</span>
+                                <span
+                                  className="text-xs font-bold"
+                                  style={{ color: "white" }}>
+                                  +{photos.length - 4}
+                                </span>
                               </div>
                             )}
                           </div>
@@ -746,8 +861,10 @@ function JobCard({
             <button
               onClick={handleComplete}
               className="flex-1 rounded-xl py-2.5 text-sm font-bold text-white"
-              style={{ backgroundColor: "#2fae8a" }}>
-              ✓ 완료 처리
+              style={{
+                backgroundColor: job.is_measurement ? "#a855f7" : "#2fae8a",
+              }}>
+              {job.is_measurement ? "📐 실측 완료" : "✓ 완료 처리"}
             </button>
           ) : (
             <button
@@ -825,9 +942,15 @@ export default function AdminDashboard() {
     const supabase = getSupabase();
     const channel = supabase
       .channel("jobs_realtime")
-      .on("postgres_changes", { event: "*", schema: "public", table: "jobs" }, () => load())
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "jobs" },
+        () => load(),
+      )
       .subscribe();
-    return () => { supabase.removeChannel(channel); };
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, [load, authed]);
 
   const handleLogin = () => {
@@ -848,43 +971,58 @@ export default function AdminDashboard() {
   // ── 인증 안된 경우 로그인 화면 (훅 선언 이후에 위치) ──
   if (!authed) {
     return (
-      <main className="min-h-screen flex items-center justify-center px-6"
+      <main
+        className="min-h-screen flex items-center justify-center px-6"
         style={{ backgroundColor: "#111" }}>
         <div className="w-full max-w-xs flex flex-col items-center gap-6">
           <div className="text-center">
             <p className="text-3xl mb-2">🛠</p>
-            <h1 className="text-xl font-black" style={{ color: "white" }}>수리담 관리자</h1>
-            <p className="text-sm mt-1" style={{ color: "#555" }}>관리자만 접근할 수 있어요</p>
+            <h1 className="text-xl font-black" style={{ color: "white" }}>
+              수리담 관리자
+            </h1>
+            <p className="text-sm mt-1" style={{ color: "#555" }}>
+              관리자만 접근할 수 있어요
+            </p>
           </div>
           <div className="w-full flex flex-col gap-3">
             <div className="relative">
               <input
                 type={showPw ? "text" : "password"}
                 value={pwInput}
-                onChange={e => { setPwInput(e.target.value); setPwError(false); }}
-                onKeyDown={e => e.key === "Enter" && handleLogin()}
+                onChange={(e) => {
+                  setPwInput(e.target.value);
+                  setPwError(false);
+                }}
+                onKeyDown={(e) => e.key === "Enter" && handleLogin()}
                 placeholder="비밀번호 입력"
                 autoFocus
                 className="w-full rounded-2xl px-4 py-3.5 text-base pr-12"
                 style={{
                   backgroundColor: "#1c1c1c",
                   border: `1px solid ${pwError ? "#ef4444" : "#2e2e2e"}`,
-                  color: "white", outline: "none", fontFamily: "inherit",
+                  color: "white",
+                  outline: "none",
+                  fontFamily: "inherit",
                   boxSizing: "border-box",
                 }}
               />
-              <button type="button" onClick={() => setShowPw(v => !v)}
+              <button
+                type="button"
+                onClick={() => setShowPw((v) => !v)}
                 className="absolute right-3.5 top-1/2 -translate-y-1/2 text-base"
                 style={{ color: "#555" }}>
                 {showPw ? "🙈" : "👁"}
               </button>
             </div>
             {pwError && (
-              <p className="text-sm text-center font-medium" style={{ color: "#ef4444" }}>
+              <p
+                className="text-sm text-center font-medium"
+                style={{ color: "#ef4444" }}>
                 비밀번호가 틀렸습니다
               </p>
             )}
-            <button onClick={handleLogin}
+            <button
+              onClick={handleLogin}
               className="w-full rounded-2xl py-3.5 text-base font-bold text-white"
               style={{ backgroundColor: "#2fae8a" }}>
               입장
@@ -894,7 +1032,6 @@ export default function AdminDashboard() {
       </main>
     );
   }
-
 
   const save = async () => {
     if (!form.name.trim() || !form.region.trim() || !form.symptom.trim())
@@ -934,6 +1071,7 @@ export default function AdminDashboard() {
       memo: job.memo,
       as_until: job.as_until || addOneYear(job.visit_date || today()),
       intake_photos: job.intake_photos || "",
+      is_measurement: job.is_measurement ?? false,
     });
     setEditId(job.id);
     setShowForm(true);
@@ -958,7 +1096,9 @@ export default function AdminDashboard() {
   });
 
   const monthJobs = jobs.filter((j) => j.visit_date?.startsWith(monthFilter));
-  const doneMonth = monthJobs.filter((j) => j.status === "완료");
+  const doneMonth = monthJobs.filter(
+    (j) => j.status === "완료" && !j.is_measurement,
+  );
   const revenue = doneMonth.reduce((s, j) => s + (j.price || 0), 0);
   const reviewPending = jobs.filter(
     (j) => j.status === "완료" && !j.review_requested && j.phone,
@@ -984,7 +1124,9 @@ export default function AdminDashboard() {
 
   const selectedJobs = selectedDay
     ? (jobsByDate[selectedDay] ?? []).filter(
-        (j) => (calTechFilter === "전체" || j.tech === calTechFilter) && matchSearch(j),
+        (j) =>
+          (calTechFilter === "전체" || j.tech === calTechFilter) &&
+          matchSearch(j),
       )
     : [];
   const todayStr = today();
@@ -1046,20 +1188,34 @@ export default function AdminDashboard() {
             <button
               onClick={() => load()}
               className="rounded-xl px-3 py-2.5 text-sm font-bold"
-              style={{ backgroundColor: "#1c1c1c", color: "#888", border: "1px solid #2e2e2e" }}>
+              style={{
+                backgroundColor: "#1c1c1c",
+                color: "#888",
+                border: "1px solid #2e2e2e",
+              }}>
               ↻
             </button>
             <button
               onClick={() => {
-                try { localStorage.removeItem("suridam_admin_expiry"); } catch {}
+                try {
+                  localStorage.removeItem("suridam_admin_expiry");
+                } catch {}
                 setAuthed(false);
               }}
               className="rounded-xl px-3 py-2.5 text-sm font-bold"
-              style={{ backgroundColor: "#1c1c1c", color: "#666", border: "1px solid #2e2e2e" }}>
+              style={{
+                backgroundColor: "#1c1c1c",
+                color: "#666",
+                border: "1px solid #2e2e2e",
+              }}>
               🔒
             </button>
             <button
-              onClick={() => { setForm(emptyForm()); setEditId(null); setShowForm(true); }}
+              onClick={() => {
+                setForm(emptyForm());
+                setEditId(null);
+                setShowForm(true);
+              }}
               className="rounded-xl px-5 py-2.5 text-sm font-bold text-white"
               style={{ backgroundColor: "#2fae8a" }}>
               + 접수
@@ -1144,9 +1300,14 @@ export default function AdminDashboard() {
             {jobs.filter(matchSearch).length === 0 ? (
               <div
                 className="rounded-2xl py-10 text-center"
-                style={{ backgroundColor: "#1a1a1a", border: "1px solid #222" }}>
+                style={{
+                  backgroundColor: "#1a1a1a",
+                  border: "1px solid #222",
+                }}>
                 <p className="text-2xl mb-2">🔍</p>
-                <p className="text-sm" style={{ color: "#555" }}>검색 결과 없음</p>
+                <p className="text-sm" style={{ color: "#555" }}>
+                  검색 결과 없음
+                </p>
               </div>
             ) : (
               <div className="flex flex-col gap-2">
@@ -1248,14 +1409,21 @@ export default function AdminDashboard() {
                     className="h-2.5 w-2.5 rounded-full"
                     style={{ backgroundColor: TECH_COLOR[t] }}
                   />
-                  <span className="text-xs font-medium" style={{ color: TECH_COLOR[t] }}>
+                  <span
+                    className="text-xs font-medium"
+                    style={{ color: TECH_COLOR[t] }}>
                     {t}
                   </span>
                 </div>
               ))}
               <div className="flex items-center gap-1.5">
-                <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: "#555" }} />
-                <span className="text-xs font-medium" style={{ color: "#666" }}>미배정</span>
+                <span
+                  className="h-2.5 w-2.5 rounded-full"
+                  style={{ backgroundColor: "#555" }}
+                />
+                <span className="text-xs font-medium" style={{ color: "#666" }}>
+                  미배정
+                </span>
               </div>
             </div>
 
@@ -1303,7 +1471,11 @@ export default function AdminDashboard() {
                       className="text-xs font-bold mb-1 w-5 h-5 flex items-center justify-center rounded-full"
                       style={{
                         color:
-                          dow === 0 ? "#ef6666" : dow === 6 ? "#60a5fa" : "#e5e5e5",
+                          dow === 0
+                            ? "#ef6666"
+                            : dow === 6
+                              ? "#60a5fa"
+                              : "#e5e5e5",
                         backgroundColor: isToday ? "#2fae8a" : "transparent",
                       }}>
                       {day}
@@ -1316,12 +1488,15 @@ export default function AdminDashboard() {
                           <div className="flex items-center gap-1">
                             <span
                               className="h-1.5 w-1.5 rounded-full flex-shrink-0"
-                              style={{ backgroundColor: TECH_COLOR[j.tech || ""] }}
+                              style={{
+                                backgroundColor: TECH_COLOR[j.tech || ""],
+                              }}
                             />
                             <span
                               className="truncate font-semibold"
                               style={{ color: "#e5e5e5", fontSize: 10 }}>
-                              {j.name}{j.symptom ? ` · ${j.symptom}` : ""}
+                              {j.name}
+                              {j.symptom ? ` · ${j.symptom}` : ""}
                             </span>
                           </div>
                           {j.visit_time && (
@@ -1356,7 +1531,9 @@ export default function AdminDashboard() {
                     borderBottom: "1px solid #2a2a2a",
                   }}>
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-bold" style={{ color: "white" }}>
+                    <span
+                      className="text-sm font-bold"
+                      style={{ color: "white" }}>
                       {formatDate(selectedDay)}
                     </span>
                     <span
@@ -1395,7 +1572,9 @@ export default function AdminDashboard() {
                     <p className="text-sm">일정 없음</p>
                   </div>
                 ) : (
-                  <div className="flex flex-col gap-0" style={{ backgroundColor: "#111" }}>
+                  <div
+                    className="flex flex-col gap-0"
+                    style={{ backgroundColor: "#111" }}>
                     {[...selectedJobs]
                       .sort((a, b) => {
                         if (!a.visit_time && !b.visit_time) return 0;
@@ -1413,24 +1592,48 @@ export default function AdminDashboard() {
                               <div
                                 className="flex items-center gap-2 px-4 py-2"
                                 style={{ borderBottom: "1px solid #1e1e1e" }}>
-                                <span className="text-xs font-bold" style={{ color: "#555" }}>
+                                <span
+                                  className="text-xs font-bold"
+                                  style={{ color: "#555" }}>
                                   {formatTime(job.visit_time)}
                                 </span>
-                                <div className="flex-1 h-px" style={{ backgroundColor: "#1e1e1e" }} />
+                                <div
+                                  className="flex-1 h-px"
+                                  style={{ backgroundColor: "#1e1e1e" }}
+                                />
                               </div>
                             )}
                           {!job.visit_time && idx === 0 && (
-                            <div className="px-4 py-2" style={{ borderBottom: "1px solid #1e1e1e" }}>
-                              <span className="text-xs font-bold" style={{ color: "#555" }}>시간 미정</span>
+                            <div
+                              className="px-4 py-2"
+                              style={{ borderBottom: "1px solid #1e1e1e" }}>
+                              <span
+                                className="text-xs font-bold"
+                                style={{ color: "#555" }}>
+                                시간 미정
+                              </span>
                             </div>
                           )}
-                          {!job.visit_time && idx > 0 && arr[idx - 1].visit_time && (
-                            <div className="px-4 py-2" style={{ borderBottom: "1px solid #1e1e1e" }}>
-                              <span className="text-xs font-bold" style={{ color: "#555" }}>시간 미정</span>
-                            </div>
-                          )}
+                          {!job.visit_time &&
+                            idx > 0 &&
+                            arr[idx - 1].visit_time && (
+                              <div
+                                className="px-4 py-2"
+                                style={{ borderBottom: "1px solid #1e1e1e" }}>
+                                <span
+                                  className="text-xs font-bold"
+                                  style={{ color: "#555" }}>
+                                  시간 미정
+                                </span>
+                              </div>
+                            )}
                           <div className="px-3 py-2">
-                            <JobCard job={job} onUpdate={update} onEdit={startEdit} onDelete={remove} />
+                            <JobCard
+                              job={job}
+                              onUpdate={update}
+                              onEdit={startEdit}
+                              onDelete={remove}
+                            />
                           </div>
                         </div>
                       ))}
@@ -1448,8 +1651,13 @@ export default function AdminDashboard() {
             <div className="grid grid-cols-2 gap-3">
               <div
                 className="rounded-2xl p-5"
-                style={{ backgroundColor: "#1c1c1c", border: "1px solid #2e2e2e" }}>
-                <p className="text-xs mb-2 font-medium" style={{ color: "#777" }}>
+                style={{
+                  backgroundColor: "#1c1c1c",
+                  border: "1px solid #2e2e2e",
+                }}>
+                <p
+                  className="text-xs mb-2 font-medium"
+                  style={{ color: "#777" }}>
                   {formatYearMonth(monthFilter)} 매출
                 </p>
                 <p className="text-2xl font-bold" style={{ color: "white" }}>
@@ -1458,26 +1666,41 @@ export default function AdminDashboard() {
               </div>
               <div
                 className="rounded-2xl p-5"
-                style={{ backgroundColor: "#1c1c1c", border: "1px solid #2e2e2e" }}>
-                <p className="text-xs mb-2 font-medium" style={{ color: "#777" }}>
+                style={{
+                  backgroundColor: "#1c1c1c",
+                  border: "1px solid #2e2e2e",
+                }}>
+                <p
+                  className="text-xs mb-2 font-medium"
+                  style={{ color: "#777" }}>
                   {formatYearMonth(monthFilter)} 완료
                 </p>
                 <p className="text-2xl font-bold" style={{ color: "white" }}>
                   {doneMonth.length}
-                  <span className="text-base ml-1" style={{ color: "#888" }}>건</span>
+                  <span className="text-base ml-1" style={{ color: "#888" }}>
+                    건
+                  </span>
                 </p>
               </div>
             </div>
             {TECHS.map((tech) => {
               const techJobs = doneMonth.filter((j) => j.tech === tech);
-              const techRevenue = techJobs.reduce((s, j) => s + (j.price || 0), 0);
+              const techRevenue = techJobs.reduce(
+                (s, j) => s + (j.price || 0),
+                0,
+              );
               return (
                 <div
                   key={tech}
                   className="rounded-2xl p-5"
-                  style={{ backgroundColor: "#1c1c1c", border: "1px solid #2e2e2e" }}>
+                  style={{
+                    backgroundColor: "#1c1c1c",
+                    border: "1px solid #2e2e2e",
+                  }}>
                   <div className="flex items-center justify-between mb-3">
-                    <span className="text-sm font-bold" style={{ color: TECH_COLOR[tech] }}>
+                    <span
+                      className="text-sm font-bold"
+                      style={{ color: TECH_COLOR[tech] }}>
                       {tech}
                     </span>
                     <span
@@ -1489,10 +1712,14 @@ export default function AdminDashboard() {
                       {techJobs.length}건
                     </span>
                   </div>
-                  <div className="text-xl font-bold mb-3" style={{ color: TECH_COLOR[tech] }}>
+                  <div
+                    className="text-xl font-bold mb-3"
+                    style={{ color: TECH_COLOR[tech] }}>
                     {formatPrice(techRevenue)}
                   </div>
-                  <div className="h-2 rounded-full overflow-hidden" style={{ backgroundColor: "#2a2a2a" }}>
+                  <div
+                    className="h-2 rounded-full overflow-hidden"
+                    style={{ backgroundColor: "#2a2a2a" }}>
                     <div
                       className="h-full rounded-full"
                       style={{
@@ -1506,7 +1733,10 @@ export default function AdminDashboard() {
             })}
             <div
               className="rounded-2xl p-5"
-              style={{ backgroundColor: "#1c1c1c", border: "1px solid #2e2e2e" }}>
+              style={{
+                backgroundColor: "#1c1c1c",
+                border: "1px solid #2e2e2e",
+              }}>
               <p
                 className="text-sm font-bold mb-3 flex items-center gap-2"
                 style={{ color: "white" }}>
@@ -1520,7 +1750,9 @@ export default function AdminDashboard() {
                 )}
               </p>
               {reviewPending.length === 0 ? (
-                <p className="text-sm" style={{ color: "#666" }}>모두 요청 완료! 👍</p>
+                <p className="text-sm" style={{ color: "#666" }}>
+                  모두 요청 완료! 👍
+                </p>
               ) : (
                 reviewPending.map((job) => (
                   <div
@@ -1528,7 +1760,9 @@ export default function AdminDashboard() {
                     className="flex items-center justify-between py-3"
                     style={{ borderBottom: "1px solid #232323" }}>
                     <div>
-                      <span className="text-sm font-medium" style={{ color: "#e5e5e5" }}>
+                      <span
+                        className="text-sm font-medium"
+                        style={{ color: "#e5e5e5" }}>
                         {job.name}
                       </span>
                       <span className="text-xs ml-2" style={{ color: "#666" }}>
@@ -1564,7 +1798,11 @@ export default function AdminDashboard() {
                   setDateFilter(d.toISOString().slice(0, 10));
                 }}
                 className="px-3 py-2 rounded-lg text-lg font-bold"
-                style={{ backgroundColor: "#1c1c1c", color: "#e5e5e5", border: "1px solid #2e2e2e" }}>
+                style={{
+                  backgroundColor: "#1c1c1c",
+                  color: "#e5e5e5",
+                  border: "1px solid #2e2e2e",
+                }}>
                 ‹
               </button>
               <input
@@ -1572,7 +1810,12 @@ export default function AdminDashboard() {
                 value={dateFilter}
                 onChange={(e) => setDateFilter(e.target.value)}
                 className="flex-1 text-center text-sm font-bold rounded-xl py-2"
-                style={{ backgroundColor: "#1c1c1c", color: "white", border: "1px solid #2e2e2e", outline: "none" }}
+                style={{
+                  backgroundColor: "#1c1c1c",
+                  color: "white",
+                  border: "1px solid #2e2e2e",
+                  outline: "none",
+                }}
               />
               <button
                 onClick={() => {
@@ -1581,7 +1824,11 @@ export default function AdminDashboard() {
                   setDateFilter(d.toISOString().slice(0, 10));
                 }}
                 className="px-3 py-2 rounded-lg text-lg font-bold"
-                style={{ backgroundColor: "#1c1c1c", color: "#e5e5e5", border: "1px solid #2e2e2e" }}>
+                style={{
+                  backgroundColor: "#1c1c1c",
+                  color: "#e5e5e5",
+                  border: "1px solid #2e2e2e",
+                }}>
                 ›
               </button>
               <select
@@ -1589,8 +1836,18 @@ export default function AdminDashboard() {
                 onChange={(e) => setTechFilter(e.target.value as Tech | "전체")}
                 className="rounded-xl px-3 py-2 text-xs font-bold cursor-pointer"
                 style={{
-                  backgroundColor: techFilter === "기사1" ? "#2fae8a22" : techFilter === "기사2" ? "#60a5fa22" : "#1c1c1c",
-                  color: techFilter === "기사1" ? "#2fae8a" : techFilter === "기사2" ? "#60a5fa" : "#bbb",
+                  backgroundColor:
+                    techFilter === "기사1"
+                      ? "#2fae8a22"
+                      : techFilter === "기사2"
+                        ? "#60a5fa22"
+                        : "#1c1c1c",
+                  color:
+                    techFilter === "기사1"
+                      ? "#2fae8a"
+                      : techFilter === "기사2"
+                        ? "#60a5fa"
+                        : "#bbb",
                   border: `1px solid ${techFilter === "기사1" ? "#2fae8a44" : techFilter === "기사2" ? "#60a5fa44" : "#2e2e2e"}`,
                   outline: "none",
                 }}>
@@ -1614,20 +1871,36 @@ export default function AdminDashboard() {
                 </button>
               ))}
             </div>
-            <div className="rounded-2xl overflow-hidden" style={{ border: "1px solid #2a2a2a" }}>
+            <div
+              className="rounded-2xl overflow-hidden"
+              style={{ border: "1px solid #2a2a2a" }}>
               <div
                 className="flex items-center justify-between px-4 py-3"
-                style={{ backgroundColor: "#1c1c1c", borderBottom: "1px solid #2a2a2a" }}>
+                style={{
+                  backgroundColor: "#1c1c1c",
+                  borderBottom: "1px solid #2a2a2a",
+                }}>
                 <div className="flex items-center gap-2 flex-wrap">
-                  <span className="text-sm font-bold" style={{ color: "white" }}>
+                  <span
+                    className="text-sm font-bold"
+                    style={{ color: "white" }}>
                     {formatDate(dateFilter)} 일정
                   </span>
-                  <span className="text-xs px-2 py-0.5 rounded-full font-medium" style={{ backgroundColor: "#2a2a2a", color: "#bbb" }}>
+                  <span
+                    className="text-xs px-2 py-0.5 rounded-full font-medium"
+                    style={{ backgroundColor: "#2a2a2a", color: "#bbb" }}>
                     {filtered.length}건
                   </span>
-                  <span className="text-xs font-medium" style={{ color: "#2fae8a" }}>
-                    완료 {filtered.filter((j) => j.status === "완료").length}건 ·{" "}
-                    {formatPrice(filtered.filter((j) => j.status === "완료").reduce((s, j) => s + (j.price || 0), 0))}
+                  <span
+                    className="text-xs font-medium"
+                    style={{ color: "#2fae8a" }}>
+                    완료 {filtered.filter((j) => j.status === "완료").length}건
+                    ·{" "}
+                    {formatPrice(
+                      filtered
+                        .filter((j) => j.status === "완료" && !j.is_measurement)
+                        .reduce((s, j) => s + (j.price || 0), 0),
+                    )}
                   </span>
                 </div>
                 <button
@@ -1642,12 +1915,16 @@ export default function AdminDashboard() {
                 </button>
               </div>
               {filtered.length === 0 ? (
-                <div className="text-center py-12" style={{ backgroundColor: "#111", color: "#444" }}>
+                <div
+                  className="text-center py-12"
+                  style={{ backgroundColor: "#111", color: "#444" }}>
                   <p className="text-3xl mb-2">📋</p>
                   <p className="text-sm">일정 없음</p>
                 </div>
               ) : (
-                <div className="flex flex-col gap-0" style={{ backgroundColor: "#111" }}>
+                <div
+                  className="flex flex-col gap-0"
+                  style={{ backgroundColor: "#111" }}>
                   {[...filtered]
                     .sort((a, b) => {
                       if (!a.visit_time && !b.visit_time) return 0;
@@ -1658,19 +1935,42 @@ export default function AdminDashboard() {
                     .map((job, idx, arr) => (
                       <div key={job.id}>
                         {job.visit_time &&
-                          (idx === 0 || arr[idx - 1].visit_time?.slice(0, 2) !== job.visit_time.slice(0, 2)) && (
-                            <div className="flex items-center gap-2 px-4 py-2" style={{ borderBottom: "1px solid #1e1e1e" }}>
-                              <span className="text-xs font-bold" style={{ color: "#555" }}>{formatTime(job.visit_time)}</span>
-                              <div className="flex-1 h-px" style={{ backgroundColor: "#1e1e1e" }} />
+                          (idx === 0 ||
+                            arr[idx - 1].visit_time?.slice(0, 2) !==
+                              job.visit_time.slice(0, 2)) && (
+                            <div
+                              className="flex items-center gap-2 px-4 py-2"
+                              style={{ borderBottom: "1px solid #1e1e1e" }}>
+                              <span
+                                className="text-xs font-bold"
+                                style={{ color: "#555" }}>
+                                {formatTime(job.visit_time)}
+                              </span>
+                              <div
+                                className="flex-1 h-px"
+                                style={{ backgroundColor: "#1e1e1e" }}
+                              />
                             </div>
                           )}
-                        {!job.visit_time && (idx === 0 || arr[idx - 1].visit_time) && (
-                          <div className="px-4 py-2" style={{ borderBottom: "1px solid #1e1e1e" }}>
-                            <span className="text-xs font-bold" style={{ color: "#555" }}>시간 미정</span>
-                          </div>
-                        )}
+                        {!job.visit_time &&
+                          (idx === 0 || arr[idx - 1].visit_time) && (
+                            <div
+                              className="px-4 py-2"
+                              style={{ borderBottom: "1px solid #1e1e1e" }}>
+                              <span
+                                className="text-xs font-bold"
+                                style={{ color: "#555" }}>
+                                시간 미정
+                              </span>
+                            </div>
+                          )}
                         <div className="px-3 py-2">
-                          <JobCard job={job} onUpdate={update} onEdit={startEdit} onDelete={remove} />
+                          <JobCard
+                            job={job}
+                            onUpdate={update}
+                            onEdit={startEdit}
+                            onDelete={remove}
+                          />
                         </div>
                       </div>
                     ))}
@@ -1692,7 +1992,8 @@ export default function AdminDashboard() {
                     onClick={() => setStatusFilter(s as Status | "전체")}
                     className="rounded-full px-3 py-1.5 text-xs font-semibold"
                     style={{
-                      backgroundColor: statusFilter === s ? "#2fae8a" : "#1c1c1c",
+                      backgroundColor:
+                        statusFilter === s ? "#2fae8a" : "#1c1c1c",
                       color: statusFilter === s ? "white" : "#777",
                       border: "1px solid #2e2e2e",
                     }}>
@@ -1705,8 +2006,18 @@ export default function AdminDashboard() {
                 onChange={(e) => setTechFilter(e.target.value as Tech | "전체")}
                 className="rounded-xl px-3 py-1.5 text-xs font-bold cursor-pointer"
                 style={{
-                  backgroundColor: techFilter === "기사1" ? "#2fae8a22" : techFilter === "기사2" ? "#60a5fa22" : "#1c1c1c",
-                  color: techFilter === "기사1" ? "#2fae8a" : techFilter === "기사2" ? "#60a5fa" : "#bbb",
+                  backgroundColor:
+                    techFilter === "기사1"
+                      ? "#2fae8a22"
+                      : techFilter === "기사2"
+                        ? "#60a5fa22"
+                        : "#1c1c1c",
+                  color:
+                    techFilter === "기사1"
+                      ? "#2fae8a"
+                      : techFilter === "기사2"
+                        ? "#60a5fa"
+                        : "#bbb",
                   border: `1px solid ${techFilter === "기사1" ? "#2fae8a44" : techFilter === "기사2" ? "#60a5fa44" : "#2e2e2e"}`,
                   outline: "none",
                 }}>
@@ -1715,12 +2026,22 @@ export default function AdminDashboard() {
                 <option value="기사2">기사2</option>
               </select>
             </div>
-            <div className="flex gap-3 mb-4 text-xs font-medium" style={{ color: "#666" }}>
+            <div
+              className="flex gap-3 mb-4 text-xs font-medium"
+              style={{ color: "#666" }}>
               <span>{filtered.length}건</span>
               <span>·</span>
-              <span style={{ color: "#2fae8a" }}>완료 {filtered.filter((j) => j.status === "완료").length}건</span>
+              <span style={{ color: "#2fae8a" }}>
+                완료 {filtered.filter((j) => j.status === "완료").length}건
+              </span>
               <span>·</span>
-              <span>{formatPrice(filtered.filter((j) => j.status === "완료").reduce((s, j) => s + (j.price || 0), 0))}</span>
+              <span>
+                {formatPrice(
+                  filtered
+                    .filter((j) => j.status === "완료" && !j.is_measurement)
+                    .reduce((s, j) => s + (j.price || 0), 0),
+                )}
+              </span>
             </div>
             {filtered.length === 0 ? (
               <div className="text-center py-16" style={{ color: "#444" }}>
@@ -1730,7 +2051,13 @@ export default function AdminDashboard() {
             ) : (
               <div className="flex flex-col gap-2">
                 {filtered.map((job) => (
-                  <JobCard key={job.id} job={job} onUpdate={update} onEdit={startEdit} onDelete={remove} />
+                  <JobCard
+                    key={job.id}
+                    job={job}
+                    onUpdate={update}
+                    onEdit={startEdit}
+                    onDelete={remove}
+                  />
                 ))}
               </div>
             )}
@@ -1756,7 +2083,10 @@ export default function AdminDashboard() {
                 {editId ? "수정" : "새 접수"}
               </h3>
               <button
-                onClick={() => { setShowForm(false); setEditId(null); }}
+                onClick={() => {
+                  setShowForm(false);
+                  setEditId(null);
+                }}
                 style={{ color: "#666", fontSize: 20 }}>
                 ✕
               </button>
@@ -1765,17 +2095,29 @@ export default function AdminDashboard() {
               [
                 { label: "이름 *", key: "name", placeholder: "홍길동" },
                 { label: "연락처", key: "phone", placeholder: "010-0000-0000" },
-                { label: "지역 *", key: "region", placeholder: "인천 서구 ○○동" },
-                { label: "증상 *", key: "symptom", placeholder: "싱크대 상부장 처짐" },
+                {
+                  label: "지역 *",
+                  key: "region",
+                  placeholder: "인천 서구 ○○동",
+                },
+                {
+                  label: "증상 *",
+                  key: "symptom",
+                  placeholder: "싱크대 상부장 처짐",
+                },
               ] as const
             ).map((f) => (
               <label key={f.key} className="flex flex-col gap-1.5">
-                <span className="text-xs font-semibold" style={{ color: "#888" }}>
+                <span
+                  className="text-xs font-semibold"
+                  style={{ color: "#888" }}>
                   {f.label}
                 </span>
                 <input
                   value={form[f.key]}
-                  onChange={(e) => setForm((p) => ({ ...p, [f.key]: e.target.value }))}
+                  onChange={(e) =>
+                    setForm((p) => ({ ...p, [f.key]: e.target.value }))
+                  }
                   placeholder={f.placeholder}
                   style={inputStyle}
                 />
@@ -1783,27 +2125,41 @@ export default function AdminDashboard() {
             ))}
             <div className="grid grid-cols-2 gap-3">
               <label className="flex flex-col gap-1.5">
-                <span className="text-xs font-semibold" style={{ color: "#888" }}>방문일</span>
+                <span
+                  className="text-xs font-semibold"
+                  style={{ color: "#888" }}>
+                  방문일
+                </span>
                 <input
                   type="date"
                   value={form.visit_date}
-                  onChange={(e) => setForm((p) => ({ ...p, visit_date: e.target.value }))}
+                  onChange={(e) =>
+                    setForm((p) => ({ ...p, visit_date: e.target.value }))
+                  }
                   style={inputStyle}
                 />
               </label>
               <label className="flex flex-col gap-1.5">
-                <span className="text-xs font-semibold" style={{ color: "#888" }}>도착 시간</span>
+                <span
+                  className="text-xs font-semibold"
+                  style={{ color: "#888" }}>
+                  도착 시간
+                </span>
                 <div className="flex items-center gap-1">
                   <input
                     type="time"
                     value={form.visit_time}
-                    onChange={(e) => setForm((p) => ({ ...p, visit_time: e.target.value }))}
+                    onChange={(e) =>
+                      setForm((p) => ({ ...p, visit_time: e.target.value }))
+                    }
                     style={{ ...inputStyle, flex: 1 }}
                   />
                   <button
                     type="button"
                     onClick={() => {
-                      const [h, m] = (form.visit_time || "00:00").split(":").map(Number);
+                      const [h, m] = (form.visit_time || "00:00")
+                        .split(":")
+                        .map(Number);
                       const total = h * 60 + m - 30;
                       const safe = ((total % 1440) + 1440) % 1440;
                       setForm((p) => ({
@@ -1812,13 +2168,19 @@ export default function AdminDashboard() {
                       }));
                     }}
                     className="rounded-xl px-2 py-2 text-sm font-bold flex-shrink-0"
-                    style={{ backgroundColor: "#252525", color: "#aaa", border: "1px solid #383838" }}>
+                    style={{
+                      backgroundColor: "#252525",
+                      color: "#aaa",
+                      border: "1px solid #383838",
+                    }}>
                     －
                   </button>
                   <button
                     type="button"
                     onClick={() => {
-                      const [h, m] = (form.visit_time || "00:00").split(":").map(Number);
+                      const [h, m] = (form.visit_time || "00:00")
+                        .split(":")
+                        .map(Number);
                       const total = h * 60 + m + 30;
                       const safe = total % 1440;
                       setForm((p) => ({
@@ -1827,43 +2189,70 @@ export default function AdminDashboard() {
                       }));
                     }}
                     className="rounded-xl px-2 py-2 text-sm font-bold flex-shrink-0"
-                    style={{ backgroundColor: "#252525", color: "#aaa", border: "1px solid #383838" }}>
+                    style={{
+                      backgroundColor: "#252525",
+                      color: "#aaa",
+                      border: "1px solid #383838",
+                    }}>
                     ＋
                   </button>
                 </div>
               </label>
             </div>
             <label className="flex flex-col gap-1.5">
-              <span className="text-xs font-semibold" style={{ color: "#888" }}>금액 (원)</span>
+              <span className="text-xs font-semibold" style={{ color: "#888" }}>
+                금액 (원)
+              </span>
               <input
                 type="number"
                 value={form.price || ""}
-                onChange={(e) => setForm((p) => ({ ...p, price: parseInt(e.target.value) || 0 }))}
+                onChange={(e) =>
+                  setForm((p) => ({
+                    ...p,
+                    price: parseInt(e.target.value) || 0,
+                  }))
+                }
                 placeholder="150000"
                 style={inputStyle}
               />
             </label>
             <div className="grid grid-cols-2 gap-3">
               <label className="flex flex-col gap-1.5">
-                <span className="text-xs font-semibold" style={{ color: "#888" }}>기사</span>
+                <span
+                  className="text-xs font-semibold"
+                  style={{ color: "#888" }}>
+                  기사
+                </span>
                 <select
                   value={form.tech}
-                  onChange={(e) => setForm((p) => ({ ...p, tech: e.target.value as Tech }))}
+                  onChange={(e) =>
+                    setForm((p) => ({ ...p, tech: e.target.value as Tech }))
+                  }
                   style={inputStyle}>
                   <option value="">미배정</option>
                   {TECHS.filter(Boolean).map((t) => (
-                    <option key={t} value={t}>{t}</option>
+                    <option key={t} value={t}>
+                      {t}
+                    </option>
                   ))}
                 </select>
               </label>
               <label className="flex flex-col gap-1.5">
-                <span className="text-xs font-semibold" style={{ color: "#888" }}>상태</span>
+                <span
+                  className="text-xs font-semibold"
+                  style={{ color: "#888" }}>
+                  상태
+                </span>
                 <select
                   value={form.status}
-                  onChange={(e) => setForm((p) => ({ ...p, status: e.target.value as Status }))}
+                  onChange={(e) =>
+                    setForm((p) => ({ ...p, status: e.target.value as Status }))
+                  }
                   style={inputStyle}>
                   {STATUSES.map((s) => (
-                    <option key={s} value={s}>{s}</option>
+                    <option key={s} value={s}>
+                      {s}
+                    </option>
                   ))}
                 </select>
               </label>
@@ -1872,84 +2261,212 @@ export default function AdminDashboard() {
             <label className="flex flex-col gap-1.5">
               <span className="text-xs font-semibold" style={{ color: "#888" }}>
                 🛡 AS 만료일
-                <span className="ml-1 font-normal" style={{ color: "#555" }}>(기본 1년)</span>
+                <span className="ml-1 font-normal" style={{ color: "#555" }}>
+                  (기본 1년)
+                </span>
               </span>
               <div className="flex gap-2 items-center">
                 <input
                   type="date"
                   value={form.as_until || ""}
-                  onChange={(e) => setForm((p) => ({ ...p, as_until: e.target.value }))}
+                  onChange={(e) =>
+                    setForm((p) => ({ ...p, as_until: e.target.value }))
+                  }
                   style={{ ...inputStyle, flex: 1 }}
                 />
                 <button
                   type="button"
-                  onClick={() => setForm((p) => ({ ...p, as_until: addOneYear(p.visit_date || today()) }))}
+                  onClick={() =>
+                    setForm((p) => ({
+                      ...p,
+                      as_until: addOneYear(p.visit_date || today()),
+                    }))
+                  }
                   className="rounded-xl px-3 py-2 text-xs font-bold flex-shrink-0"
-                  style={{ backgroundColor: "#252525", color: "#aaa", border: "1px solid #383838" }}>
+                  style={{
+                    backgroundColor: "#252525",
+                    color: "#aaa",
+                    border: "1px solid #383838",
+                  }}>
                   1년
                 </button>
               </div>
             </label>
 
+            {/* 실측 방문 토글 */}
+            <button
+              type="button"
+              onClick={() =>
+                setForm((p) => ({ ...p, is_measurement: !p.is_measurement }))
+              }
+              className="flex items-center justify-between rounded-xl px-4 py-3"
+              style={{
+                backgroundColor: form.is_measurement ? "#a855f718" : "#1a1a1a",
+                border: `1px solid ${form.is_measurement ? "#a855f755" : "#383838"}`,
+              }}>
+              <div className="flex items-center gap-2.5">
+                <span className="text-base">📐</span>
+                <div className="text-left">
+                  <p
+                    className="text-sm font-bold"
+                    style={{ color: form.is_measurement ? "#a855f7" : "#ccc" }}>
+                    실측 방문
+                  </p>
+                  <p className="text-xs mt-0.5" style={{ color: "#555" }}>
+                    체크 시 완료해도 매출에 포함 안 됨
+                  </p>
+                </div>
+              </div>
+              <div
+                className="rounded-full transition-all flex-shrink-0"
+                style={{
+                  width: 44,
+                  height: 24,
+                  backgroundColor: form.is_measurement ? "#a855f7" : "#333",
+                  position: "relative",
+                }}>
+                <div
+                  style={{
+                    position: "absolute",
+                    top: 3,
+                    left: form.is_measurement ? 23 : 3,
+                    width: 18,
+                    height: 18,
+                    borderRadius: "50%",
+                    backgroundColor: "white",
+                    transition: "left 0.2s",
+                  }}
+                />
+              </div>
+            </button>
+
             <label className="flex flex-col gap-1.5">
-              <span className="text-xs font-semibold" style={{ color: "#f59e0b" }}>
-                📷 접수 사진 <span className="font-normal" style={{ color: "#555" }}>(고장 상태)</span>
+              <span
+                className="text-xs font-semibold"
+                style={{ color: "#f59e0b" }}>
+                📷 접수 사진{" "}
+                <span className="font-normal" style={{ color: "#555" }}>
+                  (고장 상태)
+                </span>
               </span>
               <div className="flex flex-col gap-2">
                 {(() => {
                   const intakeList: string[] = form.intake_photos
-                    ? (() => { try { return JSON.parse(form.intake_photos); } catch { return []; } })()
+                    ? (() => {
+                        try {
+                          return JSON.parse(form.intake_photos);
+                        } catch {
+                          return [];
+                        }
+                      })()
                     : [];
                   return intakeList.length > 0 ? (
                     <div className="flex gap-2 flex-wrap">
                       {intakeList.map((url, idx) => (
                         <div key={url} className="relative">
-                          <img src={url} alt={`접수 ${idx + 1}`} className="rounded-xl"
-                            style={{ height: 72, width: 72, objectFit: "cover", border: "1px solid #f59e0b44" }} />
-                          <button type="button"
+                          <img
+                            src={url}
+                            alt={`접수 ${idx + 1}`}
+                            className="rounded-xl"
+                            style={{
+                              height: 72,
+                              width: 72,
+                              objectFit: "cover",
+                              border: "1px solid #f59e0b44",
+                            }}
+                          />
+                          <button
+                            type="button"
                             onClick={() => {
-                              const next = intakeList.filter((_, i) => i !== idx);
-                              setForm(p => ({ ...p, intake_photos: next.length ? JSON.stringify(next) : "" }));
+                              const next = intakeList.filter(
+                                (_, i) => i !== idx,
+                              );
+                              setForm((p) => ({
+                                ...p,
+                                intake_photos: next.length
+                                  ? JSON.stringify(next)
+                                  : "",
+                              }));
                             }}
                             className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold"
-                            style={{ backgroundColor: "#ef4444", color: "white" }}>✕</button>
+                            style={{
+                              backgroundColor: "#ef4444",
+                              color: "white",
+                            }}>
+                            ✕
+                          </button>
                         </div>
                       ))}
                     </div>
                   ) : null;
                 })()}
-                <label className="flex items-center gap-2 rounded-xl px-3 py-2.5 cursor-pointer"
-                  style={{ backgroundColor: "#1a1a1a", border: "1px dashed #f59e0b55", color: "#f59e0b" }}>
+                <label
+                  className="flex items-center gap-2 rounded-xl px-3 py-2.5 cursor-pointer"
+                  style={{
+                    backgroundColor: "#1a1a1a",
+                    border: "1px dashed #f59e0b55",
+                    color: "#f59e0b",
+                  }}>
                   <span className="text-sm">📷</span>
-                  <span className="text-xs font-semibold">사진 추가 (갤러리 / 카메라)</span>
-                  <input type="file" accept="image/*" multiple className="hidden"
+                  <span className="text-xs font-semibold">
+                    사진 추가 (갤러리 / 카메라)
+                  </span>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    className="hidden"
                     onChange={async (e) => {
                       const files = Array.from(e.target.files || []);
                       if (!files.length) return;
                       const existing: string[] = form.intake_photos
-                        ? (() => { try { return JSON.parse(form.intake_photos); } catch { return []; } })()
+                        ? (() => {
+                            try {
+                              return JSON.parse(form.intake_photos);
+                            } catch {
+                              return [];
+                            }
+                          })()
                         : [];
                       const newUrls: string[] = [];
                       for (const file of files) {
                         const compressed = await compressImage(file);
                         const path = `intake-${Date.now()}-${Math.random().toString(36).slice(2)}.jpg`;
-                        const { error } = await getSupabase().storage.from("completion-photos").upload(path, compressed, { upsert: true, contentType: "image/jpeg" });
-                        if (error) { alert("업로드 실패: " + error.message); continue; }
-                        const { data } = getSupabase().storage.from("completion-photos").getPublicUrl(path);
+                        const { error } = await getSupabase()
+                          .storage.from("completion-photos")
+                          .upload(path, compressed, {
+                            upsert: true,
+                            contentType: "image/jpeg",
+                          });
+                        if (error) {
+                          alert("업로드 실패: " + error.message);
+                          continue;
+                        }
+                        const { data } = getSupabase()
+                          .storage.from("completion-photos")
+                          .getPublicUrl(path);
                         newUrls.push(data.publicUrl);
                       }
                       const all = [...existing, ...newUrls];
-                      setForm(p => ({ ...p, intake_photos: all.length ? JSON.stringify(all) : "" }));
-                    }} />
+                      setForm((p) => ({
+                        ...p,
+                        intake_photos: all.length ? JSON.stringify(all) : "",
+                      }));
+                    }}
+                  />
                 </label>
               </div>
             </label>
 
             <label className="flex flex-col gap-1.5">
-              <span className="text-xs font-semibold" style={{ color: "#888" }}>메모</span>
+              <span className="text-xs font-semibold" style={{ color: "#888" }}>
+                메모
+              </span>
               <textarea
                 value={form.memo}
-                onChange={(e) => setForm((p) => ({ ...p, memo: e.target.value }))}
+                onChange={(e) =>
+                  setForm((p) => ({ ...p, memo: e.target.value }))
+                }
                 placeholder="특이사항, 요청사항..."
                 rows={2}
                 style={{ ...inputStyle, resize: "none" }}
