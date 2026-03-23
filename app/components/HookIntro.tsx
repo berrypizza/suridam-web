@@ -1,5 +1,16 @@
 import FadeIn from "@/app/components/FadeIn";
 
+// ✅ 카카오 채널 URL로 교체하세요
+const KAKAO_CHANNEL_URL = "https://pf.kakao.com/_수리담/chat";
+
+function KakaoIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12 3C6.477 3 2 6.477 2 10.8c0 2.7 1.62 5.1 4.077 6.569l-1.04 3.847a.3.3 0 0 0 .461.324l4.666-3.1A11.66 11.66 0 0 0 12 18.6c5.523 0 10-3.477 10-7.8S17.523 3 12 3z" />
+    </svg>
+  );
+}
+
 export default function HookIntro() {
   return (
     <section
@@ -19,7 +30,7 @@ export default function HookIntro() {
       />
 
       <div className="absolute bottom-0 left-0 right-0 z-20 mx-auto max-w-5xl px-6 pb-14 md:pb-16">
-        {/* 규칙 5 금지/위협 배지 */}
+        {/* 배지 */}
         <FadeIn delay={0}>
           <div className="mb-7">
             <span
@@ -34,7 +45,7 @@ export default function HookIntro() {
           </div>
         </FadeIn>
 
-        {/* 규칙 1 상식파괴 + 4 자아흠집 */}
+        {/* 헤드라인 */}
         <FadeIn delay={120}>
           <h1
             className="font-black leading-[1.1] tracking-tight"
@@ -57,10 +68,9 @@ export default function HookIntro() {
           </h1>
         </FadeIn>
 
-        {/* 규칙 4 라포르 + Yes-set 1줄 */}
+        {/* Yes-set */}
         <FadeIn delay={240}>
           <div className="mt-6 max-w-lg">
-            {/* 규칙 4 마인드리딩 */}
             <p
               className="font-bold mb-3"
               style={{
@@ -84,33 +94,51 @@ export default function HookIntro() {
           </div>
         </FadeIn>
 
-        {/* CTA */}
+        {/* ── CTA: 카카오 메인 + 전화 보조 ── */}
         <FadeIn delay={360}>
-          <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+          <div className="mt-9 flex flex-col gap-3 sm:flex-row max-w-lg">
+            {/* 카카오 메인 */}
             <a
-              href="/request"
-              className="rounded-2xl px-8 py-5 text-center font-black text-white transition-opacity hover:opacity-90"
-              style={{ backgroundColor: "#2fae8a", fontSize: "1.15rem" }}>
-              📷 사진 먼저 보내기 →
+              href={KAKAO_CHANNEL_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex-1 flex items-center justify-center gap-2.5 rounded-2xl px-8 py-5 font-black text-center transition-opacity hover:opacity-90"
+              style={{
+                backgroundColor: "#FEE500",
+                color: "#191919",
+                fontSize: "1.1rem",
+              }}>
+              <KakaoIcon />
+              카카오로 사진 보내기
             </a>
+
+            {/* 전화 보조 */}
             <a
               href="tel:01091273024"
-              className="rounded-2xl px-8 py-5 text-center font-bold transition-opacity hover:opacity-80"
+              className="sm:w-auto flex items-center justify-center rounded-2xl px-6 py-5 font-bold transition-opacity hover:opacity-80"
               style={{
                 backgroundColor: "rgba(255,255,255,0.08)",
                 border: "1px solid rgba(255,255,255,0.25)",
                 color: "white",
-                fontSize: "1.05rem",
+                fontSize: "1rem",
                 backdropFilter: "blur(8px)",
+                whiteSpace: "nowrap",
               }}>
-              📞 010-9127-3024
+              📞 전화 문의
             </a>
           </div>
+
+          {/* 운영시간 인라인 안내 */}
+          <p
+            className="mt-4 text-sm font-semibold"
+            style={{ color: "rgba(255,255,255,0.35)" }}>
+            🕐 매일 오전 9시 — 오후 9시 · 수리 불가 시 출장비 0원
+          </p>
         </FadeIn>
 
         <FadeIn delay={480}>
           <div
-            className="mt-10 flex w-fit items-center gap-2 text-base font-semibold"
+            className="mt-8 flex w-fit items-center gap-2 text-base font-semibold"
             style={{ color: "rgba(255,255,255,0.38)" }}>
             <span className="animate-bounce inline-block">↓</span>
             <span>왜 다른지 직접 확인해보세요</span>
