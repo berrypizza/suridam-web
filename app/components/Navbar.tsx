@@ -3,6 +3,9 @@ import Link from "next/link";
 import NavbarAuthButton from "./Navbarauthbutton";
 import DrawerMenu from "./Drawermenu";
 
+// ✅ 카카오 채널 URL로 교체하세요
+const KAKAO_CHANNEL_URL = "https://pf.kakao.com/_수리담/chat";
+
 function NaverIcon() {
   return (
     <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
@@ -15,6 +18,14 @@ function YouTubeIcon() {
   return (
     <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
       <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+    </svg>
+  );
+}
+
+function KakaoIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12 3C6.477 3 2 6.477 2 10.8c0 2.7 1.62 5.1 4.077 6.569l-1.04 3.847a.3.3 0 0 0 .461.324l4.666-3.1A11.66 11.66 0 0 0 12 18.6c5.523 0 10-3.477 10-7.8S17.523 3 12 3z" />
     </svg>
   );
 }
@@ -72,14 +83,29 @@ export default function Navbar() {
           {/* 로그인/프로필 */}
           <NavbarAuthButton />
 
-          {/* 전화 CTA */}
+          {/* ── 카카오 CTA (모바일 메인) ── */}
+          <a
+            href={KAKAO_CHANNEL_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-black transition-opacity hover:opacity-90"
+            style={{ backgroundColor: "#FEE500", color: "#191919" }}>
+            <KakaoIcon />
+            <span className="hidden sm:inline">카카오 상담</span>
+            <span className="sm:hidden">상담</span>
+          </a>
+
+          {/* 전화 CTA — 데스크탑만 */}
           <a
             href="tel:01091273024"
-            className="inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-semibold text-white transition-opacity hover:opacity-90"
-            style={{ backgroundColor: "#2fae8a" }}>
+            className="hidden sm:inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-semibold transition-opacity hover:opacity-90"
+            style={{
+              backgroundColor: "#2a2a2a",
+              border: "1px solid #333",
+              color: "#e5e5e5",
+            }}>
             <span className="text-xs">📞</span>
-            <span className="hidden sm:inline">전화 문의</span>
-            <span className="sm:hidden">문의</span>
+            <span>전화 문의</span>
           </a>
 
           {/* 드로어 메뉴 버튼 */}
