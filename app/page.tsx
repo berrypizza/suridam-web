@@ -9,6 +9,7 @@ import Footer from "@/app/components/Footer";
 import EstimateCalculator from "./components/EstimateCalculator";
 import Intro from "./components/Intro";
 import HonestSection from "./components/Honestsection";
+import CompareTable from "./components/CompareTable";
 
 export default function AdPage() {
   return (
@@ -18,6 +19,7 @@ export default function AdPage() {
         <Intro />
         <Staffphotos />
         <HonestSection />
+        <CompareTable />
         <WhySuridam />
         <DifferenceAndReviews />
         <EstimateCalculator />
