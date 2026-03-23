@@ -1,7 +1,7 @@
 import FadeIn from "@/app/components/FadeIn";
 
 // ✅ 카카오 채널 URL로 교체하세요
-const KAKAO_CHANNEL_URL = "https://pf.kakao.com/_수리담/chat";
+const KAKAO_CHANNEL_URL = "http://pf.kakao.com/_kaKTn/chat";
 
 function KakaoIcon() {
   return (

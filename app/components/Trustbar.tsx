@@ -1,9 +1,8 @@
-// TrustBar — Navbar 바로 아래, 히어로 위에 배치
-// <Navbar /> 다음 줄에 <TrustBar /> 추가하세요
 export default function TrustBar() {
   const signals = [
     { icon: "★★★★★", text: "4.9 실제 고객 후기" },
     { icon: "🚫", text: "수리 불가 시 출장비 0원" },
+    { icon: "📍", text: "서울·인천·경기" },
   ];
 
   return (
@@ -12,7 +11,7 @@ export default function TrustBar() {
       <div className="mx-auto max-w-5xl px-6 py-2 flex items-center justify-center gap-0 overflow-x-auto">
         {signals.map((s, i) => (
           <div key={i} className="flex items-center gap-4 flex-shrink-0">
-            <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-0.9">
               <span className="text-xs" style={{ color: "#2fae8a" }}>
                 {s.icon}
               </span>
