@@ -1,6 +1,5 @@
 import FadeIn from "@/app/components/FadeIn";
 
-// ✅ 카카오 채널 URL로 교체하세요
 const KAKAO_CHANNEL_URL = "http://pf.kakao.com/_kaKTn/chat";
 
 function KakaoIcon() {
@@ -30,7 +29,6 @@ export default function HookIntro() {
       />
 
       <div className="absolute bottom-0 left-0 right-0 z-20 mx-auto max-w-5xl px-6 pb-14 md:pb-16">
-        {/* 배지 */}
         <FadeIn delay={0}>
           <div className="mb-7">
             <span
@@ -45,7 +43,6 @@ export default function HookIntro() {
           </div>
         </FadeIn>
 
-        {/* 헤드라인 */}
         <FadeIn delay={120}>
           <h1
             className="font-black leading-[1.1] tracking-tight"
@@ -68,7 +65,6 @@ export default function HookIntro() {
           </h1>
         </FadeIn>
 
-        {/* Yes-set */}
         <FadeIn delay={240}>
           <div className="mt-6 max-w-lg">
             <p
@@ -94,10 +90,8 @@ export default function HookIntro() {
           </div>
         </FadeIn>
 
-        {/* ── CTA: 카카오 메인 + 전화 보조 ── */}
         <FadeIn delay={360}>
           <div className="mt-9 flex flex-col gap-3 sm:flex-row max-w-lg">
-            {/* 카카오 메인 */}
             <a
               href={KAKAO_CHANNEL_URL}
               target="_blank"
@@ -111,8 +105,6 @@ export default function HookIntro() {
               <KakaoIcon />
               카카오로 사진 보내기
             </a>
-
-            {/* 전화 보조 */}
             <a
               href="tel:01091273024"
               className="sm:w-auto flex items-center justify-center rounded-2xl px-6 py-5 font-bold transition-opacity hover:opacity-80"
@@ -127,8 +119,6 @@ export default function HookIntro() {
               📞 전화 문의
             </a>
           </div>
-
-          {/* 운영시간 인라인 안내 */}
           <p
             className="mt-4 text-sm font-semibold"
             style={{ color: "rgba(255,255,255,0.35)" }}>

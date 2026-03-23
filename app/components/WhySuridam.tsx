@@ -1,306 +1,22 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
 import FadeIn from "@/app/components/FadeIn";
 
-// ── 비교 데이터 ───────────────────────────────────────────────
-const diffs = [
-  {
-    num: "01",
-    icon: "📷",
-    theme: "진단 방식",
-    problem: "전화하면 '일단 와봐야 알아요'",
-    problemSub: "방문 후 금액이 처음과 달라진다",
-    solution: "사진 1장으로 가능 여부 먼저 판단",
-    solutionSub: "불가능하면 방문 전에 말씀드립니다",
-  },
-  {
-    num: "02",
-    icon: "💬",
-    theme: "견적 안내",
-    problem: '"비용은 현장 봐야 알아요"',
-    problemSub: "막상 오면 견적이 두 배가 된다",
-    solution: "범위를 먼저 공유, 납득 후 진행",
-    solutionSub: "표준 단가표 공개, 숨은 비용 없음",
-  },
-  {
-    num: "03",
-    icon: "✅",
-    theme: "솔직함",
-    problem: '"됩니다" 해놓고 결과가 애매함',
-    problemSub: "책임 없는 말만 하고 간다",
-    solution: "어려우면 사진 보고 먼저 말씀드림",
-    solutionSub: "수리 불가 시 출장비 0원",
-  },
-  {
-    num: "04",
-    icon: "🛡",
-    theme: "AS 보장",
-    problem: "수리 끝나면 연락이 안 된다",
-    problemSub: "재발해도 모른 척, 추가 비용 요구",
-    solution: "수리 완료일로부터 1년 무상 AS",
-    solutionSub: "같은 부위 재발 시 출장비·공임 없음",
-  },
-];
+const KAKAO_CHANNEL_URL = "http://pf.kakao.com/_kaKTn/chat";
 
-// ── 스크롤 아코디언 카드 ──────────────────────────────────────
-function ScrollAccordionCard({ d }: { d: (typeof diffs)[0] }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [open, setOpen] = useState(false);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setOpen(true);
-          obs.disconnect();
-        }
-      },
-      { threshold: 0.3, rootMargin: "0px 0px -60px 0px" },
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, []);
-
+function KakaoIcon() {
   return (
-    <div
-      ref={ref}
-      className="rounded-2xl overflow-hidden"
-      style={{
-        border: `1px solid ${open ? "#2fae8a44" : "#1a1a1a"}`,
-        opacity: open ? 1 : 0.4,
-        transform: open ? "translateY(0)" : "translateY(10px)",
-        transitionProperty: "opacity, transform, border-color",
-        transitionDuration: open ? "0.5s, 0.5s, 0.3s" : "0.15s, 0.15s, 0.15s",
-        transitionTimingFunction: open
-          ? "cubic-bezier(0.2, 0, 0, 1)"
-          : "cubic-bezier(0.7, 0, 1, 1)",
-      }}>
-      {/* 헤더 */}
-      <div
-        className="flex items-center justify-between px-5 py-3"
-        style={{
-          backgroundColor: open ? "#131a17" : "#111",
-          borderBottom: `1px solid ${open ? "#2fae8a22" : "#161616"}`,
-          transition: "background-color 0.4s ease",
-        }}>
-        <div className="flex items-center gap-3">
-          <span
-            className="text-sm font-black tabular-nums"
-            style={{ color: "#2fae8a", letterSpacing: "0.1em" }}>
-            {d.num}
-          </span>
-          <span className="text-lg">{d.icon}</span>
-          <span
-            className="text-sm font-bold"
-            style={{
-              color: open ? "white" : "#444",
-              transition: "color 0.3s",
-            }}>
-            {d.solution}
-          </span>
-        </div>
-        <div
-          className="w-1.5 h-1.5 rounded-full flex-shrink-0"
-          style={{
-            backgroundColor: open ? "#2fae8a" : "#2a2a2a",
-            boxShadow: open ? "0 0 8px #2fae8a99" : "none",
-            transition: "all 0.3s",
-          }}
-        />
-      </div>
-
-      {/* 비교 본문 */}
-      <div
-        style={{
-          maxHeight: open ? "160px" : "0px",
-          overflow: "hidden",
-          transition: open
-            ? "max-height 0.45s cubic-bezier(0.2, 0, 0, 1)"
-            : "max-height 0.18s cubic-bezier(0.7, 0, 1, 1)",
-        }}>
-        <div className="grid grid-cols-2">
-          <div
-            className="px-4 py-4"
-            style={{
-              backgroundColor: "#0f0f0f",
-              borderRight: "1px solid #1a1a1a",
-            }}>
-            <span
-              className="inline-block text-sm font-black px-2 py-0.5 rounded-full mb-2"
-              style={{ backgroundColor: "#ef444415", color: "#ef4444" }}>
-              일반 업체
-            </span>
-            <p
-              className="font-bold leading-snug mb-1 text-sm"
-              style={{
-                color: "#888",
-                textDecoration: "line-through",
-                textDecorationColor: "#ef444455",
-              }}>
-              {d.problem}
-            </p>
-            <p className="text-sm" style={{ color: "#888" }}>
-              {d.problemSub}
-            </p>
-          </div>
-          <div className="px-4 py-4" style={{ backgroundColor: "#0d1410" }}>
-            <span
-              className="inline-block text-sm font-black px-2 py-0.5 rounded-full mb-2"
-              style={{ backgroundColor: "#2fae8a22", color: "#2fae8a" }}>
-              수리담
-            </span>
-            <p
-              className="font-bold leading-snug mb-1 text-sm"
-              style={{ color: "white" }}>
-              {d.solution}
-            </p>
-            <p className="text-sm" style={{ color: "#2fae8aaa" }}>
-              {d.solutionSub}
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12 3C6.477 3 2 6.477 2 10.8c0 2.7 1.62 5.1 4.077 6.569l-1.04 3.847a.3.3 0 0 0 .461.324l4.666-3.1A11.66 11.66 0 0 0 12 18.6c5.523 0 10-3.477 10-7.8S17.523 3 12 3z" />
+    </svg>
   );
 }
 
-// ── 메인 섹션 ──────────────────────────────────────────────────
 export default function WhySuridam() {
   return (
     <section style={{ backgroundColor: "#0d0d0d" }}>
-      <div className="px-6 py-24 mx-auto max-w-3xl">
-        {/* ── 배지 ── */}
-        <FadeIn delay={0}>
-          <span
-            className="inline-block text-sm tracking-widest uppercase mb-6 px-3 py-1.5 rounded-full font-bold"
-            style={{
-              backgroundColor: "#2fae8a18",
-              color: "#2fae8a",
-              border: "1px solid #2fae8a44",
-            }}>
-            Why Suridam
-          </span>
-        </FadeIn>
-
-        {/* ── 후킹 헤드라인: 자아흠집 + 상식파괴 ── */}
-        <FadeIn delay={80}>
-          <h2
-            className="font-black leading-[1.08] tracking-tight mb-5"
-            style={{ fontSize: "clamp(2.2rem, 6vw, 4rem)", color: "white" }}>
-            가구수리 업체를
-            <br />
-            <span style={{ color: "#2fae8a" }}>잘못 고르는 법.</span>
-          </h2>
-        </FadeIn>
-
-        {/* ── 라포르 도입 ── */}
-        <FadeIn delay={140}>
-          <p
-            className="mb-8 text-lg font-semibold leading-relaxed"
-            style={{ color: "#888" }}>
-            좋은 업체를 고르려다 오히려 손해 본 경험,
-            <br />
-            <span style={{ color: "rgba(255,255,255,0.6)" }}>
-              한 번쯤은 있으셨죠.
-            </span>
-          </p>
-        </FadeIn>
-
-        {/* ── YES-SET: 라포르 + 마인드리딩 ── */}
-        <div className="flex flex-col gap-3 mb-6">
-          {[
-            {
-              check: "✓",
-              text: "수리는 됐는데 며칠 뒤 또 문제가 생겼다",
-              hi: false,
-            },
-            {
-              check: "✓",
-              text: "기사가 가고 나서 마무리가 애매해서 다시 연락했는데 안 받았다",
-              hi: false,
-            },
-            {
-              check: "→",
-              text: "그 업체, 다시는 안 부르겠다고 생각했죠?",
-              hi: true,
-            },
-          ].map((item, i) => (
-            <FadeIn key={i} delay={i * 80}>
-              <div
-                className="rounded-2xl px-5 py-4"
-                style={{
-                  backgroundColor: item.hi ? "#2fae8a12" : "#141414",
-                  border: `1px solid ${item.hi ? "#2fae8a44" : "#1e1e1e"}`,
-                }}>
-                <p
-                  className="font-semibold leading-snug"
-                  style={{
-                    fontSize: "clamp(1rem, 2.5vw, 1.15rem)",
-                    color: item.hi ? "#2fae8a" : "rgba(255,255,255,0.75)",
-                  }}>
-                  <span
-                    className="mr-2"
-                    style={{ color: item.hi ? "#2fae8a" : "#3a3a3a" }}>
-                    {item.check}
-                  </span>
-                  {item.text}
-                </p>
-              </div>
-            </FadeIn>
-          ))}
-        </div>
-
-        {/* ── 라포르 연결문 ── */}
-        <FadeIn delay={240}>
-          <p
-            className="text-base leading-relaxed mb-14"
-            style={{ color: "#666" }}>
-            수리하고 연락 끊기는 업체, 한 번쯤 겪어보셨죠.
-            <br />
-            <strong style={{ color: "rgba(255,255,255,0.6)" }}>
-              싼 게 비지떡이 아니라, 기준 없는 게 비지떡입니다.
-            </strong>
-            <br />
-            수리담이 4가지 기준을 만든 이유입니다.
-          </p>
-        </FadeIn>
-
-        {/* ── 구분선 ── */}
-        <div className="mb-10 flex items-center gap-4">
-          <div className="h-px flex-1" style={{ backgroundColor: "#1e1e1e" }} />
-          <span
-            className="text-sm font-black uppercase tracking-widest"
-            style={{ color: "#2fae8a" }}>
-            4가지 차이
-          </span>
-          <div className="h-px flex-1" style={{ backgroundColor: "#1e1e1e" }} />
-        </div>
-
-        {/* ── 소제목: 상식파괴 ── */}
-        <FadeIn delay={0}>
-          <h3
-            className="font-black leading-tight mb-2"
-            style={{ fontSize: "clamp(1.6rem, 4vw, 2.4rem)", color: "white" }}>
-            수리담에는
-            <br />
-            <span style={{ color: "#ef4444" }}>없는 것</span>이 4가지입니다.
-          </h3>
-          <p className="text-base mb-8" style={{ color: "#888" }}>
-            없는 게 많은 곳이 더 좋은 수리입니다. 스크롤하면 펼쳐집니다.
-          </p>
-        </FadeIn>
-
-        {/* ── 스크롤 아코디언 ── */}
-        <div className="flex flex-col gap-3 mb-14">
-          {diffs.map((d, i) => (
-            <ScrollAccordionCard key={i} d={d} />
-          ))}
-        </div>
-
-        {/* ── 약속 + 호기심 + CTA ── */}
+      <div className="px-6 py-20 mx-auto max-w-3xl">
+        {/* 약속 카드 */}
         <FadeIn delay={0}>
           <div
             className="rounded-2xl overflow-hidden"
@@ -317,7 +33,7 @@ export default function WhySuridam() {
                 수리담의 약속
               </p>
               <h3
-                className="font-black leading-snug mb-2"
+                className="font-black leading-snug mb-3"
                 style={{
                   fontSize: "clamp(1.3rem, 3.5vw, 1.9rem)",
                   color: "white",
@@ -333,9 +49,30 @@ export default function WhySuridam() {
                 style={{ color: "#2fae8aaa" }}>
                 광고 카피가 아닙니다. 실제로 지키지 못한 날은 청구하지 않습니다.
               </p>
+
+              {/* 4가지 요약 배지 */}
+              <div className="mt-6 grid grid-cols-2 gap-2">
+                {[
+                  "📷 사진 1장 사전 진단",
+                  "💬 범위 먼저 공유",
+                  "✅ 불가 시 출장비 0원",
+                  "🛡 1년 무상 AS",
+                ].map((item, i) => (
+                  <div
+                    key={i}
+                    className="rounded-xl px-3 py-2 text-sm font-bold"
+                    style={{
+                      backgroundColor: "#2fae8a18",
+                      color: "#2fae8a",
+                      border: "1px solid #2fae8a33",
+                    }}>
+                    {item}
+                  </div>
+                ))}
+              </div>
             </div>
 
-            {/* 호기심 훅 + CTA */}
+            {/* CTA */}
             <div
               className="px-7 py-6"
               style={{
@@ -352,10 +89,17 @@ export default function WhySuridam() {
                 </span>
               </p>
               <a
-                href="/request"
-                className="flex w-full items-center justify-center gap-2 rounded-xl py-4 font-black text-white transition-opacity hover:opacity-90"
-                style={{ backgroundColor: "#2fae8a", fontSize: "1.05rem" }}>
-                📷 사진 한 장으로 직접 확인하기 →
+                href={KAKAO_CHANNEL_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex w-full items-center justify-center gap-2 rounded-xl py-4 font-black text-center transition-opacity hover:opacity-90"
+                style={{
+                  backgroundColor: "#FEE500",
+                  color: "#191919",
+                  fontSize: "1.05rem",
+                }}>
+                <KakaoIcon />
+                카카오로 직접 확인하기 →
               </a>
             </div>
           </div>

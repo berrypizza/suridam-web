@@ -1,7 +1,6 @@
 import React from "react";
 import FadeIn from "@/app/components/FadeIn";
 
-// ✅ 카카오 채널 URL로 교체하세요
 const KAKAO_CHANNEL_URL = "http://pf.kakao.com/_kaKTn/chat";
 
 const steps = [
@@ -28,7 +27,6 @@ export default function ContactCTA() {
   return (
     <section className="px-6 py-24" style={{ backgroundColor: "#0d0d0d" }}>
       <div className="mx-auto max-w-5xl">
-        {/* ── 헤드라인 ── */}
         <FadeIn delay={0}>
           <div className="text-center mb-10">
             <span
@@ -60,7 +58,6 @@ export default function ContactCTA() {
           </div>
         </FadeIn>
 
-        {/* ── 명언 인용 ── */}
         <FadeIn delay={60}>
           <div
             className="mb-10 rounded-2xl px-6 py-5"
@@ -83,7 +80,6 @@ export default function ContactCTA() {
           </div>
         </FadeIn>
 
-        {/* ── Yes-set ── */}
         <FadeIn delay={80}>
           <div className="mb-10 flex flex-col gap-3">
             {[
@@ -127,8 +123,7 @@ export default function ContactCTA() {
           </div>
         </FadeIn>
 
-        {/* ── 3단계 ── */}
-        <div className="grid gap-4 sm:grid-cols-3 mb-12">
+        <div className="grid gap-4 sm:grid-cols-3 mb-10">
           {steps.map((s, i) => (
             <FadeIn key={s.num} delay={i * 100}>
               <div
@@ -155,7 +150,7 @@ export default function ContactCTA() {
           ))}
         </div>
 
-        {/* ── 운영시간 배지 ── */}
+        {/* 운영시간 */}
         <FadeIn delay={0}>
           <div className="flex justify-center mb-8">
             <div
@@ -179,10 +174,9 @@ export default function ContactCTA() {
           </div>
         </FadeIn>
 
-        {/* ── CTA — 카카오 메인 + 보조 2개 ── */}
+        {/* CTA */}
         <FadeIn delay={0}>
           <div className="flex flex-col gap-3 mb-12 max-w-lg mx-auto">
-            {/* 카카오 메인 CTA */}
             <a
               href={KAKAO_CHANNEL_URL}
               target="_blank"
@@ -196,8 +190,6 @@ export default function ContactCTA() {
               <KakaoIcon />
               카카오톡으로 바로 상담하기
             </a>
-
-            {/* 보조 CTA */}
             <div className="grid grid-cols-2 gap-3">
               <a
                 href="/request"
@@ -220,7 +212,7 @@ export default function ContactCTA() {
           </div>
         </FadeIn>
 
-        {/* ── 신뢰 배지 ── */}
+        {/* 신뢰 배지 */}
         <FadeIn delay={80}>
           <div
             className="flex flex-col sm:flex-row items-center justify-center gap-4"

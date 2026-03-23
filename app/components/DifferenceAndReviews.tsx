@@ -28,7 +28,7 @@ const categories = [
         after: "/images/upper-after2.jpg",
         review: {
           who: "부천 작동 / 김** 고객님",
-          body: "위에서 쾅 소리가 나더니 식칼 바로 옆에 떨어졌습니다. 그날 바로 연락했고, 다음 날 처리됐어요. 진짜 다칠 뻔했는데 빠르게 와주셔서 감사합니다.",
+          body: "위에서 쾅 소리가 나더니 식칼 바로 옆에 떨어졌습니다. 그날 바로 연락했고, 다음 날 처리됐어요.",
         },
       },
       {
@@ -37,7 +37,7 @@ const categories = [
         after: "/images/upper-after3.jpg",
         review: {
           who: "서울 마포구 / 정** 고객님",
-          body: "2년째 조금씩 처지는 거 알면서도 '괜찮겠지' 했는데… 더 미뤘으면 진짜 큰일 날 뻔했네요. 진작 연락드릴 걸 그랬어요.",
+          body: "2년째 조금씩 처지는 거 알면서도 '괜찮겠지' 했는데… 더 미뤘으면 진짜 큰일 날 뻔했네요.",
         },
       },
     ],
@@ -54,7 +54,7 @@ const categories = [
         after: "/images/door-after.png",
         review: {
           who: "마포구 합정 / 최** 고객님",
-          body: "솔직히 사진 보내고 '이건 교체하셔야 해요' 나올 줄 알았어요. 근데 '수리 가능합니다'라고 먼저 말씀해주시더라고요. 그 한 마디에 믿음이 갔습니다.",
+          body: "솔직히 사진 보내고 '이건 교체하셔야 해요' 나올 줄 알았어요. 근데 '수리 가능합니다'라고 먼저 말씀해주시더라고요.",
         },
       },
       {
@@ -63,7 +63,7 @@ const categories = [
         after: "/images/door-after2.jpg",
         review: {
           who: "강서구 화곡동 / 정** 고객님",
-          body: "업체 세 곳 돌았는데 전부 교체하라고 했습니다. 수리담은 7만원에 고쳐줬어요. 뭐가 맞는 건지는 결과가 말해주네요.",
+          body: "업체 세 곳 돌았는데 전부 교체하라고 했습니다. 수리담은 7만원에 고쳐줬어요.",
         },
       },
     ],
@@ -80,7 +80,7 @@ const categories = [
         after: "/images/sofa-after.jpg",
         review: {
           who: "부천 상동 / 이** 고객님",
-          body: "180만원짜리 새 소파 장바구니에 담아두고 결제 직전이었어요. 사진 보냈더니 고칠 수 있다고 하셔서 24만원에 끝냈습니다. 156만원 아꼈네요.",
+          body: "180만원짜리 새 소파 장바구니에 담아두고 결제 직전이었어요. 사진 보냈더니 24만원에 끝냈습니다. 156만원 아꼈네요.",
         },
       },
       {
@@ -89,7 +89,7 @@ const categories = [
         after: "/images/sofa-after2.jpg",
         review: {
           who: "인천 송도 / 장** 고객님",
-          body: "퇴근하고 소파에 눕는 게 하루 중 제일 기다려지는 시간인데, 한쪽이 꺼져서 반만 쓰고 있었어요. 이제 온전히 눕습니다. 별거 아닌 것 같아도 삶의 질이 달라지더라고요.",
+          body: "한쪽이 꺼져서 반만 쓰고 있었어요. 이제 온전히 눕습니다. 별거 아닌 것 같아도 삶의 질이 달라지더라고요.",
         },
       },
     ],
@@ -115,7 +115,7 @@ const categories = [
         after: "/images/sliding-after2.jpg",
         review: {
           who: "부천 중동 / 임** 고객님",
-          body: "문짝이 레일에서 빠진 채로 한 달 동안 들어서 열고 있었어요. 고치면 얼마나 할지 몰라서 계속 미뤘는데, 와보시더니 생각보다 금방 되더라고요.",
+          body: "문짝이 레일에서 빠진 채로 한 달 동안 들어서 열고 있었어요. 와보시더니 생각보다 금방 되더라고요.",
         },
       },
     ],
@@ -132,7 +132,7 @@ const categories = [
         after: "/images/rail-after2.jpg",
         review: {
           who: "인천 남동구 / 한** 고객님",
-          body: "비용이 얼마나 될지 몰라서 물어봤는데, 범위를 딱 잘라서 말씀해 주셨어요. 실제로 그 범위 안에서 끝났습니다. 예상치 못한 추가 비용 없이요.",
+          body: "범위를 딱 잘라서 말씀해 주셨어요. 실제로 그 범위 안에서 끝났습니다. 예상치 못한 추가 비용 없이요.",
         },
       },
       {
@@ -141,7 +141,7 @@ const categories = [
         after: "/images/rail-after.jpg",
         review: {
           who: "서울 동작구 / 이** 고객님",
-          body: "서랍 세 개가 다 뻑뻑해서 하나씩 안 쓰게 됐는데 그게 당연한 줄 알았어요. 다 고쳐지더라고요. 진작 연락할걸 했습니다.",
+          body: "서랍 세 개가 다 뻑뻑해서 하나씩 안 쓰게 됐는데 그게 당연한 줄 알았어요. 다 고쳐지더라고요.",
         },
       },
     ],
@@ -178,20 +178,20 @@ const previewReviews: Review[] = [
   {
     who: "강서구 화곡동 / 김** 고객님",
     title: "상부장 탈락",
-    body: "다른 데서 교체 견적 140만원 받아왔는데, 사진 보내드렸더니 8만원에 다 끝났습니다. 처음엔 믿기지 않았어요.",
     stars: 5,
+    body: "다른 데서 교체 견적 140만원 받아왔는데, 사진 보내드렸더니 8만원에 다 끝났습니다. 처음엔 믿기지 않았어요.",
   },
   {
     who: "부천 상동 / 이** 고객님",
     title: "소파 꺼짐",
-    body: "새 소파 장바구니에 담아두고 결제 직전이었어요. 여기서 수리하고 나서 취소했습니다. 결과 보고 잘했다 싶었어요.",
     stars: 5,
+    body: "새 소파 장바구니에 담아두고 결제 직전이었어요. 여기서 수리하고 나서 취소했습니다. 결과 보고 잘했다 싶었어요.",
   },
   {
     who: "인천 서구 / 고** 고객님",
     title: "슬라이딩 도어",
-    body: "다른 업체에서 그냥 새로 사시는 게 낫겠다고 했는데, 수리담에서 고쳐주셨어요. 그 말이 맞는지 결과로 확인했습니다.",
     stars: 5,
+    body: "다른 업체에서 그냥 새로 사시는 게 낫겠다고 했는데, 수리담에서 고쳐주셨어요. 그 말이 맞는지 결과로 확인했습니다.",
   },
 ];
 
@@ -340,8 +340,6 @@ function AccordionItem({
             </p>
           </div>
         </div>
-
-        {/* 클릭 유도 */}
         <div className="relative flex-shrink-0 flex flex-col items-center gap-1.5">
           {!open && (
             <span
@@ -353,7 +351,6 @@ function AccordionItem({
           <div
             className="relative flex items-center justify-center"
             style={{ width: 36, height: 36 }}>
-            {/* pulse 링 — 닫혀있을 때만 */}
             {!open && (
               <>
                 <span
@@ -401,10 +398,9 @@ function AccordionItem({
 export default function DifferenceAndReviews() {
   return (
     <section>
-      {/* ───── 리뷰 맛보기 ───── */}
+      {/* 리뷰 */}
       <div className="px-6 pt-20 pb-14" style={{ backgroundColor: "#111" }}>
         <div className="mx-auto max-w-5xl">
-          {/* 규칙 1 상식파괴 헤더 */}
           <FadeIn delay={0}>
             <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-8">
               <div>
@@ -429,6 +425,7 @@ export default function DifferenceAndReviews() {
                     후기 한 줄이 정직합니다
                   </span>
                 </h2>
+                {/* ✅ 중복 문구 1개만 남김 */}
                 <p
                   className="mt-4 text-lg leading-relaxed"
                   style={{ color: "#888" }}>
@@ -454,15 +451,6 @@ export default function DifferenceAndReviews() {
                 </div>
               </div>
             </div>
-          </FadeIn>
-
-          {/* 후기 도입 — 간결하게 */}
-          <FadeIn delay={60}>
-            <p
-              className="mb-8 text-base font-semibold"
-              style={{ color: "#888" }}>
-              광고 카피가 아닌, 실제 고객의 말입니다.
-            </p>
           </FadeIn>
 
           {/* 리뷰 카드 */}
@@ -527,10 +515,9 @@ export default function DifferenceAndReviews() {
         </div>
       </div>
 
-      {/* ───── YES-SET + Before/After 아코디언 ───── */}
+      {/* Before/After 아코디언 */}
       <div className="px-6 py-20" style={{ backgroundColor: "#f5f5f5" }}>
         <div className="mx-auto max-w-5xl">
-          {/* 섹션 브릿지 — 후기에서 사례로 자연스럽게 연결 */}
           <FadeIn delay={0}>
             <div
               className="mb-14 rounded-2xl px-7 py-6"
@@ -565,7 +552,6 @@ export default function DifferenceAndReviews() {
             </div>
           </FadeIn>
 
-          {/* Before/After 헤더 + 명언 */}
           <FadeIn delay={0}>
             <span
               className="inline-block text-sm tracking-widest uppercase mb-4 px-3 py-1.5 rounded-full font-bold"
@@ -583,7 +569,6 @@ export default function DifferenceAndReviews() {
             </p>
           </FadeIn>
 
-          {/* 아코디언 */}
           <div className="flex flex-col gap-3">
             {categories.map((cat, i) => (
               <FadeIn key={cat.id} delay={i * 60}>

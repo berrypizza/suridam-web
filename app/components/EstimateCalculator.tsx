@@ -309,7 +309,6 @@ function Calculator() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [count, setCount] = useState(1);
   const [selectOpt, setSelectOpt] = useState("");
-
   const cat = categories.find((c) => c.id === selectedId);
 
   const calcPrice = () => {
@@ -345,10 +344,9 @@ function Calculator() {
     setCount(1);
     setSelectOpt("");
   };
-
-  const labelColor = "#9ca3af";
   const cardBg = "#1a1a1a";
   const cardBorder = "#252525";
+  const labelColor = "#9ca3af";
 
   return (
     <div>
@@ -636,101 +634,48 @@ function Calculator() {
 }
 
 export default function EstimateCalculator() {
-  const [open, setOpen] = useState(false);
-
   return (
     <section className="px-6 py-16" style={{ backgroundColor: "#111" }}>
       <div className="mx-auto max-w-2xl">
-        {/* ── 후킹 카피 (규칙 4 자아흠집 + 5 위협 + 라포르) ── */}
         <FadeIn delay={0}>
-          <div
-            className="mb-6 rounded-2xl px-7 py-6"
-            style={{
-              backgroundColor: "#0d2318",
-              border: "1px solid #2fae8a66",
-            }}>
-            <p
-              className="font-bold leading-relaxed"
+          <div className="mb-8 text-center">
+            <span
+              className="inline-block text-sm tracking-widest uppercase mb-4 px-3 py-1.5 rounded-full font-bold"
               style={{
-                fontSize: "clamp(1rem, 2.5vw, 1.15rem)",
-                color: "#aaa",
+                backgroundColor: "#2fae8a22",
+                color: "#2fae8a",
+                border: "1px solid #2fae8a55",
               }}>
-              방문 전에 비용 범위를 먼저 알 수 있습니다.
-              <br />
-              아래에서 항목을 선택하면 바로 확인됩니다.
-            </p>
-            {/* 규칙 5 위협 + 상식파괴 */}
-            <p
-              className="mt-3 font-black"
+              🧮 무료 견적 계산기
+            </span>
+            <h2
+              className="font-black leading-tight"
               style={{
-                fontSize: "clamp(1.1rem, 3vw, 1.35rem)",
+                fontSize: "clamp(1.8rem, 5vw, 2.8rem)",
                 color: "white",
               }}>
-              전화하기 전에,{" "}
-              <span style={{ color: "#2fae8a" }}>
-                30초면 비용을 알 수 있습니다.
-              </span>
+              내 가구,
+              <br />
+              <span style={{ color: "#2fae8a" }}>얼마면 고칠 수 있을까?</span>
+            </h2>
+            <p
+              className="mt-3 text-base font-semibold"
+              style={{ color: "#888" }}>
+              항목 선택 → 30초 안에 예상 비용 확인
             </p>
           </div>
         </FadeIn>
 
-        {/* ── 아코디언 트리거 ── */}
         <FadeIn delay={80}>
-          <button
-            onClick={() => setOpen((v) => !v)}
-            className="w-full rounded-2xl px-7 py-6 flex items-center justify-between transition-all"
-            style={{
-              backgroundColor: open ? "#1a2e27" : "#161616",
-              border: `1px solid ${open ? "#2fae8a55" : "#222"}`,
-            }}>
-            <div className="flex items-center gap-4 text-left">
-              <span className="text-3xl">🧮</span>
-              <div>
-                <p
-                  className="text-sm font-black uppercase tracking-widest mb-1"
-                  style={{ color: "#2fae8a" }}>
-                  Estimate
-                </p>
-                {/* 규칙 6 호기심 + 1 상식파괴 */}
-                <p
-                  className="font-black"
-                  style={{
-                    fontSize: "clamp(1.1rem, 3vw, 1.4rem)",
-                    color: "white",
-                  }}>
-                  내 가구, 얼마면 고칠 수 있을까?
-                </p>
-                <p className="text-sm mt-0.5" style={{ color: "#888" }}>
-                  항목 선택 → 즉시 예상 비용 확인
-                </p>
-              </div>
-            </div>
-            <div
-              className="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300"
-              style={{
-                backgroundColor: open ? "#2fae8a" : "#1e1e1e",
-                border: `1px solid ${open ? "#2fae8a" : "#2a2a2a"}`,
-                transform: open ? "rotate(180deg)" : "rotate(0deg)",
-                color: open ? "white" : "#555",
-                fontSize: "1.1rem",
-              }}>
-              ↓
-            </div>
-          </button>
-        </FadeIn>
-
-        <div
-          style={{
-            maxHeight: open ? "2000px" : "0px",
-            overflow: "hidden",
-            transition: "max-height 0.5s cubic-bezier(0.4,0,0.2,1)",
-          }}>
           <div
-            className="rounded-2xl px-6 py-8 mt-3"
-            style={{ backgroundColor: "#161616", border: "1px solid #1e1e1e" }}>
+            className="rounded-2xl px-6 py-8"
+            style={{
+              backgroundColor: "#161616",
+              border: "1px solid #2fae8a33",
+            }}>
             <Calculator />
           </div>
-        </div>
+        </FadeIn>
       </div>
     </section>
   );

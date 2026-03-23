@@ -3,8 +3,7 @@ import Link from "next/link";
 import NavbarAuthButton from "./Navbarauthbutton";
 import DrawerMenu from "./Drawermenu";
 
-// ✅ 카카오 채널 URL로 교체하세요
-const KAKAO_CHANNEL_URL = "https://pf.kakao.com/_수리담/chat";
+const KAKAO_CHANNEL_URL = "http://pf.kakao.com/_kaKTn/chat";
 
 function NaverIcon() {
   return (
@@ -13,7 +12,6 @@ function NaverIcon() {
     </svg>
   );
 }
-
 function YouTubeIcon() {
   return (
     <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
@@ -21,7 +19,6 @@ function YouTubeIcon() {
     </svg>
   );
 }
-
 function KakaoIcon() {
   return (
     <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
@@ -36,7 +33,6 @@ export default function Navbar() {
       className="sticky top-0 z-50"
       style={{ backgroundColor: "#1e1e1e", borderBottom: "1px solid #2a2a2a" }}>
       <div className="mx-auto max-w-5xl px-6 h-14 flex items-center justify-between gap-4">
-        {/* 로고 */}
         <Link href="/" className="flex items-center gap-2 flex-shrink-0">
           <Image
             src="/images/logo-transparent.png"
@@ -48,9 +44,8 @@ export default function Navbar() {
           />
         </Link>
 
-        {/* 우측 */}
         <div className="flex items-center gap-2">
-          {/* SNS 아이콘 — 데스크탑만 */}
+          {/* SNS — 데스크탑만 */}
           <div
             className="hidden sm:flex items-center gap-1 rounded-full px-1.5 py-1.5"
             style={{ backgroundColor: "#2a2a2a", border: "1px solid #333" }}>
@@ -74,16 +69,14 @@ export default function Navbar() {
             </a>
           </div>
 
-          {/* 구분선 */}
           <div
             className="hidden sm:block h-4 w-px"
             style={{ backgroundColor: "#333" }}
           />
 
-          {/* 로그인/프로필 */}
           <NavbarAuthButton />
 
-          {/* ── 카카오 CTA (모바일 메인) ── */}
+          {/* 카카오 CTA */}
           <a
             href={KAKAO_CHANNEL_URL}
             target="_blank"
@@ -95,7 +88,7 @@ export default function Navbar() {
             <span className="sm:hidden">상담</span>
           </a>
 
-          {/* 전화 CTA — 데스크탑만 */}
+          {/* 전화 — 데스크탑만 */}
           <a
             href="tel:01091273024"
             className="hidden sm:inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-semibold transition-opacity hover:opacity-90"
@@ -108,7 +101,6 @@ export default function Navbar() {
             <span>전화 문의</span>
           </a>
 
-          {/* 드로어 메뉴 버튼 */}
           <DrawerMenu />
         </div>
       </div>

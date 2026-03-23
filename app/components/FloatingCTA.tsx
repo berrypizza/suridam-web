@@ -2,8 +2,15 @@
 
 import { useEffect, useState } from "react";
 
-// ✅ 카카오 채널 URL로 교체하세요
 const KAKAO_CHANNEL_URL = "http://pf.kakao.com/_kaKTn/chat";
+
+function KakaoIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12 3C6.477 3 2 6.477 2 10.8c0 2.7 1.62 5.1 4.077 6.569l-1.04 3.847a.3.3 0 0 0 .461.324l4.666-3.1A11.66 11.66 0 0 0 12 18.6c5.523 0 10-3.477 10-7.8S17.523 3 12 3z" />
+    </svg>
+  );
+}
 
 export default function FloatingCTA() {
   const [visible, setVisible] = useState(false);
@@ -18,7 +25,7 @@ export default function FloatingCTA() {
 
   return (
     <div
-      className="fixed bottom-0 left-0 right-0 z-50 px-4 pb-safe-bottom md:hidden"
+      className="fixed bottom-0 left-0 right-0 z-50 px-4 md:hidden"
       style={{
         paddingBottom: "max(16px, env(safe-area-inset-bottom))",
         paddingTop: 12,
@@ -26,7 +33,7 @@ export default function FloatingCTA() {
           "linear-gradient(to top, rgba(13,13,13,0.99) 60%, transparent)",
       }}>
       <div className="flex flex-col gap-2 mx-auto max-w-sm">
-        {/* ── 카카오톡 메인 CTA ── */}
+        {/* 카카오 메인 */}
         <a
           href={KAKAO_CHANNEL_URL}
           target="_blank"
@@ -37,37 +44,27 @@ export default function FloatingCTA() {
           카카오톡으로 사진 상담하기
         </a>
 
-        {/* ── 보조 버튼 ── */}
+        {/* 문자 + 전화번호 텍스트 노출 (50대+ 배려) */}
         <div className="flex gap-2">
           <a
             href="/request"
             className="flex-1 rounded-xl py-3 text-center text-sm font-bold transition-opacity active:opacity-80"
-            style={{
-              backgroundColor: "#2fae8a",
-              color: "white",
-            }}>
+            style={{ backgroundColor: "#2fae8a", color: "white" }}>
             💬 문자 상담
           </a>
           <a
             href="tel:01091273024"
-            className="rounded-xl px-5 py-3 text-center text-sm font-bold transition-opacity active:opacity-80"
+            className="flex items-center justify-center gap-1.5 rounded-xl px-3 py-3 text-sm font-bold transition-opacity active:opacity-80"
             style={{
               backgroundColor: "#1e1e1e",
               border: "1px solid #333",
               color: "#e5e5e5",
+              whiteSpace: "nowrap",
             }}>
-            📞
+            📞 <span style={{ letterSpacing: "0.02em" }}>010-9127-3024</span>
           </a>
         </div>
       </div>
     </div>
-  );
-}
-
-function KakaoIcon() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-      <path d="M12 3C6.477 3 2 6.477 2 10.8c0 2.7 1.62 5.1 4.077 6.569l-1.04 3.847a.3.3 0 0 0 .461.324l4.666-3.1A11.66 11.66 0 0 0 12 18.6c5.523 0 10-3.477 10-7.8S17.523 3 12 3z" />
-    </svg>
   );
 }
