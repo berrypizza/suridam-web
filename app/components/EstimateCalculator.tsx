@@ -344,12 +344,13 @@ function Calculator() {
     setCount(1);
     setSelectOpt("");
   };
-  const cardBg = "#1a1a1a";
-  const cardBorder = "#252525";
-  const labelColor = "#9ca3af";
+  const cardBg = "#1e1e1e";
+  const cardBorder = "#2a2a2a";
+  const labelColor = "#ccc"; // #9ca3af → #ccc
 
   return (
     <div>
+      {/* 진행 바 */}
       <div className="mb-8">
         <div className="flex items-center gap-2 mb-3">
           {[1, 2, 3].map((s) => (
@@ -361,13 +362,14 @@ function Calculator() {
           ))}
         </div>
         <div className="flex items-center justify-between text-sm font-bold uppercase tracking-widest">
-          <span style={{ color: step >= 1 ? "#2fae8a" : "#444" }}>
+          {/* #444 → #888 for inactive steps */}
+          <span style={{ color: step >= 1 ? "#2fae8a" : "#888" }}>
             가구 종류
           </span>
-          <span style={{ color: step >= 2 ? "#2fae8a" : "#444" }}>
+          <span style={{ color: step >= 2 ? "#2fae8a" : "#888" }}>
             상세 증상
           </span>
-          <span style={{ color: step >= 3 ? "#2fae8a" : "#444" }}>
+          <span style={{ color: step >= 3 ? "#2fae8a" : "#888" }}>
             예상 비용
           </span>
         </div>
@@ -377,7 +379,7 @@ function Calculator() {
         <div>
           <p
             className="text-sm font-black uppercase tracking-widest mb-2"
-            style={{ color: "#777" }}>
+            style={{ color: "#aaa" }}>
             Step 1
           </p>
           <h3
@@ -401,9 +403,8 @@ function Calculator() {
                 <div className="mb-3 text-3xl">
                   {categories.find((c) => c.group === group)?.icon}
                 </div>
-                <span
-                  className="text-sm font-bold"
-                  style={{ color: "#e0e0e0" }}>
+                {/* #e0e0e0 → white */}
+                <span className="text-sm font-bold" style={{ color: "white" }}>
                   {group}
                 </span>
               </button>
@@ -417,12 +418,12 @@ function Calculator() {
           <button
             onClick={() => setStep(1)}
             className="inline-flex items-center gap-2 text-base font-semibold mb-5"
-            style={{ color: "#888" }}>
+            style={{ color: "#aaa" }}>
             ← 이전으로
           </button>
           <p
             className="text-sm font-black uppercase tracking-widest mb-2"
-            style={{ color: "#777" }}>
+            style={{ color: "#aaa" }}>
             Step 2
           </p>
           <h3
@@ -430,7 +431,8 @@ function Calculator() {
             style={{ fontSize: "clamp(1.3rem, 3vw, 1.7rem)", color: "white" }}>
             {selectedGroup} 수리
           </h3>
-          <p className="text-base mb-6" style={{ color: "#666" }}>
+          {/* #666 → #bbb */}
+          <p className="text-base mb-6" style={{ color: "#bbb" }}>
             증상을 선택하면 예상 비용을 바로 확인할 수 있습니다.
           </p>
           <div className="flex flex-col gap-3">
@@ -454,11 +456,11 @@ function Calculator() {
                     <span className="text-2xl">{c.icon}</span>
                     <span
                       className="text-base font-bold"
-                      style={{ color: "#e0e0e0" }}>
+                      style={{ color: "white" }}>
                       {c.label}
                     </span>
                   </div>
-                  <span style={{ color: "#777" }}>→</span>
+                  <span style={{ color: "#aaa" }}>→</span>
                 </button>
               ))}
           </div>
@@ -470,17 +472,17 @@ function Calculator() {
           <button
             onClick={() => setStep(2)}
             className="inline-flex items-center gap-2 text-base font-semibold mb-5"
-            style={{ color: "#888" }}>
+            style={{ color: "#aaa" }}>
             ← 이전으로
           </button>
           <div
             className="flex items-center gap-4 rounded-2xl p-4 mb-6"
-            style={{ backgroundColor: "#141414", border: "1px solid #222" }}>
+            style={{ backgroundColor: "#141414", border: "1px solid #2a2a2a" }}>
             <span className="text-4xl">{cat.icon}</span>
             <div>
               <p
                 className="text-base font-medium mb-0.5"
-                style={{ color: "#888" }}>
+                style={{ color: "#aaa" }}>
                 {cat.group}
               </p>
               <h3 className="text-xl font-black" style={{ color: "white" }}>
@@ -506,8 +508,8 @@ function Calculator() {
                         className="rounded-2xl px-4 py-4 text-sm font-black transition-all"
                         style={{
                           backgroundColor: active ? "#2fae8a" : "#1a1a1a",
-                          color: active ? "white" : "#888",
-                          border: `1px solid ${active ? "#2fae8a" : "#252525"}`,
+                          color: active ? "white" : "#ccc",
+                          border: `1px solid ${active ? "#2fae8a" : "#333"}`,
                         }}>
                         {opt.label}
                       </button>
@@ -527,7 +529,7 @@ function Calculator() {
                   className="flex items-center justify-between rounded-2xl p-3"
                   style={{
                     backgroundColor: "#141414",
-                    border: "1px solid #222",
+                    border: "1px solid #2a2a2a",
                   }}>
                   <button
                     onClick={() =>
@@ -537,7 +539,7 @@ function Calculator() {
                     style={{
                       backgroundColor: "#1e1e1e",
                       color: "white",
-                      border: "1px solid #2a2a2a",
+                      border: "1px solid #333",
                     }}>
                     −
                   </button>
@@ -547,7 +549,7 @@ function Calculator() {
                       style={{ color: "white" }}>
                       {count}
                     </div>
-                    <div className="mt-1 text-sm" style={{ color: "#888" }}>
+                    <div className="mt-1 text-sm" style={{ color: "#bbb" }}>
                       {cat.addUnit || "개"}
                     </div>
                   </div>
@@ -571,7 +573,7 @@ function Calculator() {
             className="rounded-2xl p-6 mt-6"
             style={{
               background: "linear-gradient(135deg, #0a1a12 0%, #0d1f17 100%)",
-              border: "1px solid #2fae8a33",
+              border: "1px solid #2fae8a44",
             }}>
             <p className="text-sm font-bold mb-2" style={{ color: "#2fae8a" }}>
               예상 수리 비용
@@ -588,12 +590,13 @@ function Calculator() {
               {total > 0 && (
                 <span
                   className="pb-1 text-base font-medium"
-                  style={{ color: "#888" }}>
+                  style={{ color: "#bbb" }}>
                   내외
                 </span>
               )}
             </div>
-            <p className="text-base leading-relaxed" style={{ color: "#666" }}>
+            {/* #666 → #bbb */}
+            <p className="text-base leading-relaxed" style={{ color: "#bbb" }}>
               {breakdown}
             </p>
             {cat.fixedNote && (
@@ -616,8 +619,8 @@ function Calculator() {
               className="w-full rounded-2xl py-4 text-sm font-bold"
               style={{
                 backgroundColor: "#141414",
-                color: "#888",
-                border: "1px solid #1e1e1e",
+                color: "#aaa",
+                border: "1px solid #2a2a2a",
               }}>
               처음부터 다시 계산하기
             </button>
@@ -626,7 +629,7 @@ function Calculator() {
       )}
       <p
         className="mt-6 text-center text-sm leading-relaxed"
-        style={{ color: "#888" }}>
+        style={{ color: "#aaa" }}>
         표준 단가 기준이며, 현장 상황에 따라 달라질 수 있습니다.
       </p>
     </div>
@@ -660,12 +663,11 @@ export default function EstimateCalculator() {
             </h2>
             <p
               className="mt-3 text-base font-semibold"
-              style={{ color: "#888" }}>
+              style={{ color: "#bbb" }}>
               항목 선택 → 30초 안에 예상 비용 확인
             </p>
           </div>
         </FadeIn>
-
         <FadeIn delay={80}>
           <div
             className="rounded-2xl px-6 py-8"

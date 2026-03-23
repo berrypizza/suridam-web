@@ -199,7 +199,7 @@ function CaseCard({ c }: { c: (typeof categories)[0]["cases"][0] }) {
   return (
     <div
       className="rounded-2xl overflow-hidden"
-      style={{ border: "1px solid #222" }}>
+      style={{ border: "1px solid #2a2a2a" }}>
       <div className="grid grid-cols-2">
         <div
           className="relative"
@@ -219,7 +219,7 @@ function CaseCard({ c }: { c: (typeof categories)[0]["cases"][0] }) {
             }}>
             <span
               className="text-sm font-black"
-              style={{ color: "#bbb", letterSpacing: "0.08em" }}>
+              style={{ color: "#ddd", letterSpacing: "0.08em" }}>
               BEFORE
             </span>
           </div>
@@ -253,21 +253,24 @@ function CaseCard({ c }: { c: (typeof categories)[0]["cases"][0] }) {
           className="inline-block text-sm font-bold px-2.5 py-1 rounded-full mb-2"
           style={{
             backgroundColor: "#1e1e1e",
-            color: "#888",
-            border: "1px solid #252525",
+            color: "#aaa",
+            border: "1px solid #2a2a2a",
           }}>
           {c.tag}
         </span>
         {c.review && (
           <div
             className="rounded-xl px-3 py-2.5 mt-1"
-            style={{ backgroundColor: "#1a1a1a", border: "1px solid #222" }}>
-            <p className="text-base leading-relaxed" style={{ color: "#ddd" }}>
+            style={{ backgroundColor: "#1a1a1a", border: "1px solid #2a2a2a" }}>
+            <p
+              className="text-base leading-relaxed"
+              style={{ color: "#e5e5e5" }}>
               <span style={{ color: "#2fae8a", fontSize: 16 }}>"</span>
               {c.review.body}
               <span style={{ color: "#2fae8a", fontSize: 16 }}>"</span>
             </p>
-            <p className="text-sm mt-1.5" style={{ color: "#888" }}>
+            {/* #888 → #aaa */}
+            <p className="text-sm mt-1.5" style={{ color: "#aaa" }}>
               — {c.review.who}
             </p>
           </div>
@@ -309,7 +312,7 @@ function AccordionItem({
       ref={ref}
       className="rounded-2xl overflow-hidden transition-all duration-200"
       style={{
-        border: `1px solid ${open ? "#2fae8a55" : "#1e1e1e"}`,
+        border: `1px solid ${open ? "#2fae8a55" : "#2a2a2a"}`,
         backgroundColor: open ? "#111" : "#0f0f0f",
       }}>
       <button
@@ -320,22 +323,21 @@ function AccordionItem({
           <span className="text-2xl">{cat.icon}</span>
           <div>
             <div className="flex items-center gap-2 flex-wrap">
-              <span
-                className="text-sm font-bold"
-                style={{ color: open ? "white" : "#e5e5e5" }}>
+              <span className="text-sm font-bold" style={{ color: "white" }}>
                 {cat.label}
               </span>
               <span
                 className="text-sm font-bold px-2 py-0.5 rounded-full"
                 style={{
                   backgroundColor: open ? "#2fae8a22" : "#1e1e1e",
-                  color: open ? "#2fae8a" : "#555",
-                  border: `1px solid ${open ? "#2fae8a44" : "#252525"}`,
+                  color: open ? "#2fae8a" : "#aaa",
+                  border: `1px solid ${open ? "#2fae8a44" : "#333"}`,
                 }}>
                 {cat.cases.length}건
               </span>
             </div>
-            <p className="text-sm mt-0.5" style={{ color: "#999" }}>
+            {/* #999 → #bbb */}
+            <p className="text-sm mt-0.5" style={{ color: "#bbb" }}>
               {cat.desc}
             </p>
           </div>
@@ -385,7 +387,7 @@ function AccordionItem({
         }}>
         <div
           className="px-4 pb-4 flex flex-col gap-4"
-          style={{ borderTop: "1px solid #1e1e1e", paddingTop: 16 }}>
+          style={{ borderTop: "1px solid #222", paddingTop: 16 }}>
           {cat.cases.map((c, i) => (
             <CaseCard key={i} c={c} />
           ))}
@@ -425,10 +427,9 @@ export default function DifferenceAndReviews() {
                     후기 한 줄이 정직합니다
                   </span>
                 </h2>
-                {/* ✅ 중복 문구 1개만 남김 */}
                 <p
                   className="mt-4 text-lg leading-relaxed"
-                  style={{ color: "#888" }}>
+                  style={{ color: "#bbb" }}>
                   광고 카피가 아닌, 실제 고객의 말입니다.
                 </p>
               </div>
@@ -445,7 +446,8 @@ export default function DifferenceAndReviews() {
                     style={{ color: "white" }}>
                     4.9 / 5.0
                   </div>
-                  <div className="text-sm mt-0.5" style={{ color: "#666" }}>
+                  {/* #666 → #aaa */}
+                  <div className="text-sm mt-0.5" style={{ color: "#aaa" }}>
                     실제 고객 후기 기준
                   </div>
                 </div>
@@ -453,7 +455,6 @@ export default function DifferenceAndReviews() {
             </div>
           </FadeIn>
 
-          {/* 리뷰 카드 */}
           <div className="grid gap-5 sm:grid-cols-3">
             {previewReviews.map((r, i) => (
               <FadeIn key={i} delay={i * 100}>
@@ -461,7 +462,7 @@ export default function DifferenceAndReviews() {
                   className="rounded-2xl p-7 flex flex-col gap-5"
                   style={{
                     backgroundColor: "#1a1a1a",
-                    border: "1px solid #252525",
+                    border: "1px solid #2a2a2a",
                   }}>
                   <div className="flex items-center justify-between">
                     <div
@@ -473,7 +474,7 @@ export default function DifferenceAndReviews() {
                       className="text-sm px-3 py-1 rounded-full"
                       style={{
                         backgroundColor: "#111",
-                        color: "#888",
+                        color: "#bbb",
                         border: "1px solid #2a2a2a",
                       }}>
                       {r.title}
@@ -481,7 +482,7 @@ export default function DifferenceAndReviews() {
                   </div>
                   <p
                     className="text-xl leading-relaxed flex-1"
-                    style={{ color: "#e8e8e8" }}>
+                    style={{ color: "#f0f0f0" }}>
                     <span
                       style={{ color: "#2fae8a", fontSize: 24, lineHeight: 0 }}>
                       "
@@ -494,7 +495,7 @@ export default function DifferenceAndReviews() {
                   </p>
                   <div
                     className="flex items-center gap-3 pt-4"
-                    style={{ borderTop: "1px solid #222" }}>
+                    style={{ borderTop: "1px solid #2a2a2a" }}>
                     <div
                       className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-black flex-shrink-0"
                       style={{
@@ -504,7 +505,8 @@ export default function DifferenceAndReviews() {
                       }}>
                       {r.who[0]}
                     </div>
-                    <span className="text-sm" style={{ color: "#666" }}>
+                    {/* #666 → #aaa */}
+                    <span className="text-sm" style={{ color: "#aaa" }}>
                       {r.who}
                     </span>
                   </div>
@@ -544,7 +546,7 @@ export default function DifferenceAndReviews() {
                   style={{
                     fontSize: "clamp(0.95rem, 2vw, 1.1rem)",
                     fontWeight: 500,
-                    color: "#888",
+                    color: "#ccc",
                   }}>
                   아래는 실제 수리 전·후 사진입니다.
                 </span>
@@ -564,7 +566,7 @@ export default function DifferenceAndReviews() {
             </span>
             <p
               className="mb-6 text-base font-semibold"
-              style={{ color: "#888" }}>
+              style={{ color: "#555" }}>
               말보다 사진이 빠릅니다. 직접 확인하세요.
             </p>
           </FadeIn>

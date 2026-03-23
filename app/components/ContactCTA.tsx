@@ -49,7 +49,7 @@ export default function ContactCTA() {
               className="mt-6 font-semibold leading-relaxed"
               style={{
                 fontSize: "clamp(1.1rem, 2.5vw, 1.35rem)",
-                color: "#888",
+                color: "#bbb",
               }}>
               작은 이상이 느껴질 때가
               <br />
@@ -92,12 +92,13 @@ export default function ContactCTA() {
                 className="rounded-2xl px-6 py-4"
                 style={{
                   backgroundColor: "#161616",
-                  border: "1px solid #1e1e1e",
+                  border: "1px solid #2a2a2a",
                 }}>
+                {/* #888 → #bbb */}
                 <p
                   className="font-semibold"
                   style={{
-                    color: "#888",
+                    color: "#bbb",
                     fontSize: "clamp(0.95rem, 2.2vw, 1.1rem)",
                   }}>
                   {q}
@@ -130,11 +131,11 @@ export default function ContactCTA() {
                 className="rounded-2xl px-6 py-7 flex items-start gap-5"
                 style={{
                   backgroundColor: i === 2 ? "#2fae8a18" : "#161616",
-                  border: `1px solid ${i === 2 ? "#2fae8a55" : "#1e1e1e"}`,
+                  border: `1px solid ${i === 2 ? "#2fae8a55" : "#2a2a2a"}`,
                 }}>
                 <span
                   className="text-4xl font-black leading-none select-none flex-shrink-0 mt-0.5"
-                  style={{ color: i === 2 ? "#2fae8a" : "#2a2a2a" }}>
+                  style={{ color: i === 2 ? "#2fae8a" : "#444" }}>
                   {s.num}
                 </span>
                 <p
@@ -155,12 +156,9 @@ export default function ContactCTA() {
           <div className="flex justify-center mb-8">
             <div
               className="inline-flex items-center gap-2 rounded-full px-5 py-2.5"
-              style={{
-                backgroundColor: "#1e1e1e",
-                border: "1px solid #2a2a2a",
-              }}>
+              style={{ backgroundColor: "#1e1e1e", border: "1px solid #333" }}>
               <span style={{ color: "#2fae8a", fontSize: 14 }}>🕐</span>
-              <span className="text-sm font-semibold" style={{ color: "#aaa" }}>
+              <span className="text-sm font-semibold" style={{ color: "#ddd" }}>
                 매일 오전 9시 — 오후 9시 운영
               </span>
               <span
@@ -201,7 +199,7 @@ export default function ContactCTA() {
                 href="tel:01091273024"
                 className="rounded-2xl px-5 py-4 font-bold text-center transition-opacity hover:opacity-70"
                 style={{
-                  border: "1px solid #2a2a2a",
+                  border: "1px solid #333",
                   color: "#f0f0f0",
                   backgroundColor: "#161616",
                   fontSize: "0.95rem",
@@ -212,14 +210,14 @@ export default function ContactCTA() {
           </div>
         </FadeIn>
 
-        {/* 신뢰 배지 */}
+        {/* 신뢰 배지 — #777 → #bbb */}
         <FadeIn delay={80}>
-          <div
-            className="flex flex-col sm:flex-row items-center justify-center gap-4"
-            style={{ color: "#777" }}>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             {badges.map((b, i) => (
               <React.Fragment key={b}>
-                <span className="flex items-center gap-2 text-base font-semibold">
+                <span
+                  className="flex items-center gap-2 text-base font-semibold"
+                  style={{ color: "#bbb" }}>
                   <span
                     className="h-2 w-2 rounded-full inline-block flex-shrink-0"
                     style={{ backgroundColor: "#2fae8a" }}
@@ -227,9 +225,7 @@ export default function ContactCTA() {
                   {b}
                 </span>
                 {i < badges.length - 1 && (
-                  <span
-                    className="hidden sm:block"
-                    style={{ color: "#1e1e1e" }}>
+                  <span className="hidden sm:block" style={{ color: "#333" }}>
                     ·
                   </span>
                 )}

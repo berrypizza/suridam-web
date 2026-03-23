@@ -4,7 +4,6 @@ export default function HonestSection() {
   return (
     <section style={{ backgroundColor: "#0a0a0a" }}>
       <div className="px-6 py-20 mx-auto max-w-3xl">
-        {/* 배지 */}
         <FadeIn delay={0}>
           <span
             className="inline-block text-sm tracking-widest uppercase mb-6 px-3 py-1.5 rounded-full font-bold"
@@ -17,7 +16,6 @@ export default function HonestSection() {
           </span>
         </FadeIn>
 
-        {/* 헤드라인 */}
         <FadeIn delay={80}>
           <h2
             className="font-black leading-[1.08] tracking-tight mb-4"
@@ -31,26 +29,25 @@ export default function HonestSection() {
         <FadeIn delay={140}>
           <p
             className="text-lg leading-relaxed mb-10"
-            style={{ color: "#888" }}>
+            style={{ color: "#aaa" }}>
             착하다는 말 듣고 싶어서가 아닙니다.
             <br />
-            <span style={{ color: "rgba(255,255,255,0.65)" }}>
+            <span style={{ color: "rgba(255,255,255,0.75)" }}>
               그게 오래 하는 방법이라는 걸 알기 때문입니다.
             </span>
           </p>
         </FadeIn>
 
-        {/* ── 메인 에피소드 1개 — 소파 ── */}
+        {/* 메인 에피소드 — 소파 */}
         <FadeIn delay={0}>
           <div
             className="rounded-2xl overflow-hidden mb-6"
-            style={{ border: "1px solid #1e1e1e" }}>
-            {/* 헤더 */}
+            style={{ border: "1px solid #2a2a2a" }}>
             <div
               className="flex items-center gap-3 px-6 py-4"
               style={{
                 backgroundColor: "#111",
-                borderBottom: "1px solid #1a1a1a",
+                borderBottom: "1px solid #222",
               }}>
               <span style={{ fontSize: 18 }}>🛋</span>
               <div>
@@ -70,13 +67,13 @@ export default function HonestSection() {
               </div>
             </div>
 
-            {/* 스토리 */}
             <div className="px-6 py-5" style={{ backgroundColor: "#0d0d0d" }}>
+              {/* #bbb → #ccc (스토리 본문 더 밝게) */}
               <p
                 className="leading-[2] mb-5 whitespace-pre-line"
                 style={{
                   fontSize: "clamp(1rem, 2.2vw, 1.05rem)",
-                  color: "#bbb",
+                  color: "#ccc",
                 }}>
                 {`"소파를 새로 사려는데, 혹시 고칠 수 있나요?"
 장바구니에 이미 담아두셨다고 했어요.
@@ -92,8 +89,6 @@ export default function HonestSection() {
 고객분이 말씀하셨어요.
 "이렇게 말해주는 데가 어딨어요."`}
               </p>
-
-              {/* 포인트 배지 */}
               <div
                 className="inline-flex items-center gap-2 rounded-full px-4 py-2"
                 style={{
@@ -111,20 +106,22 @@ export default function HonestSection() {
           </div>
         </FadeIn>
 
-        {/* ── 나머지 2개 — 배지로 압축 ── */}
+        {/* 나머지 2개 — 배지 (#777 → #bbb) */}
         <FadeIn delay={80}>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-10">
             <div
               className="rounded-2xl px-5 py-4 flex items-start gap-4"
-              style={{ backgroundColor: "#111", border: "1px solid #1e1e1e" }}>
+              style={{ backgroundColor: "#111", border: "1px solid #2a2a2a" }}>
               <span style={{ fontSize: 20, flexShrink: 0 }}>🔧</span>
               <div>
                 <p
-                  className="text-sm font-black mb-1"
+                  className="text-sm font-black mb-1.5"
                   style={{ color: "#2fae8a" }}>
                   1년 무상 AS
                 </p>
-                <p className="text-sm leading-snug" style={{ color: "#777" }}>
+                <p
+                  className="text-sm leading-relaxed"
+                  style={{ color: "#bbb" }}>
                   "얼마예요?" "없습니다."
                   <br />
                   같은 부위 재발 시 출장비·공임 0원.
@@ -134,15 +131,17 @@ export default function HonestSection() {
 
             <div
               className="rounded-2xl px-5 py-4 flex items-start gap-4"
-              style={{ backgroundColor: "#111", border: "1px solid #1e1e1e" }}>
+              style={{ backgroundColor: "#111", border: "1px solid #2a2a2a" }}>
               <span style={{ fontSize: 20, flexShrink: 0 }}>💡</span>
               <div>
                 <p
-                  className="text-sm font-black mb-1"
+                  className="text-sm font-black mb-1.5"
                   style={{ color: "#2fae8a" }}>
                   필요한 것만 청구
                 </p>
-                <p className="text-sm leading-snug" style={{ color: "#777" }}>
+                <p
+                  className="text-sm leading-relaxed"
+                  style={{ color: "#bbb" }}>
                   경첩 5개 요청 → 멀쩡한 3개 그대로.
                   <br />
                   2개 비용만 받았습니다.

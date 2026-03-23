@@ -55,9 +55,10 @@ export default function CompareTable() {
               <br />
               <span style={{ color: "#2fae8a" }}>잘못 고르는 법.</span>
             </h2>
+            {/* #666 → #aaa */}
             <p
               className="mt-3 text-base font-semibold"
-              style={{ color: "#666" }}>
+              style={{ color: "#aaa" }}>
               좋은 업체를 고르려다 오히려 손해 본 경험, 한 번쯤은 있으셨죠.
             </p>
           </div>
@@ -66,13 +67,13 @@ export default function CompareTable() {
         <FadeIn delay={80}>
           <div
             className="rounded-2xl overflow-hidden"
-            style={{ border: "1px solid #222" }}>
+            style={{ border: "1px solid #2a2a2a" }}>
             {/* 컬럼 헤더 */}
             <div className="grid grid-cols-[1fr_auto_1fr]">
               <div
                 className="px-5 py-5 text-center"
                 style={{ backgroundColor: "#2a2a2a" }}>
-                <p className="text-base font-black" style={{ color: "#888" }}>
+                <p className="text-base font-black" style={{ color: "#ccc" }}>
                   일반 업체
                 </p>
               </div>
@@ -80,12 +81,13 @@ export default function CompareTable() {
                 className="flex items-center justify-center px-5"
                 style={{
                   backgroundColor: "#1a1a1a",
-                  borderLeft: "1px solid #222",
-                  borderRight: "1px solid #222",
+                  borderLeft: "1px solid #2a2a2a",
+                  borderRight: "1px solid #2a2a2a",
                 }}>
+                {/* #333 → #777 */}
                 <p
-                  className="text-xs font-black tracking-widest"
-                  style={{ color: "#333" }}>
+                  className="text-sm font-black tracking-widest"
+                  style={{ color: "#777" }}>
                   VS
                 </p>
               </div>
@@ -103,37 +105,37 @@ export default function CompareTable() {
               <div
                 key={i}
                 className="grid grid-cols-[1fr_auto_1fr]"
-                style={{ borderTop: "1px solid #1e1e1e" }}>
-                {/* 일반 업체 */}
+                style={{ borderTop: "1px solid #222" }}>
+                {/* 일반 업체 값 */}
                 <div
                   className="px-5 py-5 flex items-center justify-center text-center"
                   style={{ backgroundColor: "#161616" }}>
                   <p
                     className="text-sm font-bold whitespace-pre-line leading-snug"
                     style={{
-                      color: row.other.startsWith("X") ? "#ef4444" : "#555",
+                      color: row.other.startsWith("X") ? "#ef4444" : "#aaa",
                     }}>
                     {row.other}
                   </p>
                 </div>
 
-                {/* 중간 라벨 */}
+                {/* 중간 라벨 — text-xs → text-sm, #444 → #aaa */}
                 <div
                   className="flex items-center justify-center px-4 py-5 text-center"
                   style={{
                     backgroundColor: "#111",
-                    borderLeft: "1px solid #1e1e1e",
-                    borderRight: "1px solid #1e1e1e",
+                    borderLeft: "1px solid #222",
+                    borderRight: "1px solid #222",
                     minWidth: "6.5rem",
                   }}>
                   <p
-                    className="text-xs font-semibold leading-snug whitespace-pre-line"
-                    style={{ color: "#444" }}>
+                    className="text-sm font-semibold leading-snug whitespace-pre-line"
+                    style={{ color: "#aaa" }}>
                     {row.label}
                   </p>
                 </div>
 
-                {/* 수리담 */}
+                {/* 수리담 값 */}
                 <div
                   className="px-5 py-5 flex items-center justify-center text-center"
                   style={{
@@ -150,10 +152,11 @@ export default function CompareTable() {
           </div>
         </FadeIn>
 
+        {/* #555 → #aaa */}
         <FadeIn delay={120}>
           <p
             className="mt-6 text-center text-sm font-semibold"
-            style={{ color: "#555" }}>
+            style={{ color: "#aaa" }}>
             방문 현장의 80%는 교체 없이 수리로 끝났습니다.
             <span style={{ color: "#2fae8a" }}>
               {" "}
