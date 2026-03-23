@@ -1,6 +1,9 @@
 import React from "react";
 import FadeIn from "@/app/components/FadeIn";
 
+// ✅ 카카오 채널 URL로 교체하세요
+const KAKAO_CHANNEL_URL = "http://pf.kakao.com/_kaKTn/chat";
+
 const steps = [
   { num: "01", text: "가구 사진 1~3장 찍기" },
   { num: "02", text: "지역 + 증상 한 줄 남기기" },
@@ -13,11 +16,19 @@ const badges = [
   "숨은 비용 없음",
 ];
 
+function KakaoIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12 3C6.477 3 2 6.477 2 10.8c0 2.7 1.62 5.1 4.077 6.569l-1.04 3.847a.3.3 0 0 0 .461.324l4.666-3.1A11.66 11.66 0 0 0 12 18.6c5.523 0 10-3.477 10-7.8S17.523 3 12 3z" />
+    </svg>
+  );
+}
+
 export default function ContactCTA() {
   return (
     <section className="px-6 py-24" style={{ backgroundColor: "#0d0d0d" }}>
       <div className="mx-auto max-w-5xl">
-        {/* ── 헤드라인 (규칙 1 상식파괴 + 4 자아흠집 + 5 위협) ── */}
+        {/* ── 헤드라인 ── */}
         <FadeIn delay={0}>
           <div className="text-center mb-10">
             <span
@@ -49,7 +60,7 @@ export default function ContactCTA() {
           </div>
         </FadeIn>
 
-        {/* ── 명언 인용 (규칙 1) ── */}
+        {/* ── 명언 인용 ── */}
         <FadeIn delay={60}>
           <div
             className="mb-10 rounded-2xl px-6 py-5"
@@ -72,7 +83,7 @@ export default function ContactCTA() {
           </div>
         </FadeIn>
 
-        {/* ── Yes-set (규칙 4 마인드리딩) ── */}
+        {/* ── Yes-set ── */}
         <FadeIn delay={80}>
           <div className="mb-10 flex flex-col gap-3">
             {[
@@ -144,26 +155,68 @@ export default function ContactCTA() {
           ))}
         </div>
 
-        {/* ── CTA ── */}
+        {/* ── 운영시간 배지 ── */}
         <FadeIn delay={0}>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-            <a
-              href="/request"
-              className="rounded-2xl px-9 py-5 text-white font-black text-center transition-opacity hover:opacity-90"
-              style={{ backgroundColor: "#2fae8a", fontSize: "1.15rem" }}>
-              📷 사진 상담 시작하기 →
-            </a>
-            <a
-              href="tel:01091273024"
-              className="rounded-2xl px-9 py-5 font-black text-center transition-opacity hover:opacity-70"
+          <div className="flex justify-center mb-8">
+            <div
+              className="inline-flex items-center gap-2 rounded-full px-5 py-2.5"
               style={{
+                backgroundColor: "#1e1e1e",
                 border: "1px solid #2a2a2a",
-                color: "#f0f0f0",
-                backgroundColor: "#161616",
-                fontSize: "1.05rem",
               }}>
-              📞 010-9127-3024
+              <span style={{ color: "#2fae8a", fontSize: 14 }}>🕐</span>
+              <span className="text-sm font-semibold" style={{ color: "#aaa" }}>
+                매일 오전 9시 — 오후 9시 운영
+              </span>
+              <span
+                className="inline-block h-2 w-2 rounded-full animate-pulse"
+                style={{ backgroundColor: "#2fae8a" }}
+              />
+              <span className="text-sm font-bold" style={{ color: "#2fae8a" }}>
+                지금 상담 가능
+              </span>
+            </div>
+          </div>
+        </FadeIn>
+
+        {/* ── CTA — 카카오 메인 + 보조 2개 ── */}
+        <FadeIn delay={0}>
+          <div className="flex flex-col gap-3 mb-12 max-w-lg mx-auto">
+            {/* 카카오 메인 CTA */}
+            <a
+              href={KAKAO_CHANNEL_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center gap-2.5 rounded-2xl py-5 font-black text-center transition-opacity hover:opacity-90"
+              style={{
+                backgroundColor: "#FEE500",
+                color: "#191919",
+                fontSize: "1.15rem",
+              }}>
+              <KakaoIcon />
+              카카오톡으로 바로 상담하기
             </a>
+
+            {/* 보조 CTA */}
+            <div className="grid grid-cols-2 gap-3">
+              <a
+                href="/request"
+                className="rounded-2xl px-5 py-4 text-white font-bold text-center transition-opacity hover:opacity-90"
+                style={{ backgroundColor: "#2fae8a", fontSize: "0.95rem" }}>
+                📷 사진 문자 상담
+              </a>
+              <a
+                href="tel:01091273024"
+                className="rounded-2xl px-5 py-4 font-bold text-center transition-opacity hover:opacity-70"
+                style={{
+                  border: "1px solid #2a2a2a",
+                  color: "#f0f0f0",
+                  backgroundColor: "#161616",
+                  fontSize: "0.95rem",
+                }}>
+                📞 전화 문의
+              </a>
+            </div>
           </div>
         </FadeIn>
 
