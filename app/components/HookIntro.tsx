@@ -52,15 +52,15 @@ export default function HookIntro() {
             }}>
             고칠 수 있는 가구를
             <br />
-            <span style={{ color: "#2fae8a" }}>버렸습니다.</span>
+            <span style={{ color: "#2fae8a" }}>버리셨나요?</span>
             <br />
             <span
               style={{
-                color: "rgba(255,255,255,0.45)",
-                fontSize: "clamp(1.4rem, 3.5vw, 2.4rem)",
+                color: "rgb(255, 255, 255)",
+                fontSize: "clamp(1.9rem, 3.5vw, 2.4rem)",
                 fontWeight: 700,
               }}>
-              수리담이 없었다면.
+              그러면 나가주셔도 됩니다.
             </span>
           </h1>
         </FadeIn>
@@ -71,9 +71,9 @@ export default function HookIntro() {
               className="font-bold mb-3"
               style={{
                 fontSize: "clamp(1rem, 2vw, 1.15rem)",
-                color: "rgba(255,255,255,0.55)",
+                color: "rgba(255, 255, 255, 0.82)",
               }}>
-              ✓ 전화했더니 "일단 와봐야 알아요" — 맞죠?
+              ✓ 연 1,200건 현장이 만든 자신감
             </p>
             <p
               className="font-medium leading-relaxed"
@@ -81,10 +81,8 @@ export default function HookIntro() {
                 fontSize: "clamp(1.1rem, 2.5vw, 1.4rem)",
                 color: "rgba(255,255,255,0.72)",
               }}>
-              그 말에 포기하신 분들이 많습니다.
-              <br />
               <span style={{ color: "#2fae8a", fontWeight: 800 }}>
-                수리담은 사진 한 장으로 먼저 판단합니다.
+                3분이면 확인됩니다.
               </span>
             </p>
           </div>
@@ -121,15 +119,15 @@ export default function HookIntro() {
           </div>
           <p
             className="mt-4 text-sm font-semibold"
-            style={{ color: "rgba(255,255,255,0.35)" }}>
-            🕐 매일 오전 9시 — 오후 9시 · 수리 불가 시 출장비 0원
+            style={{ color: "rgba(255, 255, 255, 0.8)" }}>
+            🕐 24시간 사진 상담 가능
           </p>
         </FadeIn>
 
         <FadeIn delay={480}>
           <div
             className="mt-8 flex w-fit items-center gap-2 text-base font-semibold"
-            style={{ color: "rgba(255,255,255,0.38)" }}>
+            style={{ color: "rgba(255, 255, 255, 0.64)" }}>
             <span className="animate-bounce inline-block">↓</span>
             <span>왜 다른지 직접 확인해보세요</span>
           </div>
