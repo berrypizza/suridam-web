@@ -1,11 +1,7 @@
 import FadeIn from "@/app/components/FadeIn";
 
 export default function Intro() {
-  const cardStyle = {
-    backgroundColor: "#1e1e1e",
-    border: "1px solid #2a2a2a",
-  };
-
+  const cardStyle = { backgroundColor: "#1e1e1e", border: "1px solid #2a2a2a" };
   const valueStyle: React.CSSProperties = {
     color: "#2fae8a",
     fontSize: "2.4rem",
@@ -30,7 +26,7 @@ export default function Intro() {
       className="flex flex-col items-center justify-center px-6 py-20"
       style={{ backgroundColor: "#111" }}>
       <div className="max-w-[760px] w-full text-center">
-        {/* ── YES-SET (규칙 4 마인드리딩) ── */}
+        {/* YES-SET */}
         <div className="flex flex-col gap-5 mb-12">
           {yesSet.map((text, i) => (
             <FadeIn key={i} delay={i * 100}>
@@ -53,7 +49,7 @@ export default function Intro() {
           ))}
         </div>
 
-        {/* ── 명언 인용 (규칙 1) ── */}
+        {/* 명언 */}
         <FadeIn delay={0}>
           <div
             className="mb-10 rounded-2xl px-6 py-5 text-left"
@@ -76,10 +72,9 @@ export default function Intro() {
           </div>
         </FadeIn>
 
-        {/* ── 브랜드 소개 (규칙 2 권위 + 6 스토리텔링) ── */}
+        {/* 브랜드 소개 — ✅ 추상어 제거, 숫자로 대체 */}
         <FadeIn delay={0}>
-          <div className="mb-14 text-center">
-            {/* 규칙 1 상식파괴: "서비스" 제거, 구체적 표현으로 */}
+          <div className="mb-10 text-center">
             <p
               className="font-black leading-snug"
               style={{ fontSize: "clamp(1.8rem, 5vw, 3rem)", color: "white" }}>
@@ -88,26 +83,140 @@ export default function Intro() {
               <span style={{ color: "#2fae8a" }}>직접 고칩니다.</span>
             </p>
             <p
-              className="mt-5 mx-auto max-w-lg text-lg md:text-xl leading-relaxed"
-              style={{ color: "#888" }}>
+              className="mt-5 mx-auto max-w-lg text-lg leading-relaxed"
+              style={{ color: "#bbb" }}>
               대형 가구회사 생산·마감 라인 출신.
               <br />
-              재질이 뭔지, 어떻게 조립됐는지 아는 사람이 고치는 것과
+              재질, 조립 구조, 어디서 균열이 생기는지까지 압니다.
               <br />
-              그냥 고치는 건 — 결과가 다릅니다.
+              그냥 고치는 것과{" "}
+              <strong style={{ color: "white" }}>결과가 다른 이유</strong>가
+              여기 있습니다.
               <br />
-              <strong style={{ color: "rgba(255,255,255,0.65)" }}>
-                수리를 담다, 수리담.
-              </strong>
-              <br />
-              <span style={{ fontSize: "1.05rem", color: "#888" }}>
-                서울·수도권·인천·부천 전 지역 출장
+              <span style={{ fontSize: "1rem", color: "#aaa" }}>
+                서울 · 인천 · 경기 전 지역 출장
               </span>
             </p>
           </div>
         </FadeIn>
 
-        {/* ── 숫자 지표 ── */}
+        {/* ✅ "사진만 보고 어떻게 알아요?" 반박 카드 — 공식B 보강 */}
+        <FadeIn delay={0}>
+          <div
+            className="mb-10 rounded-2xl overflow-hidden text-left"
+            style={{ border: "1px solid #2a2a2a" }}>
+            <div
+              className="px-6 py-4"
+              style={{
+                backgroundColor: "#161616",
+                borderBottom: "1px solid #222",
+              }}>
+              <p className="text-sm font-black" style={{ color: "#ef4444" }}>
+                💬 자주 묻는 질문
+              </p>
+              <p
+                className="font-black mt-1"
+                style={{
+                  fontSize: "clamp(1rem, 2.5vw, 1.2rem)",
+                  color: "white",
+                }}>
+                "사진만 보고 어떻게 정확히 알아요?"
+              </p>
+            </div>
+            <div className="px-6 py-5" style={{ backgroundColor: "#0d0d0d" }}>
+              <p
+                className="text-base leading-relaxed"
+                style={{ color: "#ccc" }}>
+                사진만으로 100% 판단은 어렵습니다.
+                <br />
+                그래서 현장에서 직접 확인합니다.
+              </p>
+              <p
+                className="text-base leading-relaxed mt-3"
+                style={{ color: "#ccc" }}>
+                연 1200건 이상 다니다 보면,
+                <br />
+                손으로 눌러보는 순간 대부분 느낌이 옵니다.
+                <br />
+                <span style={{ color: "white", fontWeight: 700 }}>
+                  그래도 모르겠으면 솔직히 말씀드립니다.
+                </span>
+              </p>
+              <p
+                className="text-base leading-relaxed mt-3"
+                style={{ color: "#ccc" }}>
+                수리 불가 판정 시 출장비는 받지 않습니다.
+              </p>
+            </div>
+          </div>
+        </FadeIn>
+
+        {/* ✅ 내구성 — "왜 오래 가냐" 설명 + 1년 AS 연결 */}
+        <FadeIn delay={0}>
+          <div
+            className="mb-14 rounded-2xl overflow-hidden text-left"
+            style={{ border: "1px solid #2fae8a44" }}>
+            <div
+              className="px-6 py-4"
+              style={{
+                backgroundColor: "#0d2318",
+                borderBottom: "1px solid #2fae8a33",
+              }}>
+              <p className="text-sm font-black" style={{ color: "#2fae8a" }}>
+                🛡 수리 후 내구성
+              </p>
+              <p
+                className="font-black mt-1"
+                style={{
+                  fontSize: "clamp(1rem, 2.5vw, 1.2rem)",
+                  color: "white",
+                }}>
+                "수리해도 또 망가지면 어쩌죠?"
+              </p>
+            </div>
+            <div className="px-6 py-5" style={{ backgroundColor: "#0a1a10" }}>
+              <p
+                className="text-base leading-relaxed"
+                style={{ color: "#ccc" }}>
+                구조를 알고 고치는 것과 모르고 고치는 건 다릅니다.
+              </p>
+              <p
+                className="text-base leading-relaxed mt-3"
+                style={{ color: "#ccc" }}>
+                어디서 균열이 생기는지, 어느 부품이 먼저 닳는지,
+                <br />
+                제조사 라인 출신이라 그 패턴을 알고 있습니다.
+              </p>
+              <p
+                className="text-base leading-relaxed mt-3"
+                style={{ color: "#ccc" }}>
+                그래도 혹시 같은 부위에서 재발하면
+                <br />
+                <span style={{ color: "#2fae8a", fontWeight: 700 }}>
+                  1년 안에는 출장비·공임 없이 다시 옵니다.
+                </span>
+                <br />
+                그만큼 자신 있다는 뜻입니다.
+              </p>
+              <span
+                className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-bold"
+                style={{
+                  display: "block",
+                  textAlign: "center",
+                  marginTop: 20,
+                  backgroundColor: "#44ef7718",
+                  border: "1px solid #00ffa297",
+                  color: "#00ffa2",
+                }}>
+                보증 스티커
+              </span>
+            </div>
+
+            <img src="/images/st.png" alt="수리담 현장" />
+          </div>
+        </FadeIn>
+
+        {/* 숫자 지표 */}
         <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-3">
           {stats.map((item, i) => (
             <FadeIn key={i} delay={i * 100}>
@@ -116,7 +225,7 @@ export default function Intro() {
                 style={cardStyle}>
                 <div
                   className="text-base font-bold mb-3"
-                  style={{ color: "#666" }}>
+                  style={{ color: "#aaa" }}>
                   {item.label}
                 </div>
                 <div style={valueStyle}>{item.value}</div>
@@ -129,6 +238,26 @@ export default function Intro() {
             </FadeIn>
           ))}
         </div>
+
+        {/* ✅ 지인 추천 카드 */}
+        <FadeIn delay={0}>
+          <div
+            className="mt-6 rounded-2xl px-6 py-4 text-left"
+            style={{
+              backgroundColor: "#1a1a1a",
+              border: "1px solid #00ffa2",
+              textAlign: "center",
+            }}>
+            <p
+              className="mt-2 font-black"
+              style={{
+                fontSize: "clamp(1rem, 2.5vw, 1.15rem)",
+                color: "white",
+              }}>
+              "지인 추천 연 100건 이상 가는 업체"
+            </p>
+          </div>
+        </FadeIn>
       </div>
     </section>
   );
