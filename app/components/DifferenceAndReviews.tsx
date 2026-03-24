@@ -1,10 +1,19 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import Image from "next/image";
 import FadeIn from "@/app/components/FadeIn";
 
-type Review = { who: string; title: string; body: string; stars?: number };
+const reviewImages = [
+  { src: "/images/re0.png", alt: "실제 고객 후기 0" },
+  { src: "/images/re1.png", alt: "실제 고객 후기 1" },
+  { src: "/images/re2.png", alt: "실제 고객 후기 2" },
+  { src: "/images/re3.png", alt: "실제 고객 후기 3" },
+  { src: "/images/re4.png", alt: "실제 고객 후기 4" },
+  { src: "/images/re5.png", alt: "실제 고객 후기 5" },
+  { src: "/images/re6.png", alt: "실제 고객 후기 6" },
+  { src: "/images/re7.png", alt: "실제 고객 후기 7" },
+];
 
 const categories = [
   {
@@ -174,109 +183,325 @@ const categories = [
   },
 ];
 
-const previewReviews: Review[] = [
-  {
-    who: "강서구 화곡동 / 김** 고객님",
-    title: "상부장 탈락",
-    stars: 5,
-    body: "다른 데서 교체 견적 140만원 받아왔는데, 사진 보내드렸더니 8만원에 다 끝났습니다. 처음엔 믿기지 않았어요.",
-  },
-  {
-    who: "부천 상동 / 이** 고객님",
-    title: "소파 꺼짐",
-    stars: 5,
-    body: "새 소파 장바구니에 담아두고 결제 직전이었어요. 여기서 수리하고 나서 취소했습니다. 결과 보고 잘했다 싶었어요.",
-  },
-  {
-    who: "인천 서구 / 고** 고객님",
-    title: "슬라이딩 도어",
-    stars: 5,
-    body: "다른 업체에서 그냥 새로 사시는 게 낫겠다고 했는데, 수리담에서 고쳐주셨어요. 그 말이 맞는지 결과로 확인했습니다.",
-  },
-];
+// ── 라이트박스 ──────────────────────────────────────────────
+function Lightbox({
+  src,
+  alt,
+  onClose,
+}: {
+  src: string;
+  alt: string;
+  onClose: () => void;
+}) {
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [onClose]);
 
-function CaseCard({ c }: { c: (typeof categories)[0]["cases"][0] }) {
   return (
     <div
-      className="rounded-2xl overflow-hidden"
-      style={{ border: "1px solid #2a2a2a" }}>
-      <div className="grid grid-cols-2">
-        <div
-          className="relative"
-          style={{ aspectRatio: "3/2", backgroundColor: "#0d0d0d" }}>
-          <Image
-            src={c.before}
-            alt={`${c.tag} 전`}
-            fill
-            sizes="(max-width: 768px) 50vw, 33vw"
-            className="object-cover"
-          />
-          <div
-            className="absolute bottom-0 left-0 right-0 px-3 py-2"
-            style={{
-              background:
-                "linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 100%)",
-            }}>
-            <span
-              className="text-sm font-black"
-              style={{ color: "#ddd", letterSpacing: "0.08em" }}>
-              BEFORE
-            </span>
-          </div>
-        </div>
-        <div
-          className="relative"
-          style={{ aspectRatio: "3/2", backgroundColor: "#0d0d0d" }}>
-          <Image
-            src={c.after}
-            alt={`${c.tag} 후`}
-            fill
-            sizes="(max-width: 768px) 50vw, 33vw"
-            className="object-cover"
-          />
-          <div
-            className="absolute bottom-0 left-0 right-0 px-3 py-2"
-            style={{
-              background:
-                "linear-gradient(to top, rgba(15,50,35,0.85) 0%, transparent 100%)",
-            }}>
-            <span
-              className="text-sm font-black"
-              style={{ color: "#2fae8a", letterSpacing: "0.08em" }}>
-              AFTER ✦
-            </span>
-          </div>
-        </div>
-      </div>
-      <div className="px-4 py-3" style={{ backgroundColor: "#161616" }}>
-        <span
-          className="inline-block text-sm font-bold px-2.5 py-1 rounded-full mb-2"
-          style={{
-            backgroundColor: "#1e1e1e",
-            color: "#aaa",
-            border: "1px solid #2a2a2a",
-          }}>
-          {c.tag}
-        </span>
-        {c.review && (
-          <div
-            className="rounded-xl px-3 py-2.5 mt-1"
-            style={{ backgroundColor: "#1a1a1a", border: "1px solid #2a2a2a" }}>
-            <p
-              className="text-base leading-relaxed"
-              style={{ color: "#e5e5e5" }}>
-              <span style={{ color: "#2fae8a", fontSize: 16 }}>"</span>
-              {c.review.body}
-              <span style={{ color: "#2fae8a", fontSize: 16 }}>"</span>
-            </p>
-            {/* #888 → #aaa */}
-            <p className="text-sm mt-1.5" style={{ color: "#aaa" }}>
-              — {c.review.who}
-            </p>
-          </div>
-        )}
-      </div>
+      className="fixed inset-0 z-[100] flex items-center justify-center p-4"
+      style={{ backgroundColor: "rgba(0,0,0,0.95)" }}
+      onClick={onClose}>
+      <button
+        onClick={onClose}
+        className="absolute top-4 right-4 w-10 h-10 flex items-center justify-center rounded-full text-base font-bold"
+        style={{ backgroundColor: "rgba(255,255,255,0.12)", color: "white" }}>
+        ✕
+      </button>
+      <img
+        src={src}
+        alt={alt}
+        onClick={(e) => e.stopPropagation()}
+        className="rounded-2xl"
+        style={{
+          maxWidth: "92vw",
+          maxHeight: "88vh",
+          objectFit: "contain",
+          cursor: "default",
+        }}
+      />
     </div>
+  );
+}
+
+// ── 리뷰 이미지 갤러리 ─────────────────────────────────────
+function ReviewImageGallery() {
+  const [current, setCurrent] = useState(0);
+  const [transitioning, setTransitioning] = useState(false);
+  const [lightbox, setLightbox] = useState<string | null>(null);
+  const startX = useRef(0);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const total = reviewImages.length;
+
+  const goTo = useCallback(
+    (idx: number) => {
+      if (transitioning) return;
+      setTransitioning(true);
+      setCurrent(idx);
+      setTimeout(() => setTransitioning(false), 450);
+    },
+    [transitioning],
+  );
+
+  const next = useCallback(
+    () => goTo((current + 1) % total),
+    [current, goTo, total],
+  );
+  const prev = useCallback(
+    () => goTo((current - 1 + total) % total),
+    [current, goTo, total],
+  );
+
+  const resetTimer = useCallback(() => {
+    if (timerRef.current) clearInterval(timerRef.current);
+    timerRef.current = setInterval(() => {
+      setCurrent((c) => (c + 1) % total);
+    }, 3500);
+  }, [total]);
+
+  useEffect(() => {
+    resetTimer();
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
+  }, [resetTimer]);
+
+  const handlePrev = () => {
+    prev();
+    resetTimer();
+  };
+  const handleNext = () => {
+    next();
+    resetTimer();
+  };
+
+  return (
+    <>
+      {lightbox && (
+        <Lightbox
+          src={lightbox}
+          alt="후기 확대"
+          onClose={() => setLightbox(null)}
+        />
+      )}
+      <div className="select-none">
+        <div
+          className="relative overflow-hidden rounded-2xl"
+          style={{ backgroundColor: "#111" }}
+          onTouchStart={(e) => {
+            startX.current = e.touches[0].clientX;
+          }}
+          onTouchEnd={(e) => {
+            const diff = startX.current - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 40) diff > 0 ? handleNext() : handlePrev();
+          }}>
+          <div
+            className="flex"
+            style={{
+              transform: `translateX(-${current * 100}%)`,
+              transition: "transform 0.45s cubic-bezier(0.4, 0, 0.2, 1)",
+              willChange: "transform",
+            }}>
+            {reviewImages.map((img, i) => (
+              <div
+                key={i}
+                className="flex-shrink-0 w-full flex items-start justify-center"
+                style={{ height: "560px", backgroundColor: "#111" }}>
+                <img
+                  src={img.src}
+                  alt={img.alt}
+                  onClick={() => setLightbox(img.src)}
+                  style={{
+                    height: "100%",
+                    width: "auto",
+                    maxWidth: "100%",
+                    display: "block",
+                    objectFit: "contain",
+                    cursor: "zoom-in",
+                  }}
+                  draggable={false}
+                />
+              </div>
+            ))}
+          </div>
+
+          <button
+            onClick={handlePrev}
+            className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-110"
+            style={{
+              backgroundColor: "rgba(0,0,0,0.55)",
+              color: "white",
+              border: "1px solid rgba(255,255,255,0.15)",
+              fontSize: 22,
+              fontWeight: 900,
+              backdropFilter: "blur(4px)",
+            }}>
+            ‹
+          </button>
+          <button
+            onClick={handleNext}
+            className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-110"
+            style={{
+              backgroundColor: "rgba(0,0,0,0.55)",
+              color: "white",
+              border: "1px solid rgba(255,255,255,0.15)",
+              fontSize: 22,
+              fontWeight: 900,
+              backdropFilter: "blur(4px)",
+            }}>
+            ›
+          </button>
+
+          {/* 확대 힌트 */}
+          <div
+            className="absolute bottom-3 left-3 px-2.5 py-1 rounded-full text-xs font-medium flex items-center gap-1"
+            style={{
+              backgroundColor: "rgba(0,0,0,0.6)",
+              color: "#aaa",
+              backdropFilter: "blur(4px)",
+              border: "1px solid rgba(255,255,255,0.1)",
+            }}>
+            🔍 눌러서 확대
+          </div>
+
+          <div
+            className="absolute bottom-3 right-3 px-2.5 py-1 rounded-full text-xs font-bold"
+            style={{
+              backgroundColor: "rgba(0,0,0,0.6)",
+              color: "#ddd",
+              backdropFilter: "blur(4px)",
+              border: "1px solid rgba(255,255,255,0.1)",
+            }}>
+            {current + 1} / {total}
+          </div>
+        </div>
+
+        <div className="flex items-center justify-center gap-2 mt-4">
+          {reviewImages.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => {
+                setCurrent(i);
+                resetTimer();
+              }}
+              className="rounded-full transition-all duration-300"
+              style={{
+                width: i === current ? 24 : 8,
+                height: 8,
+                backgroundColor: i === current ? "#2fae8a" : "#2a2a2a",
+              }}
+            />
+          ))}
+        </div>
+      </div>
+    </>
+  );
+}
+
+// ── CaseCard — Before/After 클릭 시 확대 ──────────────────
+function CaseCard({ c }: { c: (typeof categories)[0]["cases"][0] }) {
+  const [lightbox, setLightbox] = useState<string | null>(null);
+
+  return (
+    <>
+      {lightbox && (
+        <Lightbox
+          src={lightbox}
+          alt="수리 사진"
+          onClose={() => setLightbox(null)}
+        />
+      )}
+      <div
+        className="rounded-2xl overflow-hidden"
+        style={{ border: "1px solid #2a2a2a" }}>
+        <div className="grid grid-cols-2">
+          <div
+            className="relative"
+            style={{ aspectRatio: "3/2", backgroundColor: "#0d0d0d" }}>
+            <Image
+              src={c.before}
+              alt={`${c.tag} 전`}
+              fill
+              sizes="(max-width: 768px) 50vw, 33vw"
+              className="object-cover cursor-zoom-in"
+              onClick={() => setLightbox(c.before)}
+            />
+            <div
+              className="absolute bottom-0 left-0 right-0 px-3 py-2"
+              style={{
+                background:
+                  "linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 100%)",
+                pointerEvents: "none",
+              }}>
+              <span
+                className="text-sm font-black"
+                style={{ color: "#ddd", letterSpacing: "0.08em" }}>
+                BEFORE
+              </span>
+            </div>
+          </div>
+          <div
+            className="relative"
+            style={{ aspectRatio: "3/2", backgroundColor: "#0d0d0d" }}>
+            <Image
+              src={c.after}
+              alt={`${c.tag} 후`}
+              fill
+              sizes="(max-width: 768px) 50vw, 33vw"
+              className="object-cover cursor-zoom-in"
+              onClick={() => setLightbox(c.after)}
+            />
+            <div
+              className="absolute bottom-0 left-0 right-0 px-3 py-2"
+              style={{
+                background:
+                  "linear-gradient(to top, rgba(15,50,35,0.85) 0%, transparent 100%)",
+                pointerEvents: "none",
+              }}>
+              <span
+                className="text-sm font-black"
+                style={{ color: "#2fae8a", letterSpacing: "0.08em" }}>
+                AFTER ✦
+              </span>
+            </div>
+          </div>
+        </div>
+        <div className="px-4 py-3" style={{ backgroundColor: "#161616" }}>
+          <span
+            className="inline-block text-sm font-bold px-2.5 py-1 rounded-full mb-2"
+            style={{
+              backgroundColor: "#1e1e1e",
+              color: "#aaa",
+              border: "1px solid #2a2a2a",
+            }}>
+            {c.tag}
+          </span>
+          {c.review && (
+            <div
+              className="rounded-xl px-3 py-2.5 mt-1"
+              style={{
+                backgroundColor: "#1a1a1a",
+                border: "1px solid #2a2a2a",
+              }}>
+              <p
+                className="text-base leading-relaxed"
+                style={{ color: "#e5e5e5" }}>
+                <span style={{ color: "#2fae8a", fontSize: 16 }}>"</span>
+                {c.review.body}
+                <span style={{ color: "#2fae8a", fontSize: 16 }}>"</span>
+              </p>
+              <p className="text-sm mt-1.5" style={{ color: "#aaa" }}>
+                — {c.review.who}
+              </p>
+            </div>
+          )}
+        </div>
+      </div>
+    </>
   );
 }
 
@@ -336,7 +561,6 @@ function AccordionItem({
                 {cat.cases.length}건
               </span>
             </div>
-            {/* #999 → #bbb */}
             <p className="text-sm mt-0.5" style={{ color: "#bbb" }}>
               {cat.desc}
             </p>
@@ -400,7 +624,6 @@ function AccordionItem({
 export default function DifferenceAndReviews() {
   return (
     <section>
-      {/* 리뷰 */}
       <div className="px-6 pt-20 pb-14" style={{ backgroundColor: "#111" }}>
         <div className="mx-auto max-w-5xl">
           <FadeIn delay={0}>
@@ -430,7 +653,7 @@ export default function DifferenceAndReviews() {
                 <p
                   className="mt-4 text-lg leading-relaxed"
                   style={{ color: "#bbb" }}>
-                  광고 카피가 아닌, 실제 고객의 말입니다.
+                  가공 없이 그대로 캡처한 실제 후기입니다.
                 </p>
               </div>
               <div
@@ -446,7 +669,6 @@ export default function DifferenceAndReviews() {
                     style={{ color: "white" }}>
                     4.9 / 5.0
                   </div>
-                  {/* #666 → #aaa */}
                   <div className="text-sm mt-0.5" style={{ color: "#aaa" }}>
                     실제 고객 후기 기준
                   </div>
@@ -454,70 +676,12 @@ export default function DifferenceAndReviews() {
               </div>
             </div>
           </FadeIn>
-
-          <div className="grid gap-5 sm:grid-cols-3">
-            {previewReviews.map((r, i) => (
-              <FadeIn key={i} delay={i * 100}>
-                <div
-                  className="rounded-2xl p-7 flex flex-col gap-5"
-                  style={{
-                    backgroundColor: "#1a1a1a",
-                    border: "1px solid #2a2a2a",
-                  }}>
-                  <div className="flex items-center justify-between">
-                    <div
-                      className="flex gap-0.5 text-lg"
-                      style={{ color: "#2fae8a" }}>
-                      {"★".repeat(r.stars ?? 5)}
-                    </div>
-                    <span
-                      className="text-sm px-3 py-1 rounded-full"
-                      style={{
-                        backgroundColor: "#111",
-                        color: "#bbb",
-                        border: "1px solid #2a2a2a",
-                      }}>
-                      {r.title}
-                    </span>
-                  </div>
-                  <p
-                    className="text-xl leading-relaxed flex-1"
-                    style={{ color: "#f0f0f0" }}>
-                    <span
-                      style={{ color: "#2fae8a", fontSize: 24, lineHeight: 0 }}>
-                      "
-                    </span>
-                    {r.body}
-                    <span
-                      style={{ color: "#2fae8a", fontSize: 24, lineHeight: 0 }}>
-                      "
-                    </span>
-                  </p>
-                  <div
-                    className="flex items-center gap-3 pt-4"
-                    style={{ borderTop: "1px solid #2a2a2a" }}>
-                    <div
-                      className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-black flex-shrink-0"
-                      style={{
-                        backgroundColor: "#2fae8a22",
-                        color: "#2fae8a",
-                        border: "1px solid #2fae8a44",
-                      }}>
-                      {r.who[0]}
-                    </div>
-                    {/* #666 → #aaa */}
-                    <span className="text-sm" style={{ color: "#aaa" }}>
-                      {r.who}
-                    </span>
-                  </div>
-                </div>
-              </FadeIn>
-            ))}
-          </div>
+          <FadeIn delay={80}>
+            <ReviewImageGallery />
+          </FadeIn>
         </div>
       </div>
 
-      {/* Before/After 아코디언 */}
       <div className="px-6 py-20" style={{ backgroundColor: "#f5f5f5" }}>
         <div className="mx-auto max-w-5xl">
           <FadeIn delay={0}>
@@ -553,7 +717,6 @@ export default function DifferenceAndReviews() {
               </p>
             </div>
           </FadeIn>
-
           <FadeIn delay={0}>
             <span
               className="inline-block text-sm tracking-widest uppercase mb-4 px-3 py-1.5 rounded-full font-bold"
@@ -570,7 +733,6 @@ export default function DifferenceAndReviews() {
               말보다 사진이 빠릅니다. 직접 확인하세요.
             </p>
           </FadeIn>
-
           <div className="flex flex-col gap-3">
             {categories.map((cat, i) => (
               <FadeIn key={cat.id} delay={i * 60}>

@@ -27,7 +27,8 @@ const rows = [
   },
   {
     label: "누적 후기",
-    other: "확인 불가",
+    // ✅ "확인 불가" → "후기 0건"
+    other: "후기 없음\n(0건)",
     ours: "1,000건+\n네이버 4.9★",
     highlight: true,
   },
@@ -55,7 +56,6 @@ export default function CompareTable() {
               <br />
               <span style={{ color: "#2fae8a" }}>잘못 고르는 법.</span>
             </h2>
-            {/* #666 → #aaa */}
             <p
               className="mt-3 text-base font-semibold"
               style={{ color: "#aaa" }}>
@@ -84,7 +84,6 @@ export default function CompareTable() {
                   borderLeft: "1px solid #2a2a2a",
                   borderRight: "1px solid #2a2a2a",
                 }}>
-                {/* #333 → #777 */}
                 <p
                   className="text-sm font-black tracking-widest"
                   style={{ color: "#777" }}>
@@ -106,7 +105,6 @@ export default function CompareTable() {
                 key={i}
                 className="grid grid-cols-[1fr_auto_1fr]"
                 style={{ borderTop: "1px solid #222" }}>
-                {/* 일반 업체 값 */}
                 <div
                   className="px-5 py-5 flex items-center justify-center text-center"
                   style={{ backgroundColor: "#161616" }}>
@@ -119,7 +117,6 @@ export default function CompareTable() {
                   </p>
                 </div>
 
-                {/* 중간 라벨 — text-xs → text-sm, #444 → #aaa */}
                 <div
                   className="flex items-center justify-center px-4 py-5 text-center"
                   style={{
@@ -135,7 +132,6 @@ export default function CompareTable() {
                   </p>
                 </div>
 
-                {/* 수리담 값 */}
                 <div
                   className="px-5 py-5 flex items-center justify-center text-center"
                   style={{
@@ -152,7 +148,6 @@ export default function CompareTable() {
           </div>
         </FadeIn>
 
-        {/* #555 → #aaa */}
         <FadeIn delay={120}>
           <p
             className="mt-6 text-center text-sm font-semibold"

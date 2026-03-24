@@ -81,11 +81,12 @@ export default function WhySuridam() {
               }}>
               <p
                 className="text-base font-semibold leading-relaxed mb-5"
-                style={{ color: "rgba(255,255,255,0.5)" }}>
-                거절이 잦은 서비스가 왜 살아남았을까요?
+                style={{ color: "rgba(255, 255, 255, 0.67)" }}>
+                한 번 제대로 고쳐준 곳은 지인한테도 알려줍니다.
                 <br />
-                <span style={{ color: "#2fae8a", fontWeight: 700 }}>
-                  → 솔직한 곳을 한 번 경험하면 다시 찾기 때문입니다.
+                <br />
+                <span style={{ color: "#00ffa2", fontWeight: 700 }}>
+                  → 연간 100건 이상은 지인 추천으로 방문합니다.
                 </span>
               </p>
               <a
