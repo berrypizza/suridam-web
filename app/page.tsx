@@ -16,9 +16,8 @@ export default function AdPage() {
     <>
       <main className="min-h-screen" style={{ backgroundColor: "#1e1e1e" }}>
         <HookIntro />
-        <Intro />
         <Staffphotos />
-        <HonestSection />
+        <Intro />
         <CompareTable />
         <WhySuridam />
         <DifferenceAndReviews />
