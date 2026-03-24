@@ -309,52 +309,22 @@ function ReviewImageGallery() {
             {reviewImages.map((img, i) => (
               <div
                 key={i}
-                className="flex-shrink-0 w-full flex items-start justify-center"
+                className="relative flex-shrink-0 w-full"
                 style={{ height: "560px", backgroundColor: "#111" }}>
-                <img
+                {/* ✅ 수정 1: img → Next.js Image, quality 90 */}
+                <Image
                   src={img.src}
                   alt={img.alt}
+                  fill
+                  quality={90}
+                  sizes="(max-width: 768px) 100vw, 800px"
+                  className="object-contain cursor-zoom-in"
                   onClick={() => setLightbox(img.src)}
-                  style={{
-                    height: "100%",
-                    width: "auto",
-                    maxWidth: "100%",
-                    display: "block",
-                    objectFit: "contain",
-                    cursor: "zoom-in",
-                  }}
                   draggable={false}
                 />
               </div>
             ))}
           </div>
-
-          <button
-            onClick={handlePrev}
-            className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-110"
-            style={{
-              backgroundColor: "rgba(0,0,0,0.55)",
-              color: "white",
-              border: "1px solid rgba(255,255,255,0.15)",
-              fontSize: 22,
-              fontWeight: 900,
-              backdropFilter: "blur(4px)",
-            }}>
-            ‹
-          </button>
-          <button
-            onClick={handleNext}
-            className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-110"
-            style={{
-              backgroundColor: "rgba(0,0,0,0.55)",
-              color: "white",
-              border: "1px solid rgba(255,255,255,0.15)",
-              fontSize: 22,
-              fontWeight: 900,
-              backdropFilter: "blur(4px)",
-            }}>
-            ›
-          </button>
 
           {/* 확대 힌트 */}
           <div
@@ -422,11 +392,13 @@ function CaseCard({ c }: { c: (typeof categories)[0]["cases"][0] }) {
           <div
             className="relative"
             style={{ aspectRatio: "3/2", backgroundColor: "#0d0d0d" }}>
+            {/* ✅ 수정 2: Before quality 90, sizes 확대 */}
             <Image
               src={c.before}
               alt={`${c.tag} 전`}
               fill
-              sizes="(max-width: 768px) 50vw, 33vw"
+              quality={90}
+              sizes="(max-width: 768px) 50vw, 400px"
               className="object-cover cursor-zoom-in"
               onClick={() => setLightbox(c.before)}
             />
@@ -447,11 +419,13 @@ function CaseCard({ c }: { c: (typeof categories)[0]["cases"][0] }) {
           <div
             className="relative"
             style={{ aspectRatio: "3/2", backgroundColor: "#0d0d0d" }}>
+            {/* ✅ 수정 3: After quality 90, sizes 확대 */}
             <Image
               src={c.after}
               alt={`${c.tag} 후`}
               fill
-              sizes="(max-width: 768px) 50vw, 33vw"
+              quality={90}
+              sizes="(max-width: 768px) 50vw, 400px"
               className="object-cover cursor-zoom-in"
               onClick={() => setLightbox(c.after)}
             />
