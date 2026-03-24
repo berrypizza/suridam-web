@@ -34,11 +34,11 @@ export default function HookIntro() {
             <span
               className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-bold"
               style={{
-                backgroundColor: "#ef444418",
-                border: "1px solid #ef4444aa",
-                color: "#ff6b6b",
+                backgroundColor: "#44ef7718",
+                border: "1px solid #00ffa297",
+                color: "#00ffa2",
               }}>
-              ⚠️ 가구 버리기 전에 이것만 보세요
+              수리담 가구수리
             </span>
           </div>
         </FadeIn>
@@ -52,7 +52,7 @@ export default function HookIntro() {
             }}>
             고칠 수 있는 가구를
             <br />
-            <span style={{ color: "#2fae8a" }}>버리셨나요?</span>
+            <span style={{ color: "#00ffa2" }}>버리셨나요?</span>
             <br />
             <span
               style={{
@@ -81,7 +81,7 @@ export default function HookIntro() {
                 fontSize: "clamp(1.1rem, 2.5vw, 1.4rem)",
                 color: "rgba(255,255,255,0.72)",
               }}>
-              <span style={{ color: "#2fae8a", fontWeight: 800 }}>
+              <span style={{ color: "#00ffa2", fontWeight: 800 }}>
                 3분이면 확인됩니다.
               </span>
             </p>
