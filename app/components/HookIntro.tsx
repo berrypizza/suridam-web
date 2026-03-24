@@ -60,7 +60,8 @@ export default function HookIntro() {
                 fontSize: "clamp(1.9rem, 3.5vw, 2.4rem)",
                 fontWeight: 700,
               }}>
-              그러면 나가주셔도 됩니다.
+              140만원 견적 받은 가구, <br />
+              8만원에 끝났습니다
             </span>
           </h1>
         </FadeIn>
