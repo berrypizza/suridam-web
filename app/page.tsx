@@ -33,8 +33,9 @@ export default function AdPage() {
         <HookIntro />
         <Staffphotos />
         <Intro />
-        <CompareTable />
         <DifferenceAndReviews />
+        <CompareTable />
+
         <WhySuridam />
         <EstimateCalculator />
         <ContactCTA />
