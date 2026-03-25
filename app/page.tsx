@@ -23,7 +23,6 @@ import Navbar from "@/app/components/Navbar";
 import Footer from "@/app/components/Footer";
 import EstimateCalculator from "./components/EstimateCalculator";
 import Intro from "./components/Intro";
-import HonestSection from "./components/Honestsection";
 import CompareTable from "./components/CompareTable";
 import ServiceSeo from "./components/ServiceSeo";
 
@@ -35,8 +34,8 @@ export default function AdPage() {
         <Staffphotos />
         <Intro />
         <CompareTable />
-        <WhySuridam />
         <DifferenceAndReviews />
+        <WhySuridam />
         <EstimateCalculator />
         <ContactCTA />
         <ServiceSeo />
