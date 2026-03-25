@@ -1,3 +1,4 @@
+export const dynamic = "force-static";
 export const metadata = {
   title: "가구 수리 출장 | 소파 꺼짐, 싱크대 상부장 처짐 전문 - 수리담",
   description:
