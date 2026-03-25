@@ -29,6 +29,7 @@ import EstimateCalculator from "./components/EstimateCalculator";
 import Intro from "./components/Intro";
 import CompareTable from "./components/CompareTable";
 import ServiceSeo from "./components/ServiceSeo";
+import HiddenSEO from "./components/HiddenSEO";
 
 export default function AdPage() {
   return (
@@ -43,6 +44,7 @@ export default function AdPage() {
         <EstimateCalculator />
         <ContactCTA />
         <ServiceSeo />
+        <HiddenSEO /> {/* 👈 페이지 맨 아래 추가 (고객 안 보임, 봇만 읽음) */}
       </main>
       <FloatingCTA />
     </>
