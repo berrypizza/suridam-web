@@ -4,7 +4,7 @@
 
 const services = [
   {
-    category: "싱크대 상부장",
+    category: "싱크대 상부장, 하부장",
     emoji: "🔨",
     items: [
       {
