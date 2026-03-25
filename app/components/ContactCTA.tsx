@@ -80,50 +80,6 @@ export default function ContactCTA() {
           </div>
         </FadeIn>
 
-        <FadeIn delay={80}>
-          <div className="mb-10 flex flex-col gap-3">
-            {[
-              "'언제 한 번 봐야지' 하면서 몇 달째 미루고 있다 → 맞죠?",
-              "문이 잘 안 닫히거나 삐걱거리는 소리가 점점 커지고 있다 → 맞죠?",
-              "고치면 얼마나 할지 몰라서 연락을 못 하고 있다 → 맞죠?",
-            ].map((q, i) => (
-              <div
-                key={i}
-                className="rounded-2xl px-6 py-4"
-                style={{
-                  backgroundColor: "#161616",
-                  border: "1px solid #2a2a2a",
-                }}>
-                {/* #888 → #bbb */}
-                <p
-                  className="font-semibold"
-                  style={{
-                    color: "#bbb",
-                    fontSize: "clamp(0.95rem, 2.2vw, 1.1rem)",
-                  }}>
-                  {q}
-                </p>
-              </div>
-            ))}
-            <div
-              className="rounded-2xl px-6 py-5 mt-1"
-              style={{
-                backgroundColor: "#1a2e27",
-                border: "1px solid #2fae8a44",
-              }}>
-              <p
-                className="font-black"
-                style={{
-                  fontSize: "clamp(1.1rem, 2.8vw, 1.3rem)",
-                  color: "#2fae8a",
-                }}>
-                비용이 얼마인지, 가능한지 — 사진 한 장으로 30초 안에 알 수
-                있습니다.
-              </p>
-            </div>
-          </div>
-        </FadeIn>
-
         <div className="grid gap-4 sm:grid-cols-3 mb-10">
           {steps.map((s, i) => (
             <FadeIn key={s.num} delay={i * 100}>
