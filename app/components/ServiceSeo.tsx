@@ -309,11 +309,6 @@ export default function KeywordAccordion() {
                   <div
                     className="px-4 pb-4"
                     style={{ borderTop: "1px solid #222", paddingTop: 12 }}>
-                    {r.desc && (
-                      <p className="text-xs mb-4" style={{ color: "#666" }}>
-                        {r.desc}
-                      </p>
-                    )}
                     <div className="flex flex-col gap-4">
                       {r.areas.map((area) => (
                         <div key={area.city}>
