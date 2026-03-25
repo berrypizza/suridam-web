@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-const KAKAO_CHANNEL_URL = "http://pf.kakao.com/_kaKTn/chat";
+const KAKAO_CHANNEL_URL = "https://pf.kakao.com/_kaKTn/chat";
 
 function KakaoIcon() {
   return (

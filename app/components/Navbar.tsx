@@ -3,7 +3,7 @@ import Link from "next/link";
 import NavbarAuthButton from "./Navbarauthbutton";
 import DrawerMenu from "./Drawermenu";
 
-const KAKAO_CHANNEL_URL = "http://pf.kakao.com/_kaKTn/chat";
+const KAKAO_CHANNEL_URL = "https://pf.kakao.com/_kaKTn/chat";
 
 function NaverIcon() {
   return (
