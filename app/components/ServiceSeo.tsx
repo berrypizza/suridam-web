@@ -119,6 +119,11 @@ const services = [
       { name: "식탁 다리 수리·흔들림", desc: "총 8만원" },
     ],
   },
+  {
+    category: "기타 가구수리",
+    emoji: "🛏️",
+    items: [{ name: "가구 수리", desc: "별도 문의" }],
+  },
 ];
 
 const regions = [
