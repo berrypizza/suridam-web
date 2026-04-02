@@ -516,8 +516,8 @@ function JobCard({
               당신이 있어서 수리담입니다
             </p>
             <p
-              className="text-sm text-center mt-1 font-medium"
-              style={{ color: "#666" }}>
+              className="text-base text-center mt-1 font-medium"
+              style={{ color: "#00ff4c" }}>
               고마워요, 루미너스✨
             </p>
           </div>
