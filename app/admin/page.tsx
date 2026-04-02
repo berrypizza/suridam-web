@@ -497,8 +497,8 @@ function JobCard({
             <div
               className="w-28 h-28 rounded-full flex items-center justify-center mb-6"
               style={{
-                backgroundColor: "#2fae8a",
-                boxShadow: "0 0 60px #2fae8a88",
+                backgroundColor: "#00ffa2",
+                boxShadow: "0 0 60px #00ffa288",
               }}>
               <span style={{ fontSize: 56 }}>✓</span>
             </div>
@@ -517,7 +517,7 @@ function JobCard({
             </p>
             <p
               className="text-base text-center mt-1 font-medium"
-              style={{ color: "#00ff4c" }}>
+              style={{ color: "#00ffa2" }}>
               고마워요, 루미너스✨
             </p>
           </div>
