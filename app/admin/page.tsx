@@ -507,8 +507,18 @@ function JobCard({
             <p className="text-3xl font-black text-white mb-2">
               수고했어요! 🎉
             </p>
-            <p className="text-base text-center" style={{ color: "#2fae8a" }}>
-              {job.name}님 고객 완료
+            <p
+              className="text-base font-semibold text-center mb-1"
+              style={{ color: "#2fae8a" }}>
+              {job.name}님 완료
+            </p>
+            <p className="text-sm text-center" style={{ color: "#aaa" }}>
+              당신이 있어서 수리담입니다
+            </p>
+            <p
+              className="text-sm text-center mt-1 font-medium"
+              style={{ color: "#666" }}>
+              고마워요, 루미너스✨
             </p>
           </div>
         </div>
