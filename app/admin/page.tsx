@@ -381,6 +381,7 @@ function JobCard({
   const [lightboxUrl, setLightboxUrl] = useState<string | null>(null);
   const [lightboxList, setLightboxList] = useState<string[]>([]);
   const [memoOpen, setMemoOpen] = useState(false);
+  const [showCelebration, setShowCelebration] = useState(false);
 
   const getPhotos = (): string[] => {
     if (!job.completion_photo) return [];
@@ -406,7 +407,11 @@ function JobCard({
       status: "완료",
       as_until: addOneYear(nowKST().toISOString().slice(0, 10)),
     });
-    setShowPhoto(true);
+    setShowCelebration(true);
+    setTimeout(() => {
+      setShowCelebration(false);
+      setShowPhoto(true);
+    }, 2200);
   };
 
   // 실측 완료 토글 (사진 팝업 없음)
@@ -437,6 +442,78 @@ function JobCard({
 
   return (
     <>
+      {/* 완료 축하 오버레이 */}
+      {showCelebration && (
+        <div
+          className="fixed inset-0 z-[80] flex flex-col items-center justify-center pointer-events-none"
+          style={{ backgroundColor: "rgba(0,0,0,0.85)" }}>
+          {/* 컨페티 */}
+          <style>{`
+            @keyframes confetti-fall {
+              0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+              100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+            }
+            @keyframes pop-in {
+              0% { transform: scale(0.3); opacity: 0; }
+              60% { transform: scale(1.15); opacity: 1; }
+              100% { transform: scale(1); opacity: 1; }
+            }
+            @keyframes fade-up {
+              0% { transform: translateY(16px); opacity: 0; }
+              100% { transform: translateY(0); opacity: 1; }
+            }
+            .confetti-piece {
+              position: fixed;
+              width: 10px;
+              height: 10px;
+              animation: confetti-fall linear forwards;
+            }
+          `}</style>
+          {/* 컨페티 조각들 */}
+          {[...Array(20)].map((_, i) => (
+            <div
+              key={i}
+              className="confetti-piece rounded-sm"
+              style={{
+                left: `${5 + ((i * 4.5) % 95)}%`,
+                top: `-10px`,
+                backgroundColor: [
+                  "#2fae8a",
+                  "#60a5fa",
+                  "#f59e0b",
+                  "#f472b6",
+                  "#a78bfa",
+                  "#34d399",
+                ][i % 6],
+                width: i % 3 === 0 ? 8 : 12,
+                height: i % 3 === 0 ? 12 : 8,
+                animationDuration: `${1.2 + (i % 5) * 0.2}s`,
+                animationDelay: `${(i % 4) * 0.08}s`,
+              }}
+            />
+          ))}
+          {/* 중앙 체크 */}
+          <div style={{ animation: "pop-in 0.4s ease-out forwards" }}>
+            <div
+              className="w-28 h-28 rounded-full flex items-center justify-center mb-6"
+              style={{
+                backgroundColor: "#2fae8a",
+                boxShadow: "0 0 60px #2fae8a88",
+              }}>
+              <span style={{ fontSize: 56 }}>✓</span>
+            </div>
+          </div>
+          <div style={{ animation: "fade-up 0.4s ease-out 0.3s both" }}>
+            <p className="text-3xl font-black text-white mb-2">
+              수고했어요! 🎉
+            </p>
+            <p className="text-base text-center" style={{ color: "#2fae8a" }}>
+              {job.name}님 고객 완료
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* 라이트박스 */}
       {lightboxUrl &&
         (() => {
