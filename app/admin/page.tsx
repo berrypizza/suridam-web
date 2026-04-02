@@ -734,35 +734,54 @@ function JobCard({
                 <button
                   type="button"
                   onClick={() => setMemoOpen((v) => !v)}
-                  className="w-full flex items-center justify-between rounded-xl px-3 py-2.5 text-left"
+                  className="w-full flex items-center justify-between rounded-xl px-3 py-3 text-left"
                   style={{
-                    backgroundColor: memoOpen ? "#1e2a1e" : "#1e1e1e",
-                    border: `1px solid ${memoOpen ? "#2fae8a44" : "#2a2a2a"}`,
+                    backgroundColor: memoOpen ? "#1e2a1e" : "#1c2a1c",
+                    border: `1px solid ${memoOpen ? "#2fae8a66" : "#2fae8a44"}`,
+                    boxShadow: memoOpen ? "none" : "0 0 0 1px #2fae8a22",
                   }}>
                   <div className="flex items-center gap-2 min-w-0">
-                    <span style={{ fontSize: 14, flexShrink: 0 }}>💬</span>
+                    <span style={{ fontSize: 15, flexShrink: 0 }}>💬</span>
+                    <div className="min-w-0">
+                      <p
+                        className="text-xs font-black mb-0.5"
+                        style={{ color: "#2fae8a" }}>
+                        메모 보기
+                      </p>
+                      <p className="text-xs truncate" style={{ color: "#888" }}>
+                        {job.memo}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-1.5 flex-shrink-0 ml-2">
+                    {!memoOpen && (
+                      <span
+                        className="text-xs font-bold px-2 py-0.5 rounded-full animate-pulse"
+                        style={{
+                          backgroundColor: "#2fae8a22",
+                          color: "#2fae8a",
+                          border: "1px solid #2fae8a44",
+                        }}>
+                        탭
+                      </span>
+                    )}
                     <span
-                      className="text-xs font-semibold truncate"
-                      style={{ color: memoOpen ? "#2fae8a" : "#bbb" }}>
-                      {memoOpen ? "메모" : job.memo}
+                      style={{
+                        color: "#2fae8a",
+                        fontSize: 16,
+                        display: "inline-block",
+                        transition: "transform 0.2s",
+                        transform: memoOpen ? "rotate(180deg)" : "none",
+                      }}>
+                      ▾
                     </span>
                   </div>
-                  <span
-                    className="text-xs flex-shrink-0 ml-2"
-                    style={{
-                      color: "#555",
-                      transform: memoOpen ? "rotate(180deg)" : "none",
-                      display: "inline-block",
-                      transition: "transform 0.2s",
-                    }}>
-                    ▾
-                  </span>
                 </button>
                 {memoOpen && (
                   <div
                     className="rounded-b-xl px-4 py-3 -mt-0.5"
                     style={{
-                      backgroundColor: "#1a2a1a",
+                      backgroundColor: "#162116",
                       border: "1px solid #2fae8a44",
                       borderTop: "none",
                     }}>
