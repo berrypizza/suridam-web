@@ -518,7 +518,7 @@ function JobCard({
             <p
               className="text-base text-center mt-1 font-medium"
               style={{ color: "#00ffa2" }}>
-              ✨ 고마워요, 루미너스 ✨
+              ✨ 고마워요 ✨
             </p>
           </div>
         </div>
