@@ -85,11 +85,12 @@ function formatYearMonth(ym: string) {
 }
 function formatTime(t: string) {
   if (!t) return "";
-  const [h] = t.split(":");
+  const [h, m] = t.split(":");
   const hour = parseInt(h);
+  const min = parseInt(m || "0");
   const ampm = hour < 12 ? "AM" : "PM";
   const h12 = hour % 12 || 12;
-  return `${ampm} ${h12}시`;
+  return min > 0 ? `${ampm} ${h12}시 ${min}분` : `${ampm} ${h12}시`;
 }
 function formatPrice(p: number) {
   return p >= 10000
@@ -379,6 +380,7 @@ function JobCard({
   const [prevStatus, setPrevStatus] = useState<Status>(job.status);
   const [lightboxUrl, setLightboxUrl] = useState<string | null>(null);
   const [lightboxList, setLightboxList] = useState<string[]>([]);
+  const [memoOpen, setMemoOpen] = useState(false);
 
   const getPhotos = (): string[] => {
     if (!job.completion_photo) return [];
@@ -724,19 +726,55 @@ function JobCard({
                   {formatPrice(job.price)}
                 </span>
               )}
-              {job.memo && (
-                <span
-                  className="text-xs flex items-center gap-1 px-2 py-0.5 rounded-full"
-                  style={{
-                    backgroundColor: "#252525",
-                    color: "#999",
-                    border: "1px solid #333",
-                  }}>
-                  <span style={{ fontSize: 10 }}>💬</span>
-                  {job.memo}
-                </span>
-              )}
             </div>
+
+            {/* 메모 — 클릭해서 펼치기 */}
+            {job.memo && (
+              <div className="mt-2">
+                <button
+                  type="button"
+                  onClick={() => setMemoOpen((v) => !v)}
+                  className="w-full flex items-center justify-between rounded-xl px-3 py-2.5 text-left"
+                  style={{
+                    backgroundColor: memoOpen ? "#1e2a1e" : "#1e1e1e",
+                    border: `1px solid ${memoOpen ? "#2fae8a44" : "#2a2a2a"}`,
+                  }}>
+                  <div className="flex items-center gap-2 min-w-0">
+                    <span style={{ fontSize: 14, flexShrink: 0 }}>💬</span>
+                    <span
+                      className="text-xs font-semibold truncate"
+                      style={{ color: memoOpen ? "#2fae8a" : "#bbb" }}>
+                      {memoOpen ? "메모" : job.memo}
+                    </span>
+                  </div>
+                  <span
+                    className="text-xs flex-shrink-0 ml-2"
+                    style={{
+                      color: "#555",
+                      transform: memoOpen ? "rotate(180deg)" : "none",
+                      display: "inline-block",
+                      transition: "transform 0.2s",
+                    }}>
+                    ▾
+                  </span>
+                </button>
+                {memoOpen && (
+                  <div
+                    className="rounded-b-xl px-4 py-3 -mt-0.5"
+                    style={{
+                      backgroundColor: "#1a2a1a",
+                      border: "1px solid #2fae8a44",
+                      borderTop: "none",
+                    }}>
+                    <p
+                      className="text-sm leading-relaxed whitespace-pre-wrap"
+                      style={{ color: "#ddd" }}>
+                      {job.memo}
+                    </p>
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* AS 기간 */}
             {job.status === "완료" &&
