@@ -505,7 +505,7 @@ function JobCard({
           </div>
           <div style={{ animation: "fade-up 0.4s ease-out 0.3s both" }}>
             <p className="text-3xl font-black text-white mb-2">
-              수고했어요! 🎉
+              🎉 수고했어요! 🎉
             </p>
             <p
               className="text-xl font-semibold text-center mb-1"
@@ -518,7 +518,7 @@ function JobCard({
             <p
               className="text-base text-center mt-1 font-medium"
               style={{ color: "#00ffa2" }}>
-              고마워요, 루미너스✨
+              ✨ 고마워요, 루미너스 ✨
             </p>
           </div>
         </div>
