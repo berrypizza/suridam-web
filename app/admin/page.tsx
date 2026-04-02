@@ -500,7 +500,7 @@ function JobCard({
                 backgroundColor: "#00ffa2",
                 boxShadow: "0 0 60px #00ffa288",
               }}>
-              <span style={{ fontSize: 56 }}>✓</span>
+              <span style={{ fontSize: 56, color: "#023120" }}>✓</span>
             </div>
           </div>
           <div style={{ animation: "fade-up 0.4s ease-out 0.3s both" }}>
