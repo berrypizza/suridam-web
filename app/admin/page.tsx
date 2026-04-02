@@ -508,8 +508,8 @@ function JobCard({
               수고했어요! 🎉
             </p>
             <p
-              className="text-base font-semibold text-center mb-1"
-              style={{ color: "#2fae8a" }}>
+              className="text-xl font-semibold text-center mb-1"
+              style={{ color: "#e4e4e4" }}>
               {job.name}님 완료
             </p>
             <p className="text-sm text-center" style={{ color: "#aaa" }}>
