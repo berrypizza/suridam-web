@@ -119,7 +119,7 @@ function Hero() {
             {[
               { num: "1,000+", label: "누적 고객 후기" },
               { num: "4.9★", label: "네이버 평점" },
-              { num: "30분", label: "평균 시공 시간" },
+              { num: "2시간", label: "평균 시공 시간" },
             ].map((s, i) => (
               <div key={i} className="text-center">
                 <div
