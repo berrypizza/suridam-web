@@ -14,28 +14,24 @@ function KakaoIcon() {
   );
 }
 
-// ── 히어로 ───────────────────────────────────────────────────
 function Hero() {
   return (
     <section
       className="relative overflow-hidden"
       style={{ minHeight: "100svh", backgroundColor: "#0a0a0a" }}>
-      {/* 배경 사진 */}
       <img
         src="/images/staff-main4.png"
         alt="수리담 의자 가죽교체 현장"
         className="absolute inset-0 z-0 h-full w-full object-cover"
         style={{ objectPosition: "center" }}
       />
-      {/* 어둡게 오버레이 */}
       <div
         className="absolute inset-0 z-10"
         style={{
           background:
-            "linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.65) 40%, rgba(0,0,0,0.97) 100%)",
+            "linear-gradient(to bottom, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.6) 40%, rgba(0,0,0,0.97) 100%)",
         }}
       />
-      {/* 하단 초록 글로우 */}
       <div
         className="absolute inset-0 z-10"
         style={{
@@ -43,11 +39,10 @@ function Hero() {
             "radial-gradient(ellipse 80% 40% at 50% 100%, #2fae8a18 0%, transparent 70%)",
         }}
       />
-
-      <div className="relative z-10 mx-auto max-w-5xl px-6 pt-24 pb-16 flex flex-col items-center text-center">
+      <div className="relative z-20 mx-auto max-w-5xl px-6 pt-24 pb-16 flex flex-col items-center text-center">
         <FadeIn delay={0}>
           <span
-            className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-bold mb-8"
+            className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-base font-bold mb-8"
             style={{
               backgroundColor: "#2fae8a18",
               border: "1px solid #2fae8a55",
@@ -56,31 +51,29 @@ function Hero() {
             수리담 · 의자 가죽 · 천 교체 전문
           </span>
         </FadeIn>
-
         <FadeIn delay={100}>
           <h1
             className="font-black leading-[1.08] tracking-tight mb-6"
-            style={{ fontSize: "clamp(2.6rem, 7vw, 5rem)", color: "white" }}>
-            버리려던 의자,
+            style={{ fontSize: "clamp(2.8rem, 7vw, 5rem)", color: "white" }}>
+            버리려던 의자가
             <br />
-            <span style={{ color: "#2fae8a" }}>사진 한 장으로</span>
-            <br />
-            오늘 되살립니다
+            <span style={{ color: "#2fae8a" }}>오늘 새 의자가 됩니다</span>
           </h1>
         </FadeIn>
-
         <FadeIn delay={200}>
           <p
-            className="text-lg md:text-xl leading-relaxed mb-10 max-w-xl"
-            style={{ color: "#aaa" }}>
-            가죽 찢어진 의자, 식탁 의자 6개, 업소 붙박이 소파까지.
+            className="text-xl md:text-2xl leading-relaxed mb-4 max-w-xl"
+            style={{ color: "#bbb" }}>
+            사진 한 장 보내주세요.
             <br />
             <strong style={{ color: "white" }}>
-              기사가 직접 와서 30분~1시간 안에 끝냅니다.
+              기사가 직접 와서 당일 끝냅니다.
             </strong>
           </p>
+          <p className="text-base mb-10" style={{ color: "#666" }}>
+            식탁의자 · 업소 붙박이 소파 · 나무의자 · 흔들리는 의자
+          </p>
         </FadeIn>
-
         <FadeIn delay={300}>
           <div className="flex flex-col sm:flex-row gap-3 w-full max-w-md">
             <a
@@ -91,7 +84,7 @@ function Hero() {
               style={{
                 backgroundColor: "#FEE500",
                 color: "#191919",
-                fontSize: "1.05rem",
+                fontSize: "1.1rem",
               }}>
               <KakaoIcon />
               카카오로 사진 보내기
@@ -103,31 +96,29 @@ function Hero() {
                 backgroundColor: "#1e1e1e",
                 border: "1px solid #333",
                 color: "#e5e5e5",
-                fontSize: "0.95rem",
+                fontSize: "1rem",
               }}>
               📞 전화 문의
             </a>
           </div>
-          <p className="mt-4 text-sm font-medium" style={{ color: "#666" }}>
-            🕐 24시간 · 사진 보내면 30초 안에 가능 여부 확인
+          <p className="mt-4 text-base font-medium" style={{ color: "#888" }}>
+            🕐 24시간 · 30초 안에 가능 여부 확인
           </p>
         </FadeIn>
-
-        {/* 신뢰 지표 */}
         <FadeIn delay={400}>
           <div className="mt-14 grid grid-cols-3 gap-6 w-full max-w-lg">
             {[
-              { num: "1,000+", label: "누적 고객 후기" },
-              { num: "4.9★", label: "네이버 평점" },
-              { num: "2시간", label: "평균 시공 시간" },
+              { num: "1,000+", label: "누적 교체 완료" },
+              { num: "4.9★", label: "네이버 실제 평점" },
+              { num: "당일", label: "시공 완료" },
             ].map((s, i) => (
               <div key={i} className="text-center">
                 <div
-                  className="text-2xl font-black mb-1"
+                  className="text-3xl font-black mb-1"
                   style={{ color: "#2fae8a" }}>
                   {s.num}
                 </div>
-                <div className="text-xs font-medium" style={{ color: "#666" }}>
+                <div className="text-sm font-medium" style={{ color: "#888" }}>
                   {s.label}
                 </div>
               </div>
@@ -139,166 +130,40 @@ function Hero() {
   );
 }
 
-// ── 가치 방정식 4단계 ─────────────────────────────────────────
-function ValueEquation() {
-  const values = [
-    {
-      num: "01",
-      question: "이게 나를 어디까지 데려다줄까?",
-      tag: "결과",
-      icon: "✨",
-      title: "손님 앞에서\n창피 안 당합니다",
-      body: "찢어진 가죽, 튀어나온 스펀지. 식탁에 손님 불러도 의자 걱정부터 했잖아요. 교체 후엔 그냥 새 의자예요. 아무도 모릅니다.",
-      accent: "#2fae8a",
-    },
-    {
-      num: "02",
-      question: "이게 진짜 될까?",
-      tag: "확률",
-      icon: "🛡",
-      title: "1,000건 해봤습니다\n안 된 적 없습니다",
-      body: "사진 보내주시면 30초 안에 가능 여부 먼저 말씀드립니다. 불가능하면 솔직히 말해요. 출장비 없이.",
-      accent: "#60a5fa",
-    },
-    {
-      num: "03",
-      question: "얼마나 오래 걸릴까?",
-      tag: "시간",
-      icon: "⚡",
-      title: "의자 방문 당일 완료 / 야간 작업 가능",
-      body: "영업시간 외에 새벽에도 작업 가능합니다.",
-      accent: "#f59e0b",
-    },
-    {
-      num: "04",
-      question: "내가 얼마나 고생해야 될까?",
-      tag: "노력",
-      icon: "📱",
-      title: "사진 한 장만\n보내면 끝",
-      body: "의자 사진 한 장 찍어서 카카오로 보내주세요. 견적, 예약, 시공, 뒷정리까지 기사가 다 합니다. 고생할 게 없어요.",
-      accent: "#a855f7",
-    },
-  ];
-
-  return (
-    <section className="px-6 py-24" style={{ backgroundColor: "#0d0d0d" }}>
-      <div className="mx-auto max-w-5xl">
-        <FadeIn delay={0}>
-          <div className="text-center mb-16">
-            <span
-              className="inline-block text-sm tracking-widest uppercase mb-4 px-3 py-1.5 rounded-full font-bold"
-              style={{
-                backgroundColor: "#2fae8a22",
-                color: "#2fae8a",
-                border: "1px solid #2fae8a55",
-              }}>
-              왜 수리담인가
-            </span>
-            <h2
-              className="font-black leading-tight"
-              style={{ fontSize: "clamp(1.8rem, 5vw, 3rem)", color: "white" }}>
-              사람은 더 좋은 걸 사는 게 아니라
-              <br />
-              <span style={{ color: "#2fae8a" }}>더 쉽게 끝나는 걸 삽니다</span>
-            </h2>
-            <p className="mt-4 text-base" style={{ color: "#666" }}>
-              의자 가죽교체를 결정할 때 머릿속으로 계산하는 4가지
-            </p>
-          </div>
-        </FadeIn>
-
-        <div className="grid md:grid-cols-2 gap-5">
-          {values.map((v, i) => (
-            <FadeIn key={i} delay={i * 80}>
-              <div
-                className="rounded-2xl p-7 h-full"
-                style={{
-                  backgroundColor: "#161616",
-                  border: `1px solid ${v.accent}33`,
-                }}>
-                <div className="flex items-start gap-4 mb-5">
-                  <span className="text-3xl">{v.icon}</span>
-                  <div>
-                    <div className="flex items-center gap-2 mb-1">
-                      <span
-                        className="text-xs font-black px-2 py-0.5 rounded-full"
-                        style={{
-                          backgroundColor: v.accent + "22",
-                          color: v.accent,
-                          border: `1px solid ${v.accent}44`,
-                        }}>
-                        {v.tag}
-                      </span>
-                      <span
-                        className="text-xs font-bold"
-                        style={{ color: "#444" }}>
-                        {v.num}
-                      </span>
-                    </div>
-                    <p
-                      className="text-xs leading-relaxed"
-                      style={{ color: "#555" }}>
-                      Q. {v.question}
-                    </p>
-                  </div>
-                </div>
-                <h3
-                  className="font-black mb-3 whitespace-pre-line"
-                  style={{
-                    fontSize: "clamp(1.2rem, 2.5vw, 1.45rem)",
-                    color: "white",
-                  }}>
-                  {v.title}
-                </h3>
-                <p
-                  className="text-sm leading-relaxed"
-                  style={{ color: "#888" }}>
-                  {v.body}
-                </p>
-              </div>
-            </FadeIn>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-// ── 비용 계산 섹션 ──────────────────────────────────────────
 function BeforeAfter() {
   const cases = [
     {
-      tag: "업소용 붙박이 소파 의자 가죽 교체",
+      tag: "업소용 붙박이 소파 의자",
       before: "/images/chair-before2.jpg",
       after: "/images/chair-after2.jpg",
       desc: "6개 · 1시간 30분",
     },
     {
-      tag: "업소용 붙박이 소파 의자 가죽 교체",
+      tag: "업소용 붙박이 소파 의자",
       before: "/images/chair-before3.jpg",
       after: "/images/chair-after3.jpg",
       desc: "4개 · 1시간",
     },
     {
-      tag: "식당 의자 가죽교체",
+      tag: "식당 의자",
       before: "/images/chair-before5.jpg",
       after: "/images/chair-after5.jpg",
       desc: "30개 · 3시간",
     },
     {
-      tag: "카페 의자 가죽교체",
+      tag: "카페 의자",
       before: "/images/chair-before6.jpg",
       after: "/images/chair-after6.jpg",
       desc: "10개 · 1시간",
     },
     {
-      tag: "병원 대기 의자 가죽교체",
+      tag: "병원 대기 의자",
       before: "/images/chair-before4.jpg",
       after: "/images/chair-after4.jpg",
       desc: "5개 · 3시간",
     },
     {
-      tag: "식탁의자 가죽 교체",
+      tag: "식탁의자",
       before: "/images/chair-before.jpg",
       after: "/images/chair-after.jpg",
       desc: "4개 · 당일 완료",
@@ -320,32 +185,30 @@ function BeforeAfter() {
               Before / After
             </span>
             <h2
-              className="font-black leading-tight mb-3"
-              style={{ fontSize: "clamp(1.8rem, 5vw, 3rem)", color: "white" }}>
-              말보다
+              className="font-black leading-tight mb-4"
+              style={{ fontSize: "clamp(2rem, 5vw, 3rem)", color: "white" }}>
+              설명보다
               <br />
-              <span style={{ color: "#2fae8a" }}>사진이 빠릅니다</span>
+              <span style={{ color: "#2fae8a" }}>직접 보세요</span>
             </h2>
-            <p className="text-base" style={{ color: "#666" }}>
-              실제 수리 전·후 사진입니다. 가공 없이 그대로입니다.
+            <p className="text-base" style={{ color: "#777" }}>
+              실제 작업 사진입니다. 가공 없이 그대로입니다.
             </p>
           </div>
         </FadeIn>
-
         <div className="grid md:grid-cols-2 gap-6">
           {cases.map((c, i) => (
-            <FadeIn key={i} delay={i * 100}>
+            <FadeIn key={i} delay={i * 80}>
               <div
                 className="rounded-2xl overflow-hidden"
                 style={{ border: "1px solid #2a2a2a" }}>
                 <div className="grid grid-cols-2">
-                  {/* Before */}
                   <div
                     className="relative"
                     style={{ aspectRatio: "4/3", backgroundColor: "#0d0d0d" }}>
                     <img
                       src={c.before}
-                      alt={`${c.tag} 전`}
+                      alt={c.tag + " 전"}
                       className="w-full h-full object-cover"
                     />
                     <div
@@ -355,19 +218,18 @@ function BeforeAfter() {
                           "linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%)",
                       }}>
                       <span
-                        className="text-sm font-black"
+                        className="text-base font-black"
                         style={{ color: "#ddd", letterSpacing: "0.08em" }}>
                         BEFORE
                       </span>
                     </div>
                   </div>
-                  {/* After */}
                   <div
                     className="relative"
                     style={{ aspectRatio: "4/3", backgroundColor: "#0d0d0d" }}>
                     <img
                       src={c.after}
-                      alt={`${c.tag} 후`}
+                      alt={c.tag + " 후"}
                       className="w-full h-full object-cover"
                     />
                     <div
@@ -377,7 +239,7 @@ function BeforeAfter() {
                           "linear-gradient(to top, rgba(15,50,35,0.85) 0%, transparent 100%)",
                       }}>
                       <span
-                        className="text-sm font-black"
+                        className="text-base font-black"
                         style={{ color: "#2fae8a", letterSpacing: "0.08em" }}>
                         AFTER ✦
                       </span>
@@ -391,7 +253,7 @@ function BeforeAfter() {
                     {c.tag}
                   </span>
                   <span
-                    className="text-xs font-black px-3 py-1.5 rounded-full"
+                    className="text-sm font-black px-3 py-1.5 rounded-full"
                     style={{
                       backgroundColor: "#2fae8a22",
                       color: "#2fae8a",
@@ -404,28 +266,112 @@ function BeforeAfter() {
             </FadeIn>
           ))}
         </div>
-
-        {/* 클로징 멘트 */}
         <FadeIn delay={120}>
           <div
-            className="mt-10 text-center rounded-2xl px-7 py-6"
+            className="mt-10 text-center rounded-2xl px-7 py-7"
             style={{
               backgroundColor: "#0d2318",
               border: "1px solid #2fae8a44",
             }}>
             <p
-              className="font-black mb-1"
+              className="font-black mb-2"
               style={{
-                fontSize: "clamp(1.1rem, 2.5vw, 1.4rem)",
+                fontSize: "clamp(1.2rem, 2.5vw, 1.6rem)",
                 color: "white",
               }}>
               새로 산 거랑 구분 안 됩니다.
             </p>
-            <p className="text-sm" style={{ color: "#2fae8a88" }}>
+            <p className="text-base" style={{ color: "#2fae8a99" }}>
               같은 의자 맞습니다
             </p>
           </div>
         </FadeIn>
+      </div>
+    </section>
+  );
+}
+
+function ValueEquation() {
+  const values = [
+    {
+      num: "01",
+      tag: "손님",
+      icon: "💔",
+      accent: "#ef4444",
+      title: "손님들은 더럽다는 인식이\n생기면 돌아오지 않습니다",
+      body: "찢어진 가죽, 튀어나온 스펀지. 말은 안 해도 다 봅니다. 한 번 생긴 인식은 잘 안 바뀌어요.",
+    },
+    {
+      num: "02",
+      tag: "가능",
+      icon: "📲",
+      accent: "#60a5fa",
+      title: "리폼 가능 여부\n30초면 압니다",
+      body: "사진 한 장 보내주시면 바로 말씀드립니다. 안 되는 건 솔직히 말해요. 출장비 없이.",
+    },
+    {
+      num: "03",
+      tag: "시간",
+      icon: "⚡",
+      accent: "#f59e0b",
+      title: "영업 끝나고도 됩니다\n새벽 작업도 가능합니다",
+      body: "새벽 작업도 가능합니다. 영업 중에 손님 보면서 고치는 것도 됩니다.",
+    },
+    {
+      num: "04",
+      tag: "딱 이거 하나만",
+      icon: "📱",
+      accent: "#a855f7",
+      title: "사진 한 장이면 됩니다\n나머지는 저희가 합니다",
+      body: "의자 사진 찍어서 카카오로 보내주세요. 견적·예약·시공·뒷정리까지 기사가 다 합니다.",
+    },
+  ];
+
+  return (
+    <section className="px-6 py-24" style={{ backgroundColor: "#0d0d0d" }}>
+      <div className="mx-auto max-w-5xl">
+        <div className="grid md:grid-cols-2 gap-5">
+          {values.map((v, i) => (
+            <FadeIn key={i} delay={i * 80}>
+              <div
+                className="rounded-2xl p-8 h-full"
+                style={{
+                  backgroundColor: "#161616",
+                  border: `1px solid ${v.accent}33`,
+                }}>
+                <div className="flex items-center gap-3 mb-5">
+                  <span className="text-3xl">{v.icon}</span>
+                  <span
+                    className="text-sm font-black px-3 py-1 rounded-full"
+                    style={{
+                      backgroundColor: v.accent + "22",
+                      color: v.accent,
+                      border: `1px solid ${v.accent}44`,
+                    }}>
+                    {v.tag}
+                  </span>
+                  <span className="text-sm font-bold" style={{ color: "#444" }}>
+                    {v.num}
+                  </span>
+                </div>
+                <h3
+                  className="font-black mb-4 whitespace-pre-line"
+                  style={{
+                    fontSize: "clamp(1.2rem, 2.5vw, 1.45rem)",
+                    color: "white",
+                    lineHeight: 1.35,
+                  }}>
+                  {v.title}
+                </h3>
+                <p
+                  className="text-base leading-relaxed"
+                  style={{ color: "#999" }}>
+                  {v.body}
+                </p>
+              </div>
+            </FadeIn>
+          ))}
+        </div>
       </div>
     </section>
   );
@@ -474,11 +420,11 @@ function PriceSection() {
               }}>
               가격 안내
             </span>
-            <div className="flex items-center justify-center gap-3 flex-wrap mb-3">
+            <div className="flex items-center justify-center gap-3 flex-wrap mb-4">
               <h2
                 className="font-black"
                 style={{
-                  fontSize: "clamp(1.8rem, 5vw, 2.8rem)",
+                  fontSize: "clamp(2rem, 5vw, 2.8rem)",
                   color: "white",
                 }}>
                 얼마면 될까요?
@@ -493,12 +439,11 @@ function PriceSection() {
                 🎁 대량 할인 가능
               </span>
             </div>
-            <p className="text-base" style={{ color: "#666" }}>
+            <p className="text-base" style={{ color: "#777" }}>
               표준 단가 기준 · 사진 보내주시면 더 정확히 알려드립니다
             </p>
           </div>
         </FadeIn>
-
         <FadeIn delay={80}>
           <div
             className="rounded-2xl overflow-hidden"
@@ -506,7 +451,7 @@ function PriceSection() {
             {items.map((item, i) => (
               <div
                 key={i}
-                className="flex items-center justify-between px-6 py-5"
+                className="flex items-center justify-between px-6 py-6"
                 style={{
                   borderBottom:
                     i < items.length - 1 ? "1px solid #1e1e1e" : "none",
@@ -514,16 +459,16 @@ function PriceSection() {
                 }}>
                 <div className="flex-1 min-w-0 pr-4">
                   <p
-                    className="text-sm font-bold mb-0.5"
+                    className="text-base font-bold mb-1"
                     style={{ color: "white" }}>
                     {item.label}
                   </p>
-                  <p className="text-xs" style={{ color: "#555" }}>
+                  <p className="text-sm" style={{ color: "#666" }}>
                     {item.note}
                   </p>
                 </div>
                 <span
-                  className="text-base font-black flex-shrink-0"
+                  className="text-lg font-black flex-shrink-0"
                   style={{ color: "#2fae8a" }}>
                   {item.price}
                 </span>
@@ -531,55 +476,55 @@ function PriceSection() {
             ))}
           </div>
         </FadeIn>
-
-        {/* 버리는 것 vs 고치는 것 비교 */}
         <FadeIn delay={120}>
           <div
-            className="mt-8 rounded-2xl p-6"
+            className="mt-8 rounded-2xl p-7"
             style={{
               backgroundColor: "#0d2318",
               border: "1px solid #2fae8a44",
             }}>
-            <p className="text-sm font-black mb-4" style={{ color: "#2fae8a" }}>
-              💡 새 의자 사는 것과 비교하면
+            <p
+              className="text-base font-black mb-5"
+              style={{ color: "#2fae8a" }}>
+              새 의자 살 때랑 비교해보면
             </p>
             <div className="grid grid-cols-2 gap-4">
               <div
-                className="rounded-xl px-4 py-4 text-center"
+                className="rounded-xl px-4 py-5 text-center"
                 style={{
                   backgroundColor: "#1a1a1a",
                   border: "1px solid #333",
                 }}>
-                <p className="text-xs font-bold mb-2" style={{ color: "#666" }}>
-                  새 식탁의자 6개 구매
+                <p className="text-sm font-bold mb-2" style={{ color: "#777" }}>
+                  새 식탁의자 6개
                 </p>
                 <p
-                  className="text-2xl font-black mb-1"
+                  className="text-3xl font-black mb-1"
                   style={{ color: "#ef4444" }}>
                   40만~150만원
                 </p>
-                <p className="text-xs" style={{ color: "#555" }}>
-                  배송 2~5일 대기
+                <p className="text-sm" style={{ color: "#555" }}>
+                  + 배송 2~5일 기다림
                 </p>
               </div>
               <div
-                className="rounded-xl px-4 py-4 text-center"
+                className="rounded-xl px-4 py-5 text-center"
                 style={{
                   backgroundColor: "#0d2318",
                   border: "1px solid #2fae8a55",
                 }}>
                 <p
-                  className="text-xs font-bold mb-2"
+                  className="text-sm font-bold mb-2"
                   style={{ color: "#2fae8a" }}>
                   수리담 가죽 교체 6개
                 </p>
                 <p
-                  className="text-2xl font-black mb-1"
+                  className="text-3xl font-black mb-1"
                   style={{ color: "#2fae8a" }}>
                   21만원~
                 </p>
-                <p className="text-xs" style={{ color: "#2fae8a88" }}>
-                  오늘 당일 완료
+                <p className="text-sm" style={{ color: "#2fae8a88" }}>
+                  + 오늘 당일 완료
                 </p>
               </div>
             </div>
@@ -590,31 +535,30 @@ function PriceSection() {
   );
 }
 
-// ── 실제 후기 섹션 ─────────────────────────────────────────
 function Reviews() {
   const reviews = [
     {
       who: "인천 계산동 / 김** 고객님",
-      situation: "버리려던 식탁의자 4개",
-      body: "버리려다가 '혹시나' 하고 사진 보내봤어요. 3만원에 다시 앉게 됐습니다. 버릴 뻔했네요.",
-      saved: "약 60만원 절약",
+      situation: "식탁의자 4개",
+      body: "버리려다가 혹시나 하고 사진 보내봤어요. 3만원에 다시 앉게 됐습니다. 버릴 뻔했네요.",
+      result: "약 60만원 절약",
     },
     {
       who: "서울 역삼동 / 김** 고객님",
       situation: "손님방 의자 가죽 교체",
       body: "손님 오실 때마다 가죽 찢어진 게 눈에 밟혔는데 이제 신경 안 써도 됩니다. 깔끔하게 잘 해주셨어요.",
-      saved: "당일 완료",
+      result: "당일 완료",
     },
     {
       who: "부천 중동 / 이** 사장님",
       situation: "식당 붙박이 소파 6m",
       body: "손님이 앉다가 가죽 찢어졌다고 말했는데 너무 창피했어요. 빠르게 와주셔서 다음날 바로 장사 다시 했습니다.",
-      saved: "영업 공백 최소화",
+      result: "영업 공백 최소화",
     },
   ];
 
   return (
-    <section className="px-6 py-20" style={{ backgroundColor: "#0a0a0a" }}>
+    <section className="px-6 py-20" style={{ backgroundColor: "#0d0d0d" }}>
       <div className="mx-auto max-w-5xl">
         <FadeIn delay={0}>
           <div className="text-center mb-12">
@@ -625,91 +569,120 @@ function Reviews() {
                 color: "#2fae8a",
                 border: "1px solid #2fae8a55",
               }}>
-              Real Reviews
+              실제 후기
             </span>
             <h2
               className="font-black leading-tight"
-              style={{ fontSize: "clamp(1.8rem, 5vw, 3rem)", color: "white" }}>
-              긴 설명보다
+              style={{ fontSize: "clamp(2rem, 5vw, 3rem)", color: "white" }}>
+              직접 겪은 사람들이
               <br />
-              <span style={{ color: "#2fae8a" }}>후기가 정직합니다</span>
+              <span style={{ color: "#2fae8a" }}>남긴 말입니다</span>
             </h2>
           </div>
         </FadeIn>
-
         <div className="grid md:grid-cols-3 gap-5">
           {reviews.map((r, i) => (
             <FadeIn key={i} delay={i * 80}>
               <div
-                className="rounded-2xl p-6 h-full flex flex-col"
+                className="rounded-2xl p-7 h-full flex flex-col"
                 style={{
                   backgroundColor: "#161616",
                   border: "1px solid #2a2a2a",
                 }}>
                 <div className="flex-1">
                   <span
-                    className="inline-block text-xs font-bold px-2.5 py-1 rounded-full mb-4"
+                    className="inline-block text-sm font-bold px-3 py-1.5 rounded-full mb-5"
                     style={{
                       backgroundColor: "#1e1e1e",
-                      color: "#aaa",
+                      color: "#bbb",
                       border: "1px solid #2a2a2a",
                     }}>
                     {r.situation}
                   </span>
                   <p
-                    className="text-base leading-relaxed mb-4"
+                    className="text-base leading-relaxed mb-5"
                     style={{ color: "#e5e5e5" }}>
-                    <span style={{ color: "#2fae8a", fontSize: 18 }}>"</span>
+                    <span style={{ color: "#2fae8a", fontSize: 20 }}>"</span>
                     {r.body}
-                    <span style={{ color: "#2fae8a", fontSize: 18 }}>"</span>
+                    <span style={{ color: "#2fae8a", fontSize: 20 }}>"</span>
                   </p>
                 </div>
                 <div className="pt-4" style={{ borderTop: "1px solid #222" }}>
-                  <p className="text-sm mb-1" style={{ color: "#666" }}>
+                  <p className="text-sm mb-2" style={{ color: "#777" }}>
                     — {r.who}
                   </p>
                   <span
-                    className="text-xs font-black px-2.5 py-1 rounded-full"
+                    className="text-sm font-black px-3 py-1.5 rounded-full"
                     style={{
                       backgroundColor: "#2fae8a22",
                       color: "#2fae8a",
                       border: "1px solid #2fae8a44",
                     }}>
-                    {r.saved}
+                    {r.result}
                   </span>
                 </div>
               </div>
             </FadeIn>
           ))}
         </div>
+        <FadeIn delay={120}>
+          <div className="mt-8 grid grid-cols-3 gap-4">
+            {[
+              { num: "1,000+", label: "누적 후기", sub: "네이버 기준" },
+              { num: "4.9★", label: "평균 평점", sub: "실제 고객 평가" },
+              { num: "80%", label: "교체 없이 해결", sub: "방문 현장 기준" },
+            ].map((s, i) => (
+              <div
+                key={i}
+                className="rounded-2xl px-4 py-5 text-center"
+                style={{
+                  backgroundColor: "#161616",
+                  border: "1px solid #2a2a2a",
+                }}>
+                <div
+                  className="text-2xl font-black mb-1"
+                  style={{ color: "#2fae8a" }}>
+                  {s.num}
+                </div>
+                <div
+                  className="text-sm font-bold mb-0.5"
+                  style={{ color: "white" }}>
+                  {s.label}
+                </div>
+                <div className="text-xs" style={{ color: "#666" }}>
+                  {s.sub}
+                </div>
+              </div>
+            ))}
+          </div>
+        </FadeIn>
       </div>
     </section>
   );
 }
 
-// ── 프로세스 3단계 (노력=0) ───────────────────────────────
 function Process() {
   const steps = [
     {
       num: "01",
       icon: "📸",
-      title: "사진 1장 찍기",
-      desc: "의자 전체 + 찢어진 부분 사진 1~2장. 스마트폰으로 찍으면 됩니다.",
-      effort: "30초",
+      title: "사진 찍기",
+      desc: "의자 사진 1~2장. 스마트폰으로 찍으면 됩니다.",
+      time: "30초",
     },
     {
       num: "02",
       icon: "💬",
       title: "카카오로 보내기",
-      desc: "지역이랑 의자 개수만 알려주세요. 견적 바로 드립니다. 전화 안 해도 돼요.",
-      effort: "1분",
+      desc: "사진 + 지역 + 개수만 알려주세요. 전화 안 해도 됩니다.",
+      time: "1분",
     },
     {
       num: "03",
       icon: "🪑",
       title: "기다리면 끝",
-      desc: "기사가 가고, 30분~1시간, 새 의자. 그게 전부입니다. 고생할 게 없어요.",
-      effort: "기다리기만",
+      desc: "기사가 방문해서 30분~2시간. 뒷정리까지 합니다.",
+      time: "기다리기만",
     },
   ];
 
@@ -725,51 +698,127 @@ function Process() {
                 color: "#2fae8a",
                 border: "1px solid #2fae8a55",
               }}>
-              진행 방식
+              진행 방법
             </span>
             <h2
               className="font-black leading-tight"
-              style={{ fontSize: "clamp(1.8rem, 5vw, 3rem)", color: "white" }}>
-              고생할 게
+              style={{ fontSize: "clamp(2rem, 5vw, 3rem)", color: "white" }}>
+              사진 한 장이면
               <br />
-              <span style={{ color: "#2fae8a" }}>하나도 없어요</span>
+              <span style={{ color: "#2fae8a" }}>나머지는 저희가 합니다</span>
             </h2>
           </div>
         </FadeIn>
-
         <div className="grid md:grid-cols-3 gap-5">
           {steps.map((s, i) => (
             <FadeIn key={i} delay={i * 100}>
               <div
-                className="rounded-2xl p-7 text-center relative"
+                className="rounded-2xl p-8 text-center"
                 style={{
                   backgroundColor: i === 2 ? "#0d2318" : "#161616",
                   border: `1px solid ${i === 2 ? "#2fae8a55" : "#2a2a2a"}`,
                 }}>
-                <div className="text-4xl mb-4">{s.icon}</div>
+                <div className="text-5xl mb-5">{s.icon}</div>
                 <div
-                  className="text-xs font-black mb-1"
+                  className="text-sm font-black mb-2"
                   style={{ color: i === 2 ? "#2fae8a" : "#555" }}>
                   {s.num}
                 </div>
                 <h3
-                  className="text-lg font-black mb-3"
+                  className="text-xl font-black mb-3"
                   style={{ color: "white" }}>
                   {s.title}
                 </h3>
                 <p
-                  className="text-sm leading-relaxed mb-4"
-                  style={{ color: "#888" }}>
+                  className="text-base leading-relaxed mb-5"
+                  style={{ color: "#999" }}>
                   {s.desc}
                 </p>
                 <span
-                  className="inline-block text-xs font-black px-3 py-1.5 rounded-full"
+                  className="inline-block text-sm font-black px-4 py-2 rounded-full"
                   style={{
                     backgroundColor: i === 2 ? "#2fae8a" : "#252525",
-                    color: i === 2 ? "white" : "#666",
+                    color: i === 2 ? "white" : "#777",
                   }}>
-                  소요 시간: {s.effort}
+                  {s.time}
                 </span>
+              </div>
+            </FadeIn>
+          ))}
+        </div>
+        <FadeIn delay={120}>
+          <div
+            className="mt-8 rounded-2xl px-7 py-6 text-center"
+            style={{ backgroundColor: "#161616", border: "1px solid #2a2a2a" }}>
+            <p className="text-lg font-black mb-1" style={{ color: "white" }}>
+              고생할 게 없어요.
+            </p>
+            <p className="text-base" style={{ color: "#777" }}>
+              연락부터 시공까지 — 고객이 할 일은 문 열어주는 것뿐입니다.
+            </p>
+          </div>
+        </FadeIn>
+      </div>
+    </section>
+  );
+}
+
+function Guarantee() {
+  const items = [
+    {
+      icon: "🚫",
+      title: "수리 불가면 출장비 0원",
+      desc: "안 된다고 판단되면 방문 전에 먼저 말씀드립니다.",
+    },
+    {
+      icon: "🛡",
+      title: "1년 무상 AS",
+      desc: "같은 부위 재발하면 1년 안에 출장비·공임 없이 다시 옵니다.",
+    },
+    {
+      icon: "💬",
+      title: "숨은 비용 없음",
+      desc: "견적 범위 안에서 끝납니다. 현장에서 갑자기 더 나오지 않아요.",
+    },
+  ];
+
+  return (
+    <section className="px-6 py-20" style={{ backgroundColor: "#0d0d0d" }}>
+      <div className="mx-auto max-w-4xl">
+        <FadeIn delay={0}>
+          <div className="text-center mb-12">
+            <h2
+              className="font-black leading-tight"
+              style={{
+                fontSize: "clamp(1.8rem, 5vw, 2.8rem)",
+                color: "white",
+              }}>
+              불안하셨던 부분,
+              <br />
+              <span style={{ color: "#2fae8a" }}>미리 말씀드립니다</span>
+            </h2>
+          </div>
+        </FadeIn>
+        <div className="grid md:grid-cols-3 gap-5">
+          {items.map((item, i) => (
+            <FadeIn key={i} delay={i * 80}>
+              <div
+                className="rounded-2xl p-7"
+                style={{
+                  backgroundColor: "#161616",
+                  border: "1px solid #2a2a2a",
+                }}>
+                <div className="text-4xl mb-4">{item.icon}</div>
+                <h3
+                  className="text-lg font-black mb-3"
+                  style={{ color: "white" }}>
+                  {item.title}
+                </h3>
+                <p
+                  className="text-base leading-relaxed"
+                  style={{ color: "#999" }}>
+                  {item.desc}
+                </p>
               </div>
             </FadeIn>
           ))}
@@ -779,20 +828,19 @@ function Process() {
   );
 }
 
-// ── 최종 CTA ─────────────────────────────────────────────
 function FinalCTA() {
   return (
-    <section className="px-6 py-24" style={{ backgroundColor: "#0d0d0d" }}>
+    <section className="px-6 py-24" style={{ backgroundColor: "#111" }}>
       <div className="mx-auto max-w-xl text-center">
         <FadeIn delay={0}>
           <div
-            className="mb-8 rounded-2xl px-6 py-5"
+            className="mb-8 rounded-2xl px-6 py-6"
             style={{
               backgroundColor: "#1a0d0d",
               border: "1px solid #ef444466",
             }}>
             <p
-              className="text-base italic font-medium"
+              className="text-base italic font-medium leading-relaxed"
               style={{
                 color: "#fca5a5",
                 borderLeft: "3px solid #ef4444",
@@ -808,20 +856,18 @@ function FinalCTA() {
             </p>
           </div>
         </FadeIn>
-
         <FadeIn delay={80}>
           <h2
             className="font-black leading-tight mb-4"
-            style={{ fontSize: "clamp(2rem, 6vw, 3.2rem)", color: "white" }}>
-            지금 사진 보내면
+            style={{ fontSize: "clamp(2.2rem, 6vw, 3.5rem)", color: "white" }}>
+            지금 사진 한 장이면
             <br />
             <span style={{ color: "#2fae8a" }}>오늘 끝납니다</span>
           </h2>
-          <p className="text-base mb-10" style={{ color: "#666" }}>
-            사진 한 장 → 견적 확인 → 예약 → 당일 완료
+          <p className="text-lg mb-10" style={{ color: "#777" }}>
+            사진 → 견적 → 예약 → 당일 완료
           </p>
         </FadeIn>
-
         <FadeIn delay={120}>
           <div className="flex flex-col gap-3">
             <a
@@ -832,7 +878,7 @@ function FinalCTA() {
               style={{
                 backgroundColor: "#FEE500",
                 color: "#191919",
-                fontSize: "1.1rem",
+                fontSize: "1.15rem",
               }}>
               <KakaoIcon />
               카카오톡으로 사진 보내기
@@ -841,7 +887,7 @@ function FinalCTA() {
               <a
                 href="/request"
                 className="rounded-2xl py-4 text-center font-bold text-white"
-                style={{ backgroundColor: "#2fae8a", fontSize: "0.95rem" }}>
+                style={{ backgroundColor: "#2fae8a", fontSize: "1rem" }}>
                 📷 문자 상담
               </a>
               <a
@@ -851,22 +897,21 @@ function FinalCTA() {
                   backgroundColor: "#161616",
                   border: "1px solid #333",
                   color: "#e5e5e5",
-                  fontSize: "0.95rem",
+                  fontSize: "1rem",
                 }}>
                 📞 010-9127-3024
               </a>
             </div>
           </div>
-
           <div className="mt-8 flex items-center justify-center gap-4 flex-wrap">
-            {["수리 불가 시 출장비 0원", "1년 무상 AS", "당일 완료"].map(
+            {["출장비 0원 정책", "1년 무상 AS", "숨은 비용 없음"].map(
               (b, i) => (
                 <React.Fragment key={b}>
                   <span
-                    className="flex items-center gap-1.5 text-sm font-semibold"
-                    style={{ color: "#aaa" }}>
+                    className="flex items-center gap-1.5 text-base font-semibold"
+                    style={{ color: "#bbb" }}>
                     <span
-                      className="h-1.5 w-1.5 rounded-full inline-block"
+                      className="h-2 w-2 rounded-full inline-block flex-shrink-0"
                       style={{ backgroundColor: "#2fae8a" }}
                     />
                     {b}
@@ -882,7 +927,6 @@ function FinalCTA() {
   );
 }
 
-// ── 푸터 ─────────────────────────────────────────────────
 function Footer() {
   return (
     <footer
@@ -929,17 +973,17 @@ function Footer() {
   );
 }
 
-// ── 메인 ─────────────────────────────────────────────────
 export default function ChairLeatherPage() {
   return (
     <>
       <main style={{ backgroundColor: "#0a0a0a" }}>
         <Hero />
-        <ValueEquation />
         <BeforeAfter />
+        <ValueEquation />
         <PriceSection />
         <Reviews />
         <Process />
+        <Guarantee />
         <FinalCTA />
         <ServiceSeo />
         <HiddenSEO />
