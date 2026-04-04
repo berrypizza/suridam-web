@@ -10,20 +10,23 @@ import EstimateCalculator from "@/app/components/EstimateCalculator";
 import Intro from "@/app/components/Intro";
 import HonestSection from "@/app/components/Honestsection";
 import CompareTable from "@/app/components/CompareTable";
+import ServiceSeo from "@/app/components/ServiceSeo";
+import HiddenSEO from "@/app/components/HiddenSEO";
 
 export default function AdPage() {
   return (
     <>
       <main className="min-h-screen" style={{ backgroundColor: "#1e1e1e" }}>
         <HookIntro />
-        <Intro />
         <Staffphotos />
-        <HonestSection />
+        <Intro />
+        <DifferenceAndReviews />
         <CompareTable />
         <WhySuridam />
-        <DifferenceAndReviews />
         <EstimateCalculator />
         <ContactCTA />
+        <ServiceSeo />
+        <HiddenSEO /> {/* 👈 페이지 맨 아래 추가 (고객 안 보임, 봇만 읽음) */}
       </main>
       <FloatingCTA />
     </>
