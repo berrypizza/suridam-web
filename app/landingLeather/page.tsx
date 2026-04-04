@@ -109,7 +109,7 @@ function Hero() {
             </a>
           </div>
           <p className="mt-4 text-sm font-medium" style={{ color: "#666" }}>
-            🕐 매일 09:00 — 21:00 · 사진 보내면 30초 안에 가능 여부 확인
+            🕐 24시간 · 사진 보내면 30초 안에 가능 여부 확인
           </p>
         </FadeIn>
 
