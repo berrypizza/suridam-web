@@ -1512,7 +1512,7 @@ export default function AdminDashboard() {
               <span
                 className="text-xs font-bold"
                 style={{ color: TECH_COLOR[loggedUser] || "#2fae8a" }}>
-                {isAdmin ? "👑 " : ""}
+                {isAdmin ? "🎖️ " : ""}
                 {loggedUser}
               </span>
               {isAdmin && (
