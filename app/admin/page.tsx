@@ -1241,7 +1241,7 @@ export default function AdminDashboard() {
                     color: selectedName === name ? "white" : "#666",
                     border: `1px solid ${selectedName === name ? TECH_COLOR[name] || "#2fae8a" : "#2e2e2e"}`,
                   }}>
-                  {name === ADMIN_NAME ? "👑 " : ""}
+                  {name === ADMIN_NAME ? "Manager" : ""}
                   {name}
                 </button>
               ))}
