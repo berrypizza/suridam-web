@@ -369,11 +369,13 @@ function JobCard({
   onUpdate,
   onEdit,
   onDelete,
+  isAdmin = true,
 }: {
   job: Job;
   onUpdate: (id: string, patch: Partial<Job>) => void;
   onEdit: (job: Job) => void;
   onDelete: (id: string) => void;
+  isAdmin?: boolean;
 }) {
   const techColor = TECH_COLOR[job.tech || ""];
   const [showPhoto, setShowPhoto] = useState(false);
@@ -991,28 +993,30 @@ function JobCard({
             )}
           </div>
 
-          <div className="flex flex-col gap-1.5 flex-shrink-0">
-            <button
-              onClick={() => onEdit(job)}
-              className="w-9 h-9 flex items-center justify-center rounded-xl text-xs font-bold"
-              style={{
-                backgroundColor: "#2a2a2a",
-                color: "#ccc",
-                border: "1px solid #3a3a3a",
-              }}>
-              수정
-            </button>
-            <button
-              onClick={() => onDelete(job.id)}
-              className="w-9 h-9 flex items-center justify-center rounded-xl text-xs font-bold"
-              style={{
-                backgroundColor: "#ef444418",
-                color: "#ef4444",
-                border: "1px solid #ef444430",
-              }}>
-              삭제
-            </button>
-          </div>
+          {isAdmin && (
+            <div className="flex flex-col gap-1.5 flex-shrink-0">
+              <button
+                onClick={() => onEdit(job)}
+                className="w-9 h-9 flex items-center justify-center rounded-xl text-xs font-bold"
+                style={{
+                  backgroundColor: "#2a2a2a",
+                  color: "#ccc",
+                  border: "1px solid #3a3a3a",
+                }}>
+                수정
+              </button>
+              <button
+                onClick={() => onDelete(job.id)}
+                className="w-9 h-9 flex items-center justify-center rounded-xl text-xs font-bold"
+                style={{
+                  backgroundColor: "#ef444418",
+                  color: "#ef4444",
+                  border: "1px solid #ef444430",
+                }}>
+                삭제
+              </button>
+            </div>
+          )}
         </div>
 
         {/* 하단 버튼 */}
@@ -1092,8 +1096,13 @@ function JobCard({
   );
 }
 
+const ADMIN_NAME = "고관호";
+// 기사 공용 비밀번호: NEXT_PUBLIC_TECH_PASSWORD 환경변수 또는 기본값
+// .env.local 에 NEXT_PUBLIC_TECH_PASSWORD=원하는비밀번호 추가하세요
+
 export default function AdminDashboard() {
-  const [authed, setAuthed] = useState(false);
+  const [loggedUser, setLoggedUser] = useState<string | null>(null);
+  const [selectedName, setSelectedName] = useState<Tech | "">("");
   const [pwInput, setPwInput] = useState("");
   const [pwError, setPwError] = useState(false);
   const [showPw, setShowPw] = useState(false);
@@ -1115,10 +1124,20 @@ export default function AdminDashboard() {
   const [selectedDay, setSelectedDay] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
 
+  const isAdmin = loggedUser === ADMIN_NAME;
+
   useEffect(() => {
     try {
       const expiry = localStorage.getItem("suridam_admin_expiry");
-      if (expiry && Date.now() < parseInt(expiry)) setAuthed(true);
+      const name = localStorage.getItem("suridam_logged_name");
+      if (expiry && Date.now() < parseInt(expiry) && name) {
+        setLoggedUser(name);
+        // 기사면 자기 이름으로 필터 고정
+        if (name !== ADMIN_NAME) {
+          setTechFilter(name as Tech);
+          setCalTechFilter(name as Tech);
+        }
+      }
     } catch {}
   }, []);
 
@@ -1133,12 +1152,12 @@ export default function AdminDashboard() {
   }, []);
 
   useEffect(() => {
-    if (!authed) return;
+    if (!loggedUser) return;
     load();
-  }, [load, authed]);
+  }, [load, loggedUser]);
 
   useEffect(() => {
-    if (!authed) return;
+    if (!loggedUser) return;
     const supabase = getSupabase();
     const channel = supabase
       .channel("jobs_realtime")
@@ -1151,26 +1170,38 @@ export default function AdminDashboard() {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [load, authed]);
+  }, [load, loggedUser]);
 
   const handleLogin = () => {
-    const correct = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || "su3024";
-    if (pwInput === correct) {
+    if (!selectedName) {
+      setPwError(true);
+      return;
+    }
+    const adminPw = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || "su3024";
+    const techPw = process.env.NEXT_PUBLIC_TECH_PASSWORD || "suridam24";
+    const isAdminLogin = selectedName === ADMIN_NAME && pwInput === adminPw;
+    const isTechLogin = selectedName !== ADMIN_NAME && pwInput === techPw;
+    if (isAdminLogin || isTechLogin) {
       try {
         localStorage.setItem(
           "suridam_admin_expiry",
           String(Date.now() + 24 * 60 * 60 * 1000),
         );
+        localStorage.setItem("suridam_logged_name", selectedName);
       } catch {}
-      setAuthed(true);
+      setLoggedUser(selectedName);
       setPwError(false);
+      if (selectedName !== ADMIN_NAME) {
+        setTechFilter(selectedName as Tech);
+        setCalTechFilter(selectedName as Tech);
+      }
     } else {
       setPwError(true);
       setPwInput("");
     }
   };
 
-  if (!authed) {
+  if (!loggedUser) {
     return (
       <main
         className="min-h-screen flex items-center justify-center px-6"
@@ -1182,10 +1213,40 @@ export default function AdminDashboard() {
               수리담 관리자
             </h1>
             <p className="text-sm mt-1" style={{ color: "#555" }}>
-              관리자만 접근할 수 있어요
+              이름을 선택하고 비밀번호를 입력하세요
             </p>
           </div>
           <div className="w-full flex flex-col gap-3">
+            {/* 이름 선택 */}
+            <div className="grid grid-cols-2 gap-2">
+              {(
+                [
+                  ADMIN_NAME,
+                  ...TECHS.filter((t) => t !== ADMIN_NAME),
+                ] as string[]
+              ).map((name) => (
+                <button
+                  key={name}
+                  type="button"
+                  onClick={() => {
+                    setSelectedName(name as Tech);
+                    setPwError(false);
+                  }}
+                  className="rounded-2xl py-3.5 text-sm font-bold transition-all"
+                  style={{
+                    backgroundColor:
+                      selectedName === name
+                        ? TECH_COLOR[name] || "#2fae8a"
+                        : "#1c1c1c",
+                    color: selectedName === name ? "white" : "#666",
+                    border: `1px solid ${selectedName === name ? TECH_COLOR[name] || "#2fae8a" : "#2e2e2e"}`,
+                  }}>
+                  {name === ADMIN_NAME ? "👑 " : ""}
+                  {name}
+                </button>
+              ))}
+            </div>
+            {/* 비밀번호 */}
             <div className="relative">
               <input
                 type={showPw ? "text" : "password"}
@@ -1195,8 +1256,10 @@ export default function AdminDashboard() {
                   setPwError(false);
                 }}
                 onKeyDown={(e) => e.key === "Enter" && handleLogin()}
-                placeholder="비밀번호 입력"
-                autoFocus
+                placeholder={
+                  selectedName ? "비밀번호 입력" : "이름을 먼저 선택하세요"
+                }
+                disabled={!selectedName}
                 className="w-full rounded-2xl px-4 py-3.5 text-base pr-12"
                 style={{
                   backgroundColor: "#1c1c1c",
@@ -1205,27 +1268,38 @@ export default function AdminDashboard() {
                   outline: "none",
                   fontFamily: "inherit",
                   boxSizing: "border-box",
+                  opacity: selectedName ? 1 : 0.5,
                 }}
               />
-              <button
-                type="button"
-                onClick={() => setShowPw((v) => !v)}
-                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-base"
-                style={{ color: "#555" }}>
-                {showPw ? "🙈" : "👁"}
-              </button>
+              {selectedName && (
+                <button
+                  type="button"
+                  onClick={() => setShowPw((v) => !v)}
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-base"
+                  style={{ color: "#555" }}>
+                  {showPw ? "🙈" : "👁"}
+                </button>
+              )}
             </div>
             {pwError && (
               <p
                 className="text-sm text-center font-medium"
                 style={{ color: "#ef4444" }}>
-                비밀번호가 틀렸습니다
+                {!selectedName
+                  ? "이름을 선택해주세요"
+                  : "비밀번호가 틀렸습니다"}
               </p>
             )}
             <button
               onClick={handleLogin}
+              disabled={!selectedName}
               className="w-full rounded-2xl py-3.5 text-base font-bold text-white"
-              style={{ backgroundColor: "#2fae8a" }}>
+              style={{
+                backgroundColor: selectedName
+                  ? TECH_COLOR[selectedName] || "#2fae8a"
+                  : "#333",
+                opacity: selectedName ? 1 : 0.5,
+              }}>
               입장
             </button>
           </div>
@@ -1430,15 +1504,28 @@ export default function AdminDashboard() {
             <h1 className="text-2xl font-bold" style={{ color: "white" }}>
               수리담 관리
             </h1>
-            <p
-              className="text-xs mt-1 flex items-center gap-1.5"
-              style={{ color: "#666" }}>
+            <div className="flex items-center gap-2 mt-1">
               <span
                 className="h-1.5 w-1.5 rounded-full inline-block"
-                style={{ backgroundColor: "#2fae8a" }}
+                style={{ backgroundColor: TECH_COLOR[loggedUser] || "#2fae8a" }}
               />
-              실시간 동기화 · 기사 4명 공유
-            </p>
+              <span
+                className="text-xs font-bold"
+                style={{ color: TECH_COLOR[loggedUser] || "#2fae8a" }}>
+                {isAdmin ? "👑 " : ""}
+                {loggedUser}
+              </span>
+              {isAdmin && (
+                <span className="text-xs" style={{ color: "#555" }}>
+                  · 전체 관리
+                </span>
+              )}
+              {!isAdmin && (
+                <span className="text-xs" style={{ color: "#555" }}>
+                  · 내 일정만 표시
+                </span>
+              )}
+            </div>
           </div>
           <div className="flex items-center gap-2">
             <button
@@ -1455,8 +1542,10 @@ export default function AdminDashboard() {
               onClick={() => {
                 try {
                   localStorage.removeItem("suridam_admin_expiry");
+                  localStorage.removeItem("suridam_logged_name");
                 } catch {}
-                setAuthed(false);
+                setLoggedUser(null);
+                setSelectedName("");
               }}
               className="rounded-xl px-3 py-2.5 text-sm font-bold"
               style={{
@@ -1466,16 +1555,18 @@ export default function AdminDashboard() {
               }}>
               🔒
             </button>
-            <button
-              onClick={() => {
-                setForm(emptyForm());
-                setEditId(null);
-                setShowForm(true);
-              }}
-              className="rounded-xl px-5 py-2.5 text-sm font-bold text-white"
-              style={{ backgroundColor: "#2fae8a" }}>
-              + 접수
-            </button>
+            {isAdmin && (
+              <button
+                onClick={() => {
+                  setForm(emptyForm());
+                  setEditId(null);
+                  setShowForm(true);
+                }}
+                className="rounded-xl px-5 py-2.5 text-sm font-bold text-white"
+                style={{ backgroundColor: "#2fae8a" }}>
+                + 접수
+              </button>
+            )}
           </div>
         </div>
 
@@ -1577,6 +1668,7 @@ export default function AdminDashboard() {
                       onUpdate={update}
                       onEdit={startEdit}
                       onDelete={remove}
+                      isAdmin={isAdmin}
                     />
                   ))}
               </div>
@@ -1629,10 +1721,22 @@ export default function AdminDashboard() {
                 }}>
                 ›
               </button>
-              <TechFilterSelect
-                value={calTechFilter}
-                onChange={setCalTechFilter}
-              />
+              {isAdmin ? (
+                <TechFilterSelect
+                  value={calTechFilter}
+                  onChange={setCalTechFilter}
+                />
+              ) : (
+                <span
+                  className="text-xs font-bold px-3 py-2 rounded-xl"
+                  style={{
+                    backgroundColor: TECH_COLOR[loggedUser!] + "22",
+                    color: TECH_COLOR[loggedUser!],
+                    border: `1px solid ${TECH_COLOR[loggedUser!]}44`,
+                  }}>
+                  {loggedUser}
+                </span>
+              )}
             </div>
             <div className="flex items-center gap-4 mb-3 px-1">
               {TECHS.map((t) => (
@@ -1779,16 +1883,18 @@ export default function AdminDashboard() {
                       </span>
                     )}
                   </div>
-                  <button
-                    onClick={() => {
-                      setForm({ ...emptyForm(), visit_date: selectedDay });
-                      setEditId(null);
-                      setShowForm(true);
-                    }}
-                    className="text-xs px-3 py-1.5 rounded-lg font-bold"
-                    style={{ backgroundColor: "#2fae8a", color: "white" }}>
-                    + 추가
-                  </button>
+                  {isAdmin && (
+                    <button
+                      onClick={() => {
+                        setForm({ ...emptyForm(), visit_date: selectedDay });
+                        setEditId(null);
+                        setShowForm(true);
+                      }}
+                      className="text-xs px-3 py-1.5 rounded-lg font-bold"
+                      style={{ backgroundColor: "#2fae8a", color: "white" }}>
+                      + 추가
+                    </button>
+                  )}
                 </div>
                 {selectedJobs.length === 0 ? (
                   <div
@@ -1859,6 +1965,7 @@ export default function AdminDashboard() {
                               onUpdate={update}
                               onEdit={startEdit}
                               onDelete={remove}
+                              isAdmin={isAdmin}
                             />
                           </div>
                         </div>
@@ -2057,7 +2164,19 @@ export default function AdminDashboard() {
                 }}>
                 ›
               </button>
-              <TechFilterSelect value={techFilter} onChange={setTechFilter} />
+              {isAdmin ? (
+                <TechFilterSelect value={techFilter} onChange={setTechFilter} />
+              ) : (
+                <span
+                  className="text-xs font-bold px-3 py-2 rounded-xl"
+                  style={{
+                    backgroundColor: TECH_COLOR[loggedUser!] + "22",
+                    color: TECH_COLOR[loggedUser!],
+                    border: `1px solid ${TECH_COLOR[loggedUser!]}44`,
+                  }}>
+                  {loggedUser}
+                </span>
+              )}
             </div>
             <div className="flex flex-wrap gap-1 mb-4">
               {(["전체", ...STATUSES] as const).map((s) => (
@@ -2110,16 +2229,18 @@ export default function AdminDashboard() {
                     )}
                   </span>
                 </div>
-                <button
-                  onClick={() => {
-                    setForm({ ...emptyForm(), visit_date: dateFilter });
-                    setEditId(null);
-                    setShowForm(true);
-                  }}
-                  className="text-xs px-3 py-1.5 rounded-lg font-bold"
-                  style={{ backgroundColor: "#2fae8a", color: "white" }}>
-                  + 추가
-                </button>
+                {isAdmin && (
+                  <button
+                    onClick={() => {
+                      setForm({ ...emptyForm(), visit_date: dateFilter });
+                      setEditId(null);
+                      setShowForm(true);
+                    }}
+                    className="text-xs px-3 py-1.5 rounded-lg font-bold"
+                    style={{ backgroundColor: "#2fae8a", color: "white" }}>
+                    + 추가
+                  </button>
+                )}
               </div>
               {filtered.length === 0 ? (
                 <div
@@ -2177,6 +2298,7 @@ export default function AdminDashboard() {
                             onUpdate={update}
                             onEdit={startEdit}
                             onDelete={remove}
+                            isAdmin={isAdmin}
                           />
                         </div>
                       </div>
@@ -2208,7 +2330,19 @@ export default function AdminDashboard() {
                   </button>
                 ))}
               </div>
-              <TechFilterSelect value={techFilter} onChange={setTechFilter} />
+              {isAdmin ? (
+                <TechFilterSelect value={techFilter} onChange={setTechFilter} />
+              ) : (
+                <span
+                  className="text-xs font-bold px-3 py-2 rounded-xl"
+                  style={{
+                    backgroundColor: TECH_COLOR[loggedUser!] + "22",
+                    color: TECH_COLOR[loggedUser!],
+                    border: `1px solid ${TECH_COLOR[loggedUser!]}44`,
+                  }}>
+                  {loggedUser}
+                </span>
+              )}
             </div>
             <div
               className="flex gap-3 mb-4 text-xs font-medium"
@@ -2245,6 +2379,7 @@ export default function AdminDashboard() {
                     onUpdate={update}
                     onEdit={startEdit}
                     onDelete={remove}
+                    isAdmin={isAdmin}
                   />
                 ))}
               </div>
