@@ -1178,7 +1178,7 @@ export default function AdminDashboard() {
       return;
     }
     const adminPw = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || "su3024";
-    const techPw = process.env.NEXT_PUBLIC_TECH_PASSWORD || "suridam24";
+    const techPw = process.env.NEXT_PUBLIC_TECH_PASSWORD || "su2000";
     const isAdminLogin = selectedName === ADMIN_NAME && pwInput === adminPw;
     const isTechLogin = selectedName !== ADMIN_NAME && pwInput === techPw;
     if (isAdminLogin || isTechLogin) {
