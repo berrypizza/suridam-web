@@ -13,7 +13,7 @@ function getSupabase() {
 }
 
 type Status = "대기" | "배정" | "완료" | "취소";
-type Tech = "" | "기사1" | "기사2";
+type Tech = "" | "고관호" | "고현호" | "이주형" | "강영훈";
 
 interface Job {
   id: string;
@@ -32,19 +32,20 @@ interface Job {
   completion_photo?: string;
   as_until?: string;
   intake_photos?: string;
-  // ── 실측 관련 ──
-  is_measurement?: boolean; // 실측 방문 여부
-  install_date?: string | null; // 시공 날짜
-  install_time?: string | null; // 시공 시간
-  install_completed?: boolean; // 시공 완료 여부 (이때 매출 반영)
+  is_measurement?: boolean;
+  install_date?: string | null;
+  install_time?: string | null;
+  install_completed?: boolean;
 }
 
-const TECHS: Tech[] = ["기사1", "기사2"];
+const TECHS: Tech[] = ["고관호", "고현호", "이주형", "강영훈"];
 const STATUSES: Status[] = ["대기", "배정", "완료", "취소"];
 
 const TECH_COLOR: Record<string, string> = {
-  기사1: "#2fae8a",
-  기사2: "#60a5fa",
+  고관호: "#2fae8a",
+  고현호: "#60a5fa",
+  이주형: "#f59e0b",
+  강영훈: "#f472b6",
   "": "#666",
 };
 
@@ -363,7 +364,6 @@ function PhotoCapture({
   );
 }
 
-// ── 잡 카드 ────────────────────────────────────────────────
 function JobCard({
   job,
   onUpdate,
@@ -400,7 +400,6 @@ function JobCard({
     }
   };
 
-  // 일반 완료 처리 (사진 팝업 포함)
   const handleComplete = () => {
     setPrevStatus(job.status);
     onUpdate(job.id, {
@@ -414,10 +413,8 @@ function JobCard({
     }, 2200);
   };
 
-  // 실측 완료 토글 (사진 팝업 없음)
   const handleToggleMeasurement = () => {
     if (job.status === "완료") {
-      // 실측완료 취소 → 시공완료도 초기화
       onUpdate(job.id, { status: "대기", install_completed: false });
     } else {
       onUpdate(job.id, {
@@ -442,34 +439,16 @@ function JobCard({
 
   return (
     <>
-      {/* 완료 축하 오버레이 */}
       {showCelebration && (
         <div
           className="fixed inset-0 z-[80] flex flex-col items-center justify-center pointer-events-none"
           style={{ backgroundColor: "rgba(0,0,0,0.85)" }}>
-          {/* 컨페티 */}
           <style>{`
-            @keyframes confetti-fall {
-              0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
-              100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
-            }
-            @keyframes pop-in {
-              0% { transform: scale(0.3); opacity: 0; }
-              60% { transform: scale(1.15); opacity: 1; }
-              100% { transform: scale(1); opacity: 1; }
-            }
-            @keyframes fade-up {
-              0% { transform: translateY(16px); opacity: 0; }
-              100% { transform: translateY(0); opacity: 1; }
-            }
-            .confetti-piece {
-              position: fixed;
-              width: 10px;
-              height: 10px;
-              animation: confetti-fall linear forwards;
-            }
+            @keyframes confetti-fall { 0% { transform: translateY(-20px) rotate(0deg); opacity: 1; } 100% { transform: translateY(100vh) rotate(720deg); opacity: 0; } }
+            @keyframes pop-in { 0% { transform: scale(0.3); opacity: 0; } 60% { transform: scale(1.15); opacity: 1; } 100% { transform: scale(1); opacity: 1; } }
+            @keyframes fade-up { 0% { transform: translateY(16px); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }
+            .confetti-piece { position: fixed; width: 10px; height: 10px; animation: confetti-fall linear forwards; }
           `}</style>
-          {/* 컨페티 조각들 */}
           {[...Array(20)].map((_, i) => (
             <div
               key={i}
@@ -492,7 +471,6 @@ function JobCard({
               }}
             />
           ))}
-          {/* 중앙 체크 */}
           <div style={{ animation: "pop-in 0.4s ease-out forwards" }}>
             <div
               className="w-28 h-28 rounded-full flex items-center justify-center mb-6"
@@ -524,7 +502,6 @@ function JobCard({
         </div>
       )}
 
-      {/* 라이트박스 */}
       {lightboxUrl &&
         (() => {
           const currentList = lightboxList;
@@ -677,7 +654,6 @@ function JobCard({
             </span>
           )}
 
-          {/* 실측 배지 */}
           {job.is_measurement && (
             <span
               className="text-xs font-bold px-2 py-0.5 rounded-full"
@@ -737,7 +713,7 @@ function JobCard({
               outline: "none",
             }}>
             <option value="">미배정</option>
-            {TECHS.filter(Boolean).map((t) => (
+            {TECHS.map((t) => (
               <option key={t} value={t}>
                 {t}
               </option>
@@ -815,7 +791,6 @@ function JobCard({
               )}
             </div>
 
-            {/* 메모 — 클릭해서 펼치기 */}
             {job.memo && (
               <div className="mt-2">
                 <button
@@ -882,7 +857,6 @@ function JobCard({
               </div>
             )}
 
-            {/* AS 기간 */}
             {job.status === "완료" &&
               job.as_until &&
               (() => {
@@ -922,7 +896,6 @@ function JobCard({
                 );
               })()}
 
-            {/* 사진 */}
             {(getIntakePhotos().length > 0 || photos.length > 0) && (
               <div className="mt-2.5 flex flex-col gap-2.5">
                 {getIntakePhotos().length > 0 && (
@@ -1047,9 +1020,7 @@ function JobCard({
           className="flex gap-2 px-3 pb-3"
           style={{ borderTop: "1px solid #252525", paddingTop: 10 }}>
           {job.is_measurement ? (
-            // 실측 모드
             <div className="flex gap-2 flex-1">
-              {/* 실측 완료 토글 */}
               <button
                 onClick={handleToggleMeasurement}
                 className="flex-1 rounded-xl py-2.5 text-sm font-bold"
@@ -1062,7 +1033,6 @@ function JobCard({
                 }}>
                 {job.status === "완료" ? "📐 실측완료 ✓" : "📐 실측 완료"}
               </button>
-              {/* 시공 완료 — 실측 완료 후에만 표시 */}
               {job.status === "완료" && !job.install_completed && (
                 <button
                   onClick={() => {
@@ -1093,7 +1063,6 @@ function JobCard({
               )}
             </div>
           ) : job.status !== "완료" ? (
-            // 일반 완료 전
             <button
               onClick={handleComplete}
               className="flex-1 rounded-xl py-2.5 text-sm font-bold text-white"
@@ -1101,7 +1070,6 @@ function JobCard({
               ✓ 완료 처리
             </button>
           ) : (
-            // 일반 완료 후 사진 관리
             <button
               onClick={() => {
                 setPrevStatus("완료");
@@ -1270,7 +1238,6 @@ export default function AdminDashboard() {
     if (!form.name.trim() || !form.region.trim() || !form.symptom.trim())
       return;
     setSaving(true);
-    // null 처리: 빈 문자열인 date/time 필드를 null로 변환
     const payload = {
       ...form,
       install_date: form.install_date || null,
@@ -1353,7 +1320,6 @@ export default function AdminDashboard() {
   });
 
   const monthJobs = jobs.filter((j) => j.visit_date?.startsWith(monthFilter));
-  // 실측은 install_completed일 때만 매출 반영
   const doneMonth = monthJobs.filter(
     (j) => j.status === "완료" && (!j.is_measurement || j.install_completed),
   );
@@ -1378,7 +1344,6 @@ export default function AdminDashboard() {
   jobs.forEach((j) => {
     if (!jobsByDate[j.visit_date]) jobsByDate[j.visit_date] = [];
     jobsByDate[j.visit_date].push(j);
-    // 시공 날짜가 다르면 그 날에도 표시
     if (j.install_date && j.install_date !== j.visit_date) {
       if (!jobsByDate[j.install_date]) jobsByDate[j.install_date] = [];
       if (!jobsByDate[j.install_date].find((x) => x.id === j.id))
@@ -1425,6 +1390,33 @@ export default function AdminDashboard() {
     </div>
   );
 
+  const TechFilterSelect = ({
+    value,
+    onChange,
+  }: {
+    value: Tech | "전체";
+    onChange: (v: Tech | "전체") => void;
+  }) => (
+    <select
+      value={value}
+      onChange={(e) => onChange(e.target.value as Tech | "전체")}
+      className="rounded-xl px-3 py-2 text-xs font-bold cursor-pointer"
+      style={{
+        backgroundColor:
+          value !== "전체" ? TECH_COLOR[value] + "22" : "#1c1c1c",
+        color: value !== "전체" ? TECH_COLOR[value] : "#bbb",
+        border: `1px solid ${value !== "전체" ? TECH_COLOR[value] + "44" : "#2e2e2e"}`,
+        outline: "none",
+      }}>
+      <option value="전체">전체 기사</option>
+      {TECHS.map((t) => (
+        <option key={t} value={t}>
+          {t}
+        </option>
+      ))}
+    </select>
+  );
+
   return (
     <main
       className="min-h-screen px-3 py-5"
@@ -1445,7 +1437,7 @@ export default function AdminDashboard() {
                 className="h-1.5 w-1.5 rounded-full inline-block"
                 style={{ backgroundColor: "#2fae8a" }}
               />
-              실시간 동기화 · 기사 2명 공유
+              실시간 동기화 · 기사 4명 공유
             </p>
           </div>
           <div className="flex items-center gap-2">
@@ -1637,35 +1629,13 @@ export default function AdminDashboard() {
                 }}>
                 ›
               </button>
-              <select
+              <TechFilterSelect
                 value={calTechFilter}
-                onChange={(e) =>
-                  setCalTechFilter(e.target.value as Tech | "전체")
-                }
-                className="rounded-xl px-3 py-2 text-xs font-bold cursor-pointer"
-                style={{
-                  backgroundColor:
-                    calTechFilter === "기사1"
-                      ? "#2fae8a22"
-                      : calTechFilter === "기사2"
-                        ? "#60a5fa22"
-                        : "#1c1c1c",
-                  color:
-                    calTechFilter === "기사1"
-                      ? "#2fae8a"
-                      : calTechFilter === "기사2"
-                        ? "#60a5fa"
-                        : "#bbb",
-                  border: `1px solid ${calTechFilter === "기사1" ? "#2fae8a44" : calTechFilter === "기사2" ? "#60a5fa44" : "#2e2e2e"}`,
-                  outline: "none",
-                }}>
-                <option value="전체">기사 선택</option>
-                <option value="기사1">기사1</option>
-                <option value="기사2">기사2</option>
-              </select>
+                onChange={setCalTechFilter}
+              />
             </div>
             <div className="flex items-center gap-4 mb-3 px-1">
-              {TECHS.filter(Boolean).map((t) => (
+              {TECHS.map((t) => (
                 <div key={t} className="flex items-center gap-1.5">
                   <span
                     className="h-2.5 w-2.5 rounded-full"
@@ -1957,7 +1927,7 @@ export default function AdminDashboard() {
                     <span
                       className="text-sm font-bold"
                       style={{ color: TECH_COLOR[tech] }}>
-                      {tech}
+                      {tech} 기사님
                     </span>
                     <span
                       className="text-xs px-2 py-1 rounded-full font-medium"
@@ -2087,30 +2057,7 @@ export default function AdminDashboard() {
                 }}>
                 ›
               </button>
-              <select
-                value={techFilter}
-                onChange={(e) => setTechFilter(e.target.value as Tech | "전체")}
-                className="rounded-xl px-3 py-2 text-xs font-bold cursor-pointer"
-                style={{
-                  backgroundColor:
-                    techFilter === "기사1"
-                      ? "#2fae8a22"
-                      : techFilter === "기사2"
-                        ? "#60a5fa22"
-                        : "#1c1c1c",
-                  color:
-                    techFilter === "기사1"
-                      ? "#2fae8a"
-                      : techFilter === "기사2"
-                        ? "#60a5fa"
-                        : "#bbb",
-                  border: `1px solid ${techFilter === "기사1" ? "#2fae8a44" : techFilter === "기사2" ? "#60a5fa44" : "#2e2e2e"}`,
-                  outline: "none",
-                }}>
-                <option value="전체">전체</option>
-                <option value="기사1">기사1</option>
-                <option value="기사2">기사2</option>
-              </select>
+              <TechFilterSelect value={techFilter} onChange={setTechFilter} />
             </div>
             <div className="flex flex-wrap gap-1 mb-4">
               {(["전체", ...STATUSES] as const).map((s) => (
@@ -2261,30 +2208,7 @@ export default function AdminDashboard() {
                   </button>
                 ))}
               </div>
-              <select
-                value={techFilter}
-                onChange={(e) => setTechFilter(e.target.value as Tech | "전체")}
-                className="rounded-xl px-3 py-1.5 text-xs font-bold cursor-pointer"
-                style={{
-                  backgroundColor:
-                    techFilter === "기사1"
-                      ? "#2fae8a22"
-                      : techFilter === "기사2"
-                        ? "#60a5fa22"
-                        : "#1c1c1c",
-                  color:
-                    techFilter === "기사1"
-                      ? "#2fae8a"
-                      : techFilter === "기사2"
-                        ? "#60a5fa"
-                        : "#bbb",
-                  border: `1px solid ${techFilter === "기사1" ? "#2fae8a44" : techFilter === "기사2" ? "#60a5fa44" : "#2e2e2e"}`,
-                  outline: "none",
-                }}>
-                <option value="전체">전체 기사</option>
-                <option value="기사1">기사1</option>
-                <option value="기사2">기사2</option>
-              </select>
+              <TechFilterSelect value={techFilter} onChange={setTechFilter} />
             </div>
             <div
               className="flex gap-3 mb-4 text-xs font-medium"
@@ -2488,7 +2412,7 @@ export default function AdminDashboard() {
                   }
                   style={inputStyle}>
                   <option value="">미배정</option>
-                  {TECHS.filter(Boolean).map((t) => (
+                  {TECHS.map((t) => (
                     <option key={t} value={t}>
                       {t}
                     </option>
@@ -2604,7 +2528,6 @@ export default function AdminDashboard() {
               </div>
             </button>
 
-            {/* 시공 날짜/시간 — 실측일 때만 */}
             {form.is_measurement && (
               <div
                 className="rounded-xl p-4 flex flex-col gap-3"
