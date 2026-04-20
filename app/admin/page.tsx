@@ -1241,7 +1241,7 @@ export default function AdminDashboard() {
                     color: selectedName === name ? "white" : "#666",
                     border: `1px solid ${selectedName === name ? TECH_COLOR[name] || "#2fae8a" : "#2e2e2e"}`,
                   }}>
-                  {name === ADMIN_NAME ? "🎖️ " : ""}
+                  {name === ADMIN_NAME ? "🏅 " : ""}
                   {name}
                 </button>
               ))}
@@ -1512,7 +1512,7 @@ export default function AdminDashboard() {
               <span
                 className="text-xs font-bold"
                 style={{ color: TECH_COLOR[loggedUser] || "#2fae8a" }}>
-                {isAdmin ? "🎖️ " : ""}
+                {isAdmin ? "🏅 " : ""}
                 {loggedUser}
               </span>
               {isAdmin && (
@@ -1978,147 +1978,177 @@ export default function AdminDashboard() {
         )}
 
         {/* ── 통계 탭 ── */}
-        {!loading && tab === "통계" && (
-          <div className="flex flex-col gap-4">
-            <MonthSelector />
-            <div className="grid grid-cols-2 gap-3">
-              <div
-                className="rounded-2xl p-5"
-                style={{
-                  backgroundColor: "#1c1c1c",
-                  border: "1px solid #2e2e2e",
-                }}>
-                <p
-                  className="text-xs mb-2 font-medium"
-                  style={{ color: "#777" }}>
-                  {formatYearMonth(monthFilter)} 매출
-                </p>
-                <p className="text-2xl font-bold" style={{ color: "white" }}>
-                  {formatPrice(revenue)}
-                </p>
-              </div>
-              <div
-                className="rounded-2xl p-5"
-                style={{
-                  backgroundColor: "#1c1c1c",
-                  border: "1px solid #2e2e2e",
-                }}>
-                <p
-                  className="text-xs mb-2 font-medium"
-                  style={{ color: "#777" }}>
-                  {formatYearMonth(monthFilter)} 완료
-                </p>
-                <p className="text-2xl font-bold" style={{ color: "white" }}>
-                  {doneMonth.length}
-                  <span className="text-base ml-1" style={{ color: "#888" }}>
-                    건
-                  </span>
-                </p>
-              </div>
-            </div>
-            {TECHS.map((tech) => {
-              const techJobs = doneMonth.filter((j) => j.tech === tech);
-              const techRevenue = techJobs.reduce(
-                (s, j) => s + (j.price || 0),
-                0,
-              );
-              return (
+        {!loading &&
+          tab === "통계" &&
+          (() => {
+            const statDone = isAdmin
+              ? doneMonth
+              : doneMonth.filter((j) => j.tech === loggedUser);
+            const statRevenue = statDone.reduce(
+              (s, j) => s + (j.price || 0),
+              0,
+            );
+            const statReviewPending = isAdmin
+              ? reviewPending
+              : reviewPending.filter((j) => j.tech === loggedUser);
+            const myColor = TECH_COLOR[loggedUser!] || "#2fae8a";
+            return (
+              <div className="flex flex-col gap-4">
+                <MonthSelector />
+
+                {/* 요약 */}
+                <div className="grid grid-cols-2 gap-3">
+                  <div
+                    className="rounded-2xl p-5"
+                    style={{
+                      backgroundColor: "#1c1c1c",
+                      border: "1px solid #2e2e2e",
+                    }}>
+                    <p
+                      className="text-xs mb-2 font-medium"
+                      style={{ color: "#777" }}>
+                      {formatYearMonth(monthFilter)} {isAdmin ? "전체" : "내"}{" "}
+                      매출
+                    </p>
+                    <p
+                      className="text-2xl font-bold"
+                      style={{ color: isAdmin ? "white" : myColor }}>
+                      {formatPrice(statRevenue)}
+                    </p>
+                  </div>
+                  <div
+                    className="rounded-2xl p-5"
+                    style={{
+                      backgroundColor: "#1c1c1c",
+                      border: "1px solid #2e2e2e",
+                    }}>
+                    <p
+                      className="text-xs mb-2 font-medium"
+                      style={{ color: "#777" }}>
+                      {formatYearMonth(monthFilter)} {isAdmin ? "전체" : "내"}{" "}
+                      완료
+                    </p>
+                    <p
+                      className="text-2xl font-bold"
+                      style={{ color: isAdmin ? "white" : myColor }}>
+                      {statDone.length}
+                      <span
+                        className="text-base ml-1"
+                        style={{ color: "#888" }}>
+                        건
+                      </span>
+                    </p>
+                  </div>
+                </div>
+
+                {/* 기사별 실적 — 관리자 전체 / 기사 본인만 */}
+                {(isAdmin ? TECHS : [loggedUser as Tech]).map((tech) => {
+                  const techJobs = doneMonth.filter((j) => j.tech === tech);
+                  const techRevenue = techJobs.reduce(
+                    (s, j) => s + (j.price || 0),
+                    0,
+                  );
+                  const color = TECH_COLOR[tech];
+                  return (
+                    <div
+                      key={tech}
+                      className="rounded-2xl p-5"
+                      style={{
+                        backgroundColor: "#1c1c1c",
+                        border: `1px solid ${color}33`,
+                      }}>
+                      <div className="flex items-center justify-between mb-3">
+                        <span className="text-sm font-bold" style={{ color }}>
+                          {tech === loggedUser ? "👤 " : ""}
+                          {tech} 기사님
+                        </span>
+                        <span
+                          className="text-xs px-2 py-1 rounded-full font-medium"
+                          style={{ backgroundColor: color + "22", color }}>
+                          {techJobs.length}건
+                        </span>
+                      </div>
+                      <div className="text-xl font-bold mb-3" style={{ color }}>
+                        {formatPrice(techRevenue)}
+                      </div>
+                      {isAdmin && (
+                        <div
+                          className="h-2 rounded-full overflow-hidden"
+                          style={{ backgroundColor: "#2a2a2a" }}>
+                          <div
+                            className="h-full rounded-full"
+                            style={{
+                              width: `${revenue > 0 ? (techRevenue / revenue) * 100 : 0}%`,
+                              backgroundColor: color,
+                            }}
+                          />
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+
+                {/* 리뷰 요청 */}
                 <div
-                  key={tech}
                   className="rounded-2xl p-5"
                   style={{
                     backgroundColor: "#1c1c1c",
                     border: "1px solid #2e2e2e",
                   }}>
-                  <div className="flex items-center justify-between mb-3">
-                    <span
-                      className="text-sm font-bold"
-                      style={{ color: TECH_COLOR[tech] }}>
-                      {tech} 기사님
-                    </span>
-                    <span
-                      className="text-xs px-2 py-1 rounded-full font-medium"
-                      style={{
-                        backgroundColor: TECH_COLOR[tech] + "22",
-                        color: TECH_COLOR[tech],
-                      }}>
-                      {techJobs.length}건
-                    </span>
-                  </div>
-                  <div
-                    className="text-xl font-bold mb-3"
-                    style={{ color: TECH_COLOR[tech] }}>
-                    {formatPrice(techRevenue)}
-                  </div>
-                  <div
-                    className="h-2 rounded-full overflow-hidden"
-                    style={{ backgroundColor: "#2a2a2a" }}>
-                    <div
-                      className="h-full rounded-full"
-                      style={{
-                        width: `${revenue > 0 ? (techRevenue / revenue) * 100 : 0}%`,
-                        backgroundColor: TECH_COLOR[tech],
-                      }}
-                    />
-                  </div>
-                </div>
-              );
-            })}
-            <div
-              className="rounded-2xl p-5"
-              style={{
-                backgroundColor: "#1c1c1c",
-                border: "1px solid #2e2e2e",
-              }}>
-              <p
-                className="text-sm font-bold mb-3 flex items-center gap-2"
-                style={{ color: "white" }}>
-                📝 리뷰 요청 안 한 건
-                {reviewPending.length > 0 && (
-                  <span
-                    className="text-xs px-2 py-0.5 rounded-full font-bold"
-                    style={{ backgroundColor: "#ef4444", color: "white" }}>
-                    {reviewPending.length}건
-                  </span>
-                )}
-              </p>
-              {reviewPending.length === 0 ? (
-                <p className="text-sm" style={{ color: "#666" }}>
-                  모두 요청 완료! 👍
-                </p>
-              ) : (
-                reviewPending.map((job) => (
-                  <div
-                    key={job.id}
-                    className="flex items-center justify-between py-3"
-                    style={{ borderBottom: "1px solid #232323" }}>
-                    <div>
+                  <p
+                    className="text-sm font-bold mb-3 flex items-center gap-2"
+                    style={{ color: "white" }}>
+                    📝 리뷰 요청 안 한 건
+                    {statReviewPending.length > 0 && (
                       <span
-                        className="text-sm font-medium"
-                        style={{ color: "#e5e5e5" }}>
-                        {job.name}
+                        className="text-xs px-2 py-0.5 rounded-full font-bold"
+                        style={{ backgroundColor: "#ef4444", color: "white" }}>
+                        {statReviewPending.length}건
                       </span>
-                      <span className="text-xs ml-2" style={{ color: "#666" }}>
-                        {job.region} · {formatDate(job.visit_date)}
-                      </span>
-                    </div>
-                    <a
-                      href={`sms:${job.phone}?&body=${reviewSms(job)}`}
-                      onClick={() => update(job.id, { review_requested: true })}
-                      className="text-xs px-3 py-1.5 rounded-full font-semibold"
-                      style={{
-                        backgroundColor: "#03C75A22",
-                        color: "#03C75A",
-                        border: "1px solid #03C75A44",
-                      }}>
-                      문자 보내기
-                    </a>
-                  </div>
-                ))
-              )}
-            </div>
-          </div>
-        )}
+                    )}
+                  </p>
+                  {statReviewPending.length === 0 ? (
+                    <p className="text-sm" style={{ color: "#666" }}>
+                      모두 요청 완료! 👍
+                    </p>
+                  ) : (
+                    statReviewPending.map((job) => (
+                      <div
+                        key={job.id}
+                        className="flex items-center justify-between py-3"
+                        style={{ borderBottom: "1px solid #232323" }}>
+                        <div>
+                          <span
+                            className="text-sm font-medium"
+                            style={{ color: "#e5e5e5" }}>
+                            {job.name}
+                          </span>
+                          <span
+                            className="text-xs ml-2"
+                            style={{ color: "#666" }}>
+                            {job.region} · {formatDate(job.visit_date)}
+                          </span>
+                        </div>
+                        <a
+                          href={`sms:${job.phone}?&body=${reviewSms(job)}`}
+                          onClick={() =>
+                            update(job.id, { review_requested: true })
+                          }
+                          className="text-xs px-3 py-1.5 rounded-full font-semibold"
+                          style={{
+                            backgroundColor: "#03C75A22",
+                            color: "#03C75A",
+                            border: "1px solid #03C75A44",
+                          }}>
+                          문자 보내기
+                        </a>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+            );
+          })()}
 
         {/* ── 오늘 탭 ── */}
         {!loading && tab === "오늘" && (
