@@ -1221,7 +1221,7 @@ export default function AdminDashboard() {
           }}>
           <div className="text-center relative pt-[140px]">
             <Image
-              src="/images/logo.png"
+              src="/images/logo-restory.png"
               alt="Re'Story"
               width={216}
               height={216}
@@ -1523,7 +1523,7 @@ export default function AdminDashboard() {
           <div>
             <h1 className="text-2xl font-bold" style={{ color: "#111827" }}>
               <Image
-                src="/images/logo.png"
+                src="/images/logo-restory.png"
                 alt="Re'Story"
                 width={120}
                 height={120}
